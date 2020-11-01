@@ -1,4 +1,4 @@
-package com.idofast.admin.util;
+package com.idofast.admin.domain.enumconvert;
 
 import com.idofast.common.enums.IBaseEnum;
 import com.idofast.common.enums.RoleEnum;
@@ -15,7 +15,7 @@ public class RoleEnumConvert<T extends IBaseEnum> implements AttributeConverter<
     @Override
     public RoleEnum convertToEntityAttribute(Integer dbData)
     {
-        return null;
+        return RoleEnum.ofCode(dbData);
     }
 }
 

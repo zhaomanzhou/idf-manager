@@ -1,10 +1,11 @@
 package com.idofast.common.enums;
 
-public enum RoleEnum implements IBaseEnum {
-    ADMIN(0, "管理员"),
-    PLAIN(1,"普通用户");
+public enum  UserStatusEnum
+{
+    NORMAL(0, "正常"),
+    FORBIDDEN(1, "封禁");
 
-    RoleEnum(int code, String value)
+    UserStatusEnum(int code, String value)
     {
         this.code = code;
         this.value = value;
@@ -24,13 +25,13 @@ public enum RoleEnum implements IBaseEnum {
         return this.value;
     }
 
-    public static RoleEnum ofCode(int code)
+    public static UserStatusEnum ofCode(int code)
     {
         switch (code)
         {
-            case 0: return ADMIN;
-            case 1: return PLAIN;
-            default:throw new IllegalArgumentException("非法的role code");
+            case 0: return NORMAL;
+            case 1: return FORBIDDEN;
+            default:throw new IllegalArgumentException("非法的user statuscode");
         }
     }
 }

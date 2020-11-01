@@ -2,6 +2,7 @@ package com.idofast.admin.repository;
 
 import com.idofast.admin.domain.User;
 import com.idofast.common.enums.RoleEnum;
+import com.idofast.common.enums.UserStatusEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,9 @@ public class UserRepositoryTest
                 .email("aa")
                 .password("111")
                 .remark("dd")
-                .status(1)
+                .status(UserStatusEnum.NORMAL)
                 .role(RoleEnum.ADMIN)
+                .osDevice(1)
                 .build();
         userRepository.save(user);
     }

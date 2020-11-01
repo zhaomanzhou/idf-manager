@@ -2,9 +2,7 @@ package com.idofast.admin.util;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class UtilsTest
+public class VcodeUtilTest
 {
 
     @Test
@@ -12,7 +10,7 @@ public class UtilsTest
     {
         for (int i = 0; i < 100000; i++)
         {
-            System.out.println(Utils.generateVCode());
+            System.out.println(VcodeUtil.generateVCode());
 
 
         }

@@ -18,6 +18,6 @@ public class EmailServiceTest
     @Test
     public void testSend()
     {
-        emailService.sendEmail("271832284@qq.com", "ljj中午", "ljj是傻吊,略略略" ,null);
+        //emailService.sendEmail("271832284@qq.com", "ljj中午", "ljj是傻吊,略略略" ,null);
     }
 }

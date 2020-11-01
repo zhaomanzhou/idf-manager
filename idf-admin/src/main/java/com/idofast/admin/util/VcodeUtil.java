@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class Utils
+public final class VcodeUtil
 {
     private final static Interner<Object> STRING_WEAK_POLL = Interners.newWeakInterner();
 

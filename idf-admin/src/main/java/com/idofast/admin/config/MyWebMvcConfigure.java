@@ -41,7 +41,7 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/user/unlogin")
                 .excludePathPatterns("/user/detail/token")
-                .excludePathPatterns("/user/vcode/get");
+                .excludePathPatterns("/user/vcode/register");
 
         registry.addInterceptor(corsInterceptor)
                 .addPathPatterns("/**");

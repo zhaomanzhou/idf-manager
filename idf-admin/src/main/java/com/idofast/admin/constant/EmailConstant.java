@@ -22,8 +22,4 @@ public class EmailConstant
     private  String overdueDate;
     private  String exceedConnections;
 
-    public void setUsername(String userName) {
-        log.info("你设置的email是:{},如果为空，说明配置有问题",username);
-        this.username = userName;
-    }
 }

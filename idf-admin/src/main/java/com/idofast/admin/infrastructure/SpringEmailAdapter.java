@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
-public class SpringEmailAdapter
+public class SpringEmailAdapter implements EmailAdapter
 {
 
     @Autowired

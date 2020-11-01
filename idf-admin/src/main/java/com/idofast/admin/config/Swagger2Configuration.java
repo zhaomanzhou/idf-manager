@@ -40,7 +40,7 @@ public class Swagger2Configuration {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.im.user.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.idofast.admin.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(pars)  ;

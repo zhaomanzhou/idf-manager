@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public interface IBaseEnum
 {
-    Integer getValue();
+    Integer getCode();
 
-    String getName();
+    String getValue();
 
     static <T extends IBaseEnum> T fromValue(Class<T> enumType, Integer value) {
         for (T object : enumType.getEnumConstants()) {

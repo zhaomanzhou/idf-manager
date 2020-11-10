@@ -20,14 +20,13 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity implements Serializable
 {
     @Id
-    @TableGenerator(name = "user_gen", initialValue = 10000)
-    @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "user_gem")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(columnDefinition="bigint")
-    private Long id;
+    protected Long id;
 
     @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
     @CreationTimestamp
-    private LocalDateTime createTime;
+    protected LocalDateTime createTime;
 
 
 

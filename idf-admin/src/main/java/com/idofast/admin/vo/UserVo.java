@@ -1,16 +1,19 @@
 package com.idofast.admin.vo;
 
 
+import com.idofast.admin.domain.User;
+import com.idofast.common.enums.RoleEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Data
-@ApiModel("用户好友的VO对象")
+@ApiModel("用户VO对象")
 public class UserVo
 {
 
@@ -23,20 +26,16 @@ public class UserVo
     @ApiModelProperty("用户邮箱")
     private String email;
 
-
+    @ApiModelProperty("头像地址")
     private String avatarUrl;
 
-    private String password;
-
+    @ApiModelProperty("角色; 管理员-0; 其他用户 > 0")
     private Integer role;
 
-
-    private Integer status;
-
-    //备注
+    @ApiModelProperty("备注")
     private String remark;
 
-    //使用的设备
+    @ApiModelProperty("使用的设备")
     private List<Integer> osDevice;
 
     private String ext;
@@ -45,5 +44,19 @@ public class UserVo
 
     private LocalDateTime createTime;
 
+    public static UserVo convertUserToVo(User user)
+    {
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user, userVo);
+        //不是管理员，屏蔽掉一些数据
+        if(user.getRole().getCode() > RoleEnum.ADMIN.getCode())
+        {
+            userVo.setAvatarUrl(null);
+            userVo.setRemark(null);
+            userVo.setExt(null);
+            userVo.setOsDevice(null);
+        }
+        return userVo;
+    }
 
 }

@@ -69,21 +69,7 @@ public class EmailService
     }
 
 
-    public void registerUser(RegisterUserVo registerUserVo) throws BusinessException
-    {
-        String email = registerUserVo.getEmail();
-        String verificationCode = emailLockManager.getVerificationCode(email);
-        if(verificationCode == null)
-        {
-            throw new BusinessException("验证码已失效");
-        }
-        if(!verificationCode.equals(registerUserVo.getVcode()))
-        {
-            throw new BusinessException("验证码错误");
-        }
 
-
-    }
 
 
 

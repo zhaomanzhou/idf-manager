@@ -3,7 +3,8 @@ package com.idofast.common.enums;
 public enum  UserStatusEnum
 {
     NORMAL(0, "正常"),
-    FORBIDDEN(1, "封禁");
+    LOGOFF(0, "正常"),
+    FORBIDDEN(2, "封禁");
 
     UserStatusEnum(int code, String value)
     {

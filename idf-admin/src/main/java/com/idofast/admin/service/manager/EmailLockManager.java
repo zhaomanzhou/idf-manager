@@ -4,21 +4,18 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class EmailLockManager
 {
 
-
-
     Cache<Object, Object> lockCache = CacheBuilder.newBuilder()
             .expireAfterWrite(2, TimeUnit.MINUTES)
             .build();
 
     Cache<Object, Object> vcodeCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
             .build();
     /**
      * 判断是否能向该用户发送邮件，如果在两分钟内发送过则返回false

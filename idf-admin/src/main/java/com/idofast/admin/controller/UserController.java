@@ -2,9 +2,12 @@ package com.idofast.admin.controller;
 
 
 import com.idofast.admin.controller.vo.request.RegisterUserVo;
+import com.idofast.admin.domain.User;
+import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.EmailService;
 import com.idofast.admin.service.UserService;
 import com.idofast.admin.vo.UserVo;
+import com.idofast.common.common.RequestContext;
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.response.error.BusinessException;
 import io.swagger.annotations.Api;
@@ -14,15 +17,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.validation.Validator;
 import javax.validation.constraints.Email;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
+
 
 @RestController
 @RequestMapping("/user")
@@ -64,11 +64,114 @@ public class UserController
     }
 
 
-
-    @PostMapping("/reg")
-    public ServerResponse<String> reg(@RequestBody RegisterUserVo registerUserVo) throws BusinessException
+    @ApiOperation(value = "用户注册" )
+    @PostMapping("/register")
+    public ServerResponse<String> reg(@Validated RegisterUserVo registerUserVo) throws BusinessException
     {
-        emailService.registerUser(registerUserVo);
+        userService.registerUser(registerUserVo);
         return ServerResponse.success();
     }
+
+
+
+
+    @ApiOperation(value = "登录" )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "用户邮箱", required = true,dataType = "string",example = "271832284@qq.com"),
+            @ApiImplicitParam(name = "password", value = "密码",required = true,dataType = "string", example = "1"),
+    })
+    @PostMapping(value = "/login")
+    public ServerResponse<String> login(String email, String password) throws BusinessException {
+        String token = userService.genTokenByAuthentication(email, password);
+        return ServerResponse.success(token);
+    }
+
+
+
+    @ApiOperation("根据token获取当前用户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "token信息", required = true,dataType = "String"),
+    })
+    @GetMapping(value = "/detail/token")
+    public ServerResponse<UserVo> getUserInfo(String token) throws BusinessException {
+
+        if(token == null){
+            throw new BusinessException(BusinessErrorEnum.NEED_LOGIN);
+        }
+
+            User user = userService.getUserByToken(token);
+            UserVo userVo = UserVo.convertUserToVo(user);
+            return ServerResponse.success(userVo);
+
+    }
+
+
+    @ApiOperation(value = "根据id查询用户信息" )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", required = true,dataType = "Long"),
+    })
+    @GetMapping("/detail/id/")
+    public ServerResponse<UserVo> queryById(Long id) throws BusinessException {
+        User user = userService.getUserById(id);
+        return ServerResponse.success(UserVo.convertUserToVo(user));
+    }
+
+    @ApiOperation(value = "重置密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "passwordOld", value = "用户原密码", required = true,dataType = "String"),
+            @ApiImplicitParam(name = "passwordNew", value = "用户新密码", required = true,dataType = "String"),
+    })
+    @PostMapping(value = "/reset_password")
+    public ServerResponse<String> resetPassword(String passwordOld,String passwordNew) throws BusinessException {
+        User user = userService.getUserByToken(RequestContext.getToken());
+        if(user == null){
+            return ServerResponse.error("用户未登录");
+        }
+        userService.resetPassword(passwordOld, passwordNew, user);
+        return ServerResponse.success();
+    }
+
+    //TODO UserVo 和 User之间的转换已完成 8/24 8：00
+    @ApiOperation(value = "更新用户信息")
+    @PostMapping(value = "/update")
+    public ServerResponse<String> update_information(UserVo userVoNew) throws BusinessException {
+        User user = userService.getUserByToken(RequestContext.getToken());
+        if(user == null){
+            return ServerResponse.error("用户未登录");
+        }
+//        User user = new User();
+//        userVoNew.setId(userVo.getId());
+//        BeanUtils.copyProperties(userVoNew, user);
+//        if(userVoNew.getAvatarUrl() == null){
+//            user.setAvatarUrl(userVo.getAvatarUrl());
+//        }
+//        if(userVoNew.getUsername() == null){
+//            user.setAvatarUrl(userVo.getUsername());
+//        }
+//        String gender = userVoNew.getGender();
+//        GenderEnum genderEnum = GenderEnum.nameOf(gender);
+//        if(genderEnum != null){
+//            user.setGender(genderEnum.getCode());
+//        }
+//
+//
+//        Optional.ofNullable(userVoNew.getBirthday()).ifPresent(birthday -> user.setBirthday(new Date(birthday)));
+//        iUserService.updateUserInfo(user);
+
+
+        return ServerResponse.success();
+    }
+
+    @ApiOperation(value = "注销用户")
+    @PostMapping(value = "/delete")
+    public ServerResponse<String>  LogOutUser() throws BusinessException{
+        User user = userService.getUserByToken(RequestContext.getToken());
+        if(user == null){
+            return ServerResponse.error("用户未登录");
+        }
+        userService.deleteUser(user);
+        return ServerResponse.success();
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package com.idofast.admin.domain;
 
+import com.idofast.admin.domain.enumconvert.DeletedEnumConvert;
 import com.idofast.admin.domain.enumconvert.RoleEnumConvert;
 import com.idofast.admin.domain.enumconvert.UserStatusConvert;
+import com.idofast.common.enums.DeletedEnum;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.enums.UserStatusEnum;
 import lombok.*;
@@ -59,5 +61,8 @@ public class User extends BaseEntity implements Serializable
 
     @Transient
     private String vCode;
+
+    @Convert(converter = DeletedEnumConvert.class)
+    private DeletedEnum deleted;
 
 }

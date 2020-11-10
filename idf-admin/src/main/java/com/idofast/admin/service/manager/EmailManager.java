@@ -7,6 +7,7 @@ import com.idofast.admin.repository.EmailSendHistoryRepository;
 import com.idofast.common.enums.EmailTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,8 @@ public class EmailManager
     @Autowired
     private EmailLockManager emailLockManager;
 
+    @Value("${switch.sendEmail}")
+    private boolean sendEmail;
 
     public void sendVcode(String toEmail, String vcode, EmailTypeEnum emailTypeEnum) throws UnsupportedEncodingException, MessagingException
     {
@@ -43,7 +46,10 @@ public class EmailManager
     {
 
         log.info("开始向{}发送验证码{}", toEmail, vcode);
-        sendVcode(toEmail, vcode, EmailTypeEnum.REGISTER_VCODE);
+        if(sendEmail)
+        {
+            sendVcode(toEmail, vcode, EmailTypeEnum.REGISTER_VCODE);
+        }
         emailLockManager.lockUserForVerificationCode(toEmail, vcode);
         log.info("{}的验证码发送成功，开始存入db", toEmail);
         EmailSendHistory history = EmailSendHistory.builder()

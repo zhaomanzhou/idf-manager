@@ -39,8 +39,8 @@ email:
 spring:
   datasource:
     username: root
-    password:
-    url: jdbc:mysql:///test_idf?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+    password: idofast
+    url: jdbc:mysql://qy.zmz121.cn:3306/test_idf?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   redis:

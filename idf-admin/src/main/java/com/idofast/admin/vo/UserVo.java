@@ -30,7 +30,7 @@ public class UserVo
     private String avatarUrl;
 
     @ApiModelProperty("角色; 管理员-0; 其他用户 > 0")
-    private Integer role;
+    private String role;
 
     @ApiModelProperty("备注")
     private String remark;
@@ -48,6 +48,7 @@ public class UserVo
     {
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(user, userVo);
+        userVo.setRole(user.getRole().getValue());
         //不是管理员，屏蔽掉一些数据
         if(user.getRole().getCode() > RoleEnum.ADMIN.getCode())
         {

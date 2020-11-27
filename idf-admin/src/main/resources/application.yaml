@@ -2,19 +2,17 @@ server:
   port: 8001
 
 spring:
-  profiles:
-    active: local
   datasource:
     username: root
     password: idofast
-    url: jdbc:mysql://qy.zmz121.cn:3306/test_idf?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+    url: jdbc:mysql:///test_idf?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
-    host: zmz121.cn
+    host: localhost
     port: 6379
     timeout: 5000
-    password: cloudalibaba
+    password:
   jpa:
     show-sql: true
     hibernate:
@@ -23,7 +21,7 @@ spring:
   mail:
     host: smtp.163.com
     username: zmzsstreet@163.com
-    password: LQHKOWYQXYQINDDW
+    password:
     properties.mail.smtp.port: 465 #465或者994
     properties.mail.smtp.starttls.enable: true
     properties.mail.smtp.starttls.required: true
@@ -39,33 +37,22 @@ token:
 switch:
   sendEmail: false
 
+
+
 ---
 spring:
-  profiles: local
-
+  profiles: docker
   datasource:
+    username: root
     password: idofast
-    url: jdbc:mysql:///test_idf?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
-
+    url: jdbc:mysql://qy.zmz121.cn:3306/test_idf?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
   redis:
-    host: localhost
-    password:
+    host: qy.zmz121.cn
+    port: 6379
+    timeout: 5000
+    password: idofast
 
 
 
-email:
-  #stmp地址
-  host: smtp.163.com
-  #用户名称
-  username: zmzsstreet@163.com
-  #密码
-  password: LQHKOWYQXYQINDDW
-  #收件人显示的名称
-  senderName: idofast加速器
-  smtpPort: 465
-  useSsl: true
 
 
-  exceedConnections: 你当前的连接数已经超过账号最大限制，当前风险系统自动降低你一半的连接数，并且持续一个小时;如果你在一个小时后，不在触发监控指标，你的账号连接数将恢复。
-  vCodeTemplate: '你的验证码为: %s,请在10分钟内使用'
-  overdueDate: 你的账号即将于：%s 过期，请留意续费。

@@ -1,13 +1,13 @@
 package com.idofast.admin.controller;
 
 
+import com.idofast.admin.config.context.RequestContext;
 import com.idofast.admin.controller.vo.request.RegisterUserVo;
 import com.idofast.admin.domain.User;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.EmailService;
 import com.idofast.admin.service.UserService;
-import com.idofast.admin.vo.UserVo;
-import com.idofast.common.common.RequestContext;
+import com.idofast.admin.controller.vo.response.UserVo;
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.response.error.BusinessException;
 import io.swagger.annotations.Api;

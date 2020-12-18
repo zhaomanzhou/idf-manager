@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.PARAMETER}) // 可用在方法的参数上
 @Retention(RetentionPolicy.RUNTIME)
 @ApiIgnore
-public @interface CurrentUser
+public @interface CurUser
 {
 
 }

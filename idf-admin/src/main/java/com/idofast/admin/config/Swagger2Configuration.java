@@ -32,8 +32,7 @@ public class Swagger2Configuration {
         ticketPar.name("token").description("用户凭证")
                 .modelRef(new ModelRef("string")).parameterType("header")
                 .required(false)
-                .defaultValue("eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE2Mjk5NDcxMzQ" +
-                        "sImlhdCI6MTU5ODQxMTEzNH0.1KD0qOmY6BESz-gD1GD7jOyWXnXR1twPT3WBijRMA78")
+                .defaultValue("eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE2Mzc4OTg3MzQsImlhdCI6MTYwNjM2MjczNH0.Dqhuv9EEVJXa29WYuPS4j4jt19hG6NUYvcR7S9kmT8k")
                 .build();
         pars.add(ticketPar.build());
 
@@ -50,8 +49,8 @@ public class Swagger2Configuration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("用户好友群聊模块前后端交互api")
-                .description("用户好友群聊模块前后端交互api")
+                .title("IDoFast前后端交互api")
+                .description("IDoFast后端api列表")
                 .termsOfServiceUrl("http://localhost:8001/")
                 .version("1.0")
                 .build();

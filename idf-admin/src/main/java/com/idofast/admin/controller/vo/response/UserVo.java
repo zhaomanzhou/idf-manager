@@ -1,4 +1,4 @@
-package com.idofast.admin.vo;
+package com.idofast.admin.controller.vo.response;
 
 
 import com.idofast.admin.domain.User;

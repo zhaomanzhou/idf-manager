@@ -1,4 +1,6 @@
-package com.idofast.common.common;
+package com.idofast.admin.constant;
+
+import com.idofast.admin.domain.User;
 
 /**
  * @author zhaomanzhou
@@ -9,6 +11,8 @@ public interface ContextConstant {
     public static final String TOKEN = "token";
 
     public static final String NAMESPACE = "namespace";
+
+    public static final String USER = "user";
 
 
 }

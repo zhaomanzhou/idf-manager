@@ -28,7 +28,9 @@ public enum BusinessErrorEnum implements CommonError
 
     LOGFF_USER(1009,"用户已注销"),
 
-    NEED_LOGIN(401, "没有登录的用户，请先登录")
+    NEED_LOGIN(401, "没有登录的用户，请先登录"),
+
+    OUT_OF_AUTORITY(403, "非法权限操作")
 
 
     ;

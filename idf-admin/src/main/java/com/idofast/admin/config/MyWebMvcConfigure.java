@@ -1,9 +1,10 @@
 package com.idofast.admin.config;
 
-import com.idofast.admin.config.arguementresolver.CurrentUserMethodArgumentResolver;
-import com.idofast.admin.config.interceptor.ContextInformationInterceptor;
+import com.idofast.admin.config.arguementresolver.CurUserMethodArgumentResolver;
+import com.idofast.admin.config.interceptor.AuthorityInterceptor;
 import com.idofast.admin.config.interceptor.CorsInterceptor;
 import com.idofast.admin.config.interceptor.LoginInterceptor;
+import com.idofast.admin.config.interceptor.RequestContextInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,34 +19,38 @@ import java.util.List;
 public class MyWebMvcConfigure implements WebMvcConfigurer
 {
 
-
     @Autowired
     private LoginInterceptor loginInterceptor;
-
-
-    @Autowired
-    private ContextInformationInterceptor contextInformationInterceptor;
 
     @Autowired
     private CorsInterceptor corsInterceptor;
 
+    @Autowired
+    private AuthorityInterceptor authorityInterceptor;
+
+    @Autowired
+    private RequestContextInterceptor requestContextInterceptor;
     //注册拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(contextInformationInterceptor)
-                .addPathPatterns("/user/**");
-        registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/user/**")
-                .excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/register")
-                .excludePathPatterns("/user/unlogin")
-                .excludePathPatterns("/user/detail/token")
-                .excludePathPatterns("/user/vcode/register");
-
         registry.addInterceptor(corsInterceptor)
                 .addPathPatterns("/**");
 
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/user/**")
+                .addPathPatterns("/notice/**")
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/register")
+                .excludePathPatterns("/user/detail/token")
+                .excludePathPatterns("/user/vcode/register")
+                .excludePathPatterns("/error/**");
+
+        registry.addInterceptor(requestContextInterceptor)
+                .addPathPatterns("/**");
+
+        registry.addInterceptor(authorityInterceptor)
+                .addPathPatterns("/**");
     }
 
 
@@ -63,11 +68,10 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(currentUserMethodArgumentResolver());
-//        super.addArgumentResolvers(argumentResolvers);
     }
 
     @Bean
-    public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
-        return new CurrentUserMethodArgumentResolver();
+    public CurUserMethodArgumentResolver currentUserMethodArgumentResolver() {
+        return new CurUserMethodArgumentResolver();
     }
 }

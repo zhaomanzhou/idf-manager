@@ -1,16 +1,15 @@
-package com.idofast.common.common;
-
-import org.slf4j.MDC;
+package com.idofast.admin.config.context;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author zhaomanzhou
- * @date 2020/3/18 10:18 上午
+ * @version 1.0
+ * @createTime 2020/12/18 6:46 下午
  */
-public class ThreadLoalCache {
-
+public class ThreadLocalCache
+{
     private static final ThreadLocal<Map<String, Object>> threadLocal = ThreadLocal.withInitial(HashMap::new);
 
     public static Object get(String key) {
@@ -20,12 +19,10 @@ public class ThreadLoalCache {
 
     public static void set(String key, Object value) {
         threadLocal.get().put(key, value);
-
     }
 
     public static void remove(String key) {
         threadLocal.get().remove(key);
-        MDC.remove(key);
     }
 
     public static void clear() {

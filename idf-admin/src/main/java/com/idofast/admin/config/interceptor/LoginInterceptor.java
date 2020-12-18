@@ -36,18 +36,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String token = request.getHeader("token");
         if(!Jwtutil.isValidate(token))
         {
-            request.getRequestDispatcher("/user/unlogin").forward(request, response);
+            request.getRequestDispatcher("/error/unlogin").forward(request, response);
             return false;
         }
         User user = (User)redisTemplate.opsForHash().get(RedisPrefixConst.TOKEN_PREFIX + token, TokenHashConst.USER);
         if(user == null)
         {
-            request.getRequestDispatcher("/user/unlogin").forward(request, response);
+            request.getRequestDispatcher("/error/unlogin").forward(request, response);
             return false;
         }else
         {
             redisTemplate.expire(RedisPrefixConst.TOKEN_PREFIX+token, expiration, TimeUnit.MINUTES);
-            request.setAttribute("currentUser", user);
+            request.setAttribute("curUser", user);
         }
 
         return true;

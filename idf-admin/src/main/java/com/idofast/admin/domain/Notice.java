@@ -1,11 +1,14 @@
 package com.idofast.admin.domain;
 
 import com.idofast.common.enums.NoticeStatusEnum;
+import com.idofast.common.enums.NoticeTypeEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -52,4 +55,14 @@ public class Notice extends BaseEntity
      * 发布人id
      */
     private Long publisherId;
+
+    /**
+     * 文章类型
+     */
+    private NoticeTypeEnum noticeType;
+
+
+    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '更新时间'",insertable = false)
+    @UpdateTimestamp
+    private LocalDateTime updateTime;
 }

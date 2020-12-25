@@ -39,18 +39,21 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
 
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/user/**")
-                .addPathPatterns("/notice/**")
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/user/detail/token")
                 .excludePathPatterns("/user/vcode/register")
-                .excludePathPatterns("/error/**");
+                .excludePathPatterns("/error/**")
+
+                .addPathPatterns("/notice/**")
+                .excludePathPatterns("/notice/detail/**");
 
         registry.addInterceptor(requestContextInterceptor)
                 .addPathPatterns("/**");
 
         registry.addInterceptor(authorityInterceptor)
                 .addPathPatterns("/**");
+
     }
 
 

@@ -4,6 +4,7 @@ package com.idofast.admin.controller.vo.request;
 import com.idofast.admin.domain.Notice;
 import com.idofast.admin.util.OrderByTimeUtil;
 import com.idofast.common.enums.NoticeStatusEnum;
+import com.idofast.common.enums.NoticeTypeEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +17,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel("文章公告的vo对象")
+@ApiModel("文章公告添加的vo对象")
 public class NoticeAddVo
 {
     @NotNull(message = "标题不能为空")
@@ -41,12 +42,18 @@ public class NoticeAddVo
     @Max(value = 2,message = "只能为0，1，2之间的数值")
     private Integer visibility;
 
+    @ApiModelProperty("文章类型；0 - 教程；1 - 公告；")
+    @Min(value = 0, message = "只能为0或1")
+    @Max(value = 1,message = "只能为0或1")
+    private Integer noticeType;
+
     public static Notice convertToNotice(NoticeAddVo noticeAddVo)
     {
         Notice notice = new Notice();
         BeanUtils.copyProperties(noticeAddVo, notice);
         notice.setStatus(NoticeStatusEnum.codeOf(noticeAddVo.getStatus()));
         notice.setVisibility(NoticeVisibilityEnum.codeOf(noticeAddVo.getVisibility()));
+        notice.setNoticeType(NoticeTypeEnum.codeOf(noticeAddVo.getNoticeType()));
         notice.setOrderValue(OrderByTimeUtil.getOrderByCurTime());
         notice.setStick(false);
         return notice;

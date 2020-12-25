@@ -30,7 +30,9 @@ public enum BusinessErrorEnum implements CommonError
 
     NEED_LOGIN(401, "没有登录的用户，请先登录"),
 
-    OUT_OF_AUTORITY(403, "非法权限操作")
+    OUT_OF_AUTORITY(403, "非法权限操作"),
+
+    NOTICE_NOT_EXIST(4004, "文章/公告 不存在")
 
 
     ;

@@ -131,7 +131,6 @@ public class UserController
         return ServerResponse.success();
     }
 
-    //TODO UserVo 和 User之间的转换已完成 8/24 8：00
     @ApiOperation(value = "更新用户信息")
     @PostMapping(value = "/update")
     public ServerResponse<String> update_information(UserVo userVoNew) throws BusinessException {

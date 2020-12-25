@@ -2,8 +2,12 @@ package com.idofast.admin.service;
 
 import com.idofast.admin.domain.Notice;
 import com.idofast.admin.repository.NoticeRepository;
+import com.idofast.admin.service.manager.NoticeManager;
+import com.idofast.common.enums.NoticeTypeEnum;
+import com.idofast.common.enums.NoticeVisibilityEnum;
 import com.idofast.common.response.error.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -17,21 +21,40 @@ public class NoticeService
     @Autowired
     private NoticeRepository noticeRepository;
 
+    @Autowired
+    private NoticeManager noticeManager;
+
 
     public void addNotice(Notice notice)
     {
         noticeRepository.save(notice);
     }
 
-    public List<Notice> getNoticeList()
+
+
+    public List<Notice> getAllNoticeForAdmin()
     {
-        List<Sort.Order> sortList = new ArrayList<>();
-        sortList.add(new Sort.Order(Sort.Direction.ASC, "stick"));
-        sortList.add(new Sort.Order(Sort.Direction.ASC, "order_value"));
-        Sort sort = Sort.by(sortList);
-        List<Notice> all = noticeRepository.findAll(sort);
-        return all;
+        return noticeManager.getNoticeList(null, null);
     }
+
+    /**
+     * 普通用户获取公告列表
+     */
+    public List<Notice> getAllNoticeForSimpleUser()
+    {
+        return noticeManager.getNoticeList(NoticeTypeEnum.NOTIFICATION, NoticeVisibilityEnum.USER);
+    }
+
+
+
+    /**
+     * 普通用户获取教程列表
+     */
+    public List<Notice> getAllInstructionForSimpleUser()
+    {
+        return noticeManager.getNoticeList(NoticeTypeEnum.INSTRUCTION, NoticeVisibilityEnum.USER);
+    }
+
 
     public Notice getNoticeById(Long id) throws BusinessException
     {

@@ -1,8 +1,8 @@
 #!/bin/zsh
 
-image_name="idf"
+image_name="idf-manager"
 
-container_name="idf-c"
+container_name="idf-manager-c"
 
 old_container=$(sudo docker ps -a | grep $container_name | awk '{print $1}')
 

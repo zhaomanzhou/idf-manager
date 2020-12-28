@@ -35,3 +35,7 @@ build/
 
 
 *.log
+
+application-docker.yaml
+application-local.yaml
+

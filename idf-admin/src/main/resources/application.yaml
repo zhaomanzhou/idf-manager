@@ -30,6 +30,12 @@ spring:
   profiles:
     active: local
 
+email:
+  username: zmzsstreet@163.com
+  senderName: IdoFast加速器
+
+
+
 token:
   secret: nwafu
   # 单位 分钟

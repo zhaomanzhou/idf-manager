@@ -87,7 +87,7 @@ public class UserService
         userForSearch.setEmail(email);
         userForSearch.setDeleted(DeletedEnum.NORMAL );
         Optional<User> one = userRepository.findOne(Example.of(userForSearch));
-        if(one.isEmpty())
+        if(!one.isPresent())
         {
             log.warn("A user {} which is not exist tried to login", email);
             throw new BusinessException(BusinessErrorEnum.INVALID_USERNAME_OR_PASSWORD);

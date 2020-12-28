@@ -32,17 +32,17 @@ public class NoticeManager
      * 返回的是可见的notice列表
      * @return
      */
-    public List<Notice> getNoticeList(NoticeTypeEnum noticeTypeEnum, NoticeVisibilityEnum noticeVisibilityEnum)
+    public List<Notice> getNoticeList(NoticeTypeEnum noticeTypeEnum, NoticeVisibilityEnum noticeVisibilityEnum, NoticeStatusEnum noticeStatusEnum)
     {
         List<Sort.Order> sortList = new ArrayList<>();
-        sortList.add(new Sort.Order(Sort.Direction.ASC, "stick"));
-        sortList.add(new Sort.Order(Sort.Direction.ASC, "orderValue"));
+        sortList.add(new Sort.Order(Sort.Direction.DESC, "stick"));
+        sortList.add(new Sort.Order(Sort.Direction.DESC, "orderValue"));
         Sort sort = Sort.by(sortList);
 
         Notice notice = new Notice();
         Optional.ofNullable(noticeTypeEnum).ifPresent(notice::setNoticeType);
         Optional.ofNullable(noticeVisibilityEnum).ifPresent(notice::setVisibility);
-        notice.setStatus(NoticeStatusEnum.PUBLISHED);
+        Optional.ofNullable(noticeStatusEnum).ifPresent(notice::setStatus);
         Example<Notice> example = Example.of(notice);
         List<Notice> all = noticeRepository.findAll(example, sort);
         return all;

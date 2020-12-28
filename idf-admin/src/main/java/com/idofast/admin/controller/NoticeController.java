@@ -3,23 +3,29 @@ package com.idofast.admin.controller;
 import com.idofast.admin.annotation.AuthRole;
 import com.idofast.admin.config.context.RequestContext;
 import com.idofast.admin.controller.vo.request.NoticeAddVo;
-import com.idofast.admin.controller.vo.response.NoticeResponseVo;
+import com.idofast.admin.controller.vo.request.NoticeModifyVo;
+import com.idofast.admin.controller.vo.response.NoticeAdminResponseVo;
+import com.idofast.admin.controller.vo.response.NoticeUserResponseVo;
 import com.idofast.admin.domain.Notice;
 import com.idofast.admin.domain.User;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.NoticeService;
 import com.idofast.admin.service.UserService;
 import com.idofast.common.enums.NoticeStatusEnum;
+import com.idofast.common.enums.NoticeTypeEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.response.error.BusinessException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,21 +54,34 @@ public class NoticeController
         return ServerResponse.success();
     }
 
+    @PostMapping("/modify")
+    @ApiOperation("添加公告")
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<String> modifyNotice(@Validated NoticeModifyVo noticeModifyVo) throws BusinessException
+    {
+        Notice notice = NoticeModifyVo.convertToNotice(noticeModifyVo);
+        noticeService.modifyNoticeContent(notice);
+        return ServerResponse.success();
+    }
+
+
     @GetMapping("/detail/{id}")
     @ApiOperation("根据id获取文章内容")
-    public ServerResponse<NoticeResponseVo> getNoticeById(@PathVariable("id") Long id) throws BusinessException
+    public ServerResponse<NoticeUserResponseVo> getNoticeById(@PathVariable("id") Long id) throws BusinessException
     {
         Notice noticeById = noticeService.getNoticeById(id);
-        if(noticeById.getStatus() != NoticeStatusEnum.PUBLISHED)
+
+
+
+        if(noticeById.getStatus() == NoticeStatusEnum.PUBLISHED)
         {
-            throw new BusinessException(BusinessErrorEnum.NOTICE_NOT_EXIST);
+            //所有人可见，直接返回
+            if(noticeById.getVisibility() == NoticeVisibilityEnum.ALL)
+            {
+                return ServerResponse.success(NoticeUserResponseVo.convertFrom(noticeById));
+            }
         }
 
-        //所有人可见，直接返回
-        if(noticeById.getVisibility() == NoticeVisibilityEnum.ALL)
-        {
-            return ServerResponse.success(NoticeResponseVo.convertFrom(noticeById));
-        }
 
         String token = RequestContext.getToken();
 
@@ -76,9 +95,9 @@ public class NoticeController
             throw new BusinessException(BusinessErrorEnum.NEED_LOGIN);
         }
 
-        if(noticeById.getVisibility() == NoticeVisibilityEnum.USER)
+        if(noticeById.getVisibility() == NoticeVisibilityEnum.USER && noticeById.getStatus() == NoticeStatusEnum.PUBLISHED)
         {
-            return ServerResponse.success(NoticeResponseVo.convertFrom(noticeById));
+            return ServerResponse.success(NoticeUserResponseVo.convertFrom(noticeById));
         }
 
         //此处权限只能是管理员权限
@@ -87,17 +106,69 @@ public class NoticeController
             throw new BusinessException(BusinessErrorEnum.OUT_OF_AUTORITY);
         }
 
-        return ServerResponse.success(NoticeResponseVo.convertFrom(noticeById));
+        return ServerResponse.success(NoticeUserResponseVo.convertFrom(noticeById));
     }
 
     @GetMapping("/list/user/notification")
     @ApiOperation("获取所有公告列表")
-    public ServerResponse<List<NoticeResponseVo>> getNotificationList()
+    public ServerResponse<List<NoticeUserResponseVo>> getNotificationList()
     {
         List<Notice> noticeList = noticeService.getAllNoticeForSimpleUser();
-        List<NoticeResponseVo>  noticeListVo= noticeList.stream().map(NoticeResponseVo::convertFrom)
+        List<NoticeUserResponseVo>  noticeListVo= noticeList.stream().map(NoticeUserResponseVo::convertFrom)
                 .collect(Collectors.toList());
         return ServerResponse.success(noticeListVo);
+    }
+
+    @GetMapping("/list/user/instruction")
+    @ApiOperation("获取所有教程列表")
+    public ServerResponse<List<NoticeUserResponseVo>> getInstructionList()
+    {
+        List<Notice> noticeList = noticeService.getAllInstructionForSimpleUser();
+        List<NoticeUserResponseVo>  noticeListVo= noticeList.stream().map(NoticeUserResponseVo::convertFrom)
+                .collect(Collectors.toList());
+        return ServerResponse.success(noticeListVo);
+    }
+
+    @GetMapping("/list/user/knowledge")
+    @ApiOperation("获取所有科普列表")
+    public ServerResponse<List<NoticeUserResponseVo>> getKnowledgeList()
+    {
+        List<Notice> noticeList = noticeService.getAllKnowledgeForSimpleUser();
+        List<NoticeUserResponseVo>  noticeListVo= noticeList.stream().map(NoticeUserResponseVo::convertFrom)
+                .collect(Collectors.toList());
+        return ServerResponse.success(noticeListVo);
+    }
+    @GetMapping("/list/admin")
+    @ApiOperation("管理员获取所有公告内容")
+    @ApiImplicitParams(
+            @ApiImplicitParam(paramType = "int", name = "noticeType", value = "公告类型；0-教程；1-公告；2-科普", required = true)
+    )
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<List<NoticeAdminResponseVo>>  getNoticeList(@NotNull Integer noticeType) throws BusinessException
+    {
+        if(noticeType < 0 || noticeType > 2)
+        {
+            throw new BusinessException("非法noticeType");
+        }
+
+        List<Notice> allNoticeForAdmin = noticeService.getAllNoticeForAdmin(NoticeTypeEnum.codeOf(noticeType));
+        List<NoticeAdminResponseVo>  noticeListVo= allNoticeForAdmin.stream().map(NoticeAdminResponseVo::convertFrom)
+                .collect(Collectors.toList());
+        return ServerResponse.success(noticeListVo);
+    }
+
+
+    @PostMapping("/modify/stickAndOrderValue")
+    @ApiOperation("修改公告置顶和orderValue")
+    @ApiImplicitParams(
+            @ApiImplicitParam(paramType = "int", name = "noticeType", value = "公告类型；0-教程；1-公告；2-科普", required = true)
+    )
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<String>  getNoticeList(@NotNull Long id, Boolean stick, Long orderValue) throws BusinessException
+    {
+        noticeService.modifyNoticeStickAndOrderValue(id, stick, orderValue);
+
+        return ServerResponse.success();
     }
 
 }

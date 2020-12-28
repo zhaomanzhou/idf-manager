@@ -1,4 +1,6 @@
 package com.idofast.admin.service;
+import com.idofast.common.enums.NoticeStatusEnum;
+import java.time.LocalDateTime;
 
 import com.idofast.admin.domain.Notice;
 import com.idofast.admin.repository.NoticeRepository;
@@ -30,11 +32,47 @@ public class NoticeService
         noticeRepository.save(notice);
     }
 
-
-
-    public List<Notice> getAllNoticeForAdmin()
+    /**
+     * 文章内容修改
+     */
+    public void modifyNoticeContent(Notice notice) throws BusinessException
     {
-        return noticeManager.getNoticeList(null, null);
+        Optional<Notice> originNoticeOptional = noticeRepository.findById(notice.getId());
+        if(!originNoticeOptional.isPresent())
+        {
+            throw new BusinessException("原文章不存在");
+        }
+        Notice originNotice = originNoticeOptional.get();
+        originNotice.setTitle(notice.getTitle());
+        originNotice.setContentMarkdown(notice.getContentMarkdown());
+        originNotice.setContentHtml(notice.getContentHtml());
+        originNotice.setVisibility(notice.getVisibility());
+        originNotice.setNoticeType(notice.getNoticeType());
+        noticeRepository.save(originNotice);
+    }
+
+    /**
+     * 文章置顶和orderValue修改
+     */
+    public void modifyNoticeStickAndOrderValue(Long id, Boolean stick, Long orderValue) throws BusinessException
+    {
+        Optional<Notice> originNoticeOptional = noticeRepository.findById(id);
+        if(!originNoticeOptional.isPresent())
+        {
+            throw new BusinessException("原文章不存在");
+        }
+        Notice originNotice = originNoticeOptional.get();
+        Optional.ofNullable(stick).ifPresent(originNotice::setStick);
+        Optional.ofNullable(orderValue).ifPresent(originNotice::setOrderValue);
+        noticeRepository.save(originNotice);
+    }
+
+    /**
+     *管理员获取公告
+     */
+    public List<Notice> getAllNoticeForAdmin(NoticeTypeEnum noticeType)
+    {
+        return noticeManager.getNoticeList(noticeType, null, null);
     }
 
     /**
@@ -42,7 +80,7 @@ public class NoticeService
      */
     public List<Notice> getAllNoticeForSimpleUser()
     {
-        return noticeManager.getNoticeList(NoticeTypeEnum.NOTIFICATION, NoticeVisibilityEnum.USER);
+        return noticeManager.getNoticeList(NoticeTypeEnum.NOTIFICATION, NoticeVisibilityEnum.USER, NoticeStatusEnum.PUBLISHED);
     }
 
 
@@ -52,8 +90,18 @@ public class NoticeService
      */
     public List<Notice> getAllInstructionForSimpleUser()
     {
-        return noticeManager.getNoticeList(NoticeTypeEnum.INSTRUCTION, NoticeVisibilityEnum.USER);
+        return noticeManager.getNoticeList(NoticeTypeEnum.INSTRUCTION, NoticeVisibilityEnum.USER, NoticeStatusEnum.PUBLISHED);
     }
+
+
+    /**
+     * 普通用户获取科普列表
+     */
+    public List<Notice> getAllKnowledgeForSimpleUser()
+    {
+        return noticeManager.getNoticeList(NoticeTypeEnum.KNOWLEDGE, NoticeVisibilityEnum.USER, NoticeStatusEnum.PUBLISHED);
+    }
+
 
 
     public Notice getNoticeById(Long id) throws BusinessException

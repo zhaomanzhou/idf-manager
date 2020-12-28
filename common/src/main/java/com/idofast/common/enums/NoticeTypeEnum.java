@@ -14,6 +14,7 @@ public enum  NoticeTypeEnum
 
     INSTRUCTION(0, "安装教程"),  //教程
     NOTIFICATION(1, "通知公告"), //通知
+    KNOWLEDGE(2, "科普"),       //科普
     ;
     private int code;
     private String message;
@@ -39,6 +40,7 @@ public enum  NoticeTypeEnum
         {
             case 0: return INSTRUCTION;
             case 1: return NOTIFICATION;
+            case 2: return KNOWLEDGE;
         }
         return null;
     }

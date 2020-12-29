@@ -171,4 +171,18 @@ public class NoticeController
         return ServerResponse.success();
     }
 
+
+    @PostMapping("/modify/down/{id}")
+    @ApiOperation("下架公告")
+    @ApiImplicitParams(
+            @ApiImplicitParam(paramType = "int", name = "noticeType", value = "公告类型；0-教程；1-公告；2-科普", required = true)
+    )
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<String>  downNotice(@PathVariable Long id) throws BusinessException
+    {
+//        noticeService.modifyNoticeStickAndOrderValue(id, stick, orderValue);
+
+        return ServerResponse.success();
+    }
+
 }

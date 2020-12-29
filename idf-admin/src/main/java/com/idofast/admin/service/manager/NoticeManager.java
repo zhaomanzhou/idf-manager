@@ -8,6 +8,7 @@ import com.idofast.common.enums.NoticeVisibilityEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,10 +42,16 @@ public class NoticeManager
 
         Notice notice = new Notice();
         Optional.ofNullable(noticeTypeEnum).ifPresent(notice::setNoticeType);
-        Optional.ofNullable(noticeVisibilityEnum).ifPresent(notice::setVisibility);
         Optional.ofNullable(noticeStatusEnum).ifPresent(notice::setStatus);
         Example<Notice> example = Example.of(notice);
-        List<Notice> all = noticeRepository.findAll(example, sort);
+
+        List<Notice> all = noticeRepository.findAll(noticeRepository.visibilityLessSpecification(noticeVisibilityEnum)
+                .and(noticeRepository.exampleSpecification(example))
+                , sort);
+
+
         return all;
     }
+
+
 }

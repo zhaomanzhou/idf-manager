@@ -2,16 +2,31 @@ package com.idofast.admin.domain;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 /**
  * 套餐
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class Package extends BaseEntity
+public class Package
 {
+
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(columnDefinition="bigint")
+    protected Long id;
+
+    @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
+    @CreationTimestamp
+    protected LocalDateTime createTime;
 
 
     private String name;

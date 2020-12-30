@@ -4,21 +4,30 @@ import com.idofast.common.enums.NoticeStatusEnum;
 import com.idofast.common.enums.NoticeTypeEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Notice extends BaseEntity
+public class Notice
 {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(columnDefinition="bigint")
+    protected Long id;
+
+    @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
+    @CreationTimestamp
+    protected LocalDateTime createTime;
+
     /**
      * 公告标题
      */
@@ -36,10 +45,12 @@ public class Notice extends BaseEntity
     /**
      * 公告状态：上线；下线；草稿
      */
+    @Convert(converter = NoticeStatusEnum.Converter.class)
     private NoticeStatusEnum status;
     /**
      * 公告可见范围；全部；注册用户
      */
+    @Convert(converter = NoticeVisibilityEnum.Converter.class)
     private NoticeVisibilityEnum visibility;
     /**
      * 公告是否置顶
@@ -59,6 +70,7 @@ public class Notice extends BaseEntity
     /**
      * 文章类型
      */
+    @Convert(converter = NoticeTypeEnum.Converter.class)
     private NoticeTypeEnum noticeType;
 
 

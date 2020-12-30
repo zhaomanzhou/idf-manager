@@ -47,7 +47,14 @@ switch:
 
 
 
-
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
 
 
 

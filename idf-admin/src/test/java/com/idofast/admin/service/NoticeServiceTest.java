@@ -3,6 +3,7 @@ package com.idofast.admin.service;
 import com.idofast.admin.domain.Notice;
 import com.idofast.admin.util.OrderByTimeUtil;
 import com.idofast.common.enums.NoticeStatusEnum;
+import com.idofast.common.enums.NoticeTypeEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,11 +36,17 @@ public class NoticeServiceTest
                         "- 彻底反腐地方\n" +
                         "- 方式方法")
                 .stick(false)
-                .title("win7教程")
+                .title("win7教程1")
+                .noticeType(NoticeTypeEnum.INSTRUCTION)
                 .status(NoticeStatusEnum.DRAFT)
                 .orderValue(OrderByTimeUtil.getOrderByCurTime())
                 .visibility(NoticeVisibilityEnum.ALL)
                 .build();
+        notice.setId(10L);
         noticeService.addNotice(notice);
+    }
+
+    public void testModify(){
+
     }
 }

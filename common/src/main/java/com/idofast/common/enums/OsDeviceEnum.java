@@ -1,6 +1,9 @@
 package com.idofast.common.enums;
 
-public enum OsDeviceEnum
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
+public enum OsDeviceEnum implements IBaseEnum<OsDeviceEnum>
 {
     ANDROID(0b01, "安卓"),
     IOS(0b010, "IOS"),
@@ -8,22 +11,36 @@ public enum OsDeviceEnum
     WIN7(0b01000, "win7"),
     MAC(0b010000, "苹果电脑");
 
-    private int code;
-    private String value;
-
-    OsDeviceEnum(int code, String value)
+    OsDeviceEnum(int code, String msg)
     {
         this.code = code;
-        this.value = value;
+        this.msg = msg;
     }
 
-    public int getCode()
+    private final Integer code;
+    private final String msg;
+
+    @Override
+    public Integer getCode()
     {
         return code;
     }
 
-    public String getValue()
+    @Override
+    public String getMsg()
     {
-        return value;
+        return msg;
+    }
+
+
+    public static OsDeviceEnum ofCode(Integer code){
+        return (OsDeviceEnum) IBaseEnum.ofCodeII(code, OsDeviceEnum.class);
+    }
+
+    public static class Converter extends BaseAttributeConvert<OsDeviceEnum>
+    {
+        public Converter(){
+            super(OsDeviceEnum.class);
+        }
     }
 }

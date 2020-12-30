@@ -1,12 +1,11 @@
 package com.idofast.admin.domain;
 
-import com.idofast.admin.domain.enumconvert.DeletedEnumConvert;
-import com.idofast.admin.domain.enumconvert.RoleEnumConvert;
 import com.idofast.admin.domain.enumconvert.UserStatusConvert;
 import com.idofast.common.enums.DeletedEnum;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.enums.UserStatusEnum;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -19,24 +18,32 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(uniqueConstraints=@UniqueConstraint(columnNames="email"))
-public class User extends BaseEntity implements Serializable
+public class User implements Serializable
 {
+
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(columnDefinition="bigint")
+    protected Long id;
+
+    @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
+    @CreationTimestamp
+    protected LocalDateTime createTime;
 
     private String nickname;
 
     @Column(columnDefinition = "",unique = true, nullable = false)
     private String email;
 
-    @Column(name = "avatar_url")
     private String avatarUrl;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    @Convert(converter = RoleEnumConvert.class)
+    @Convert(converter = RoleEnum.Converter.class)
     private RoleEnum role;
 
 
@@ -62,7 +69,7 @@ public class User extends BaseEntity implements Serializable
     @Transient
     private String vCode;
 
-    @Convert(converter = DeletedEnumConvert.class)
+    @Convert(converter = DeletedEnum.Converter.class)
     private DeletedEnum deleted;
 
 }

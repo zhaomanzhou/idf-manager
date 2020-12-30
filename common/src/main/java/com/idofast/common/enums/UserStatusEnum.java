@@ -1,38 +1,44 @@
 package com.idofast.common.enums;
 
-public enum  UserStatusEnum
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
+public enum  UserStatusEnum implements IBaseEnum<UserStatusEnum>
 {
     NORMAL(0, "正常"),
     LOGOFF(0, "正常"),
     FORBIDDEN(2, "封禁");
 
-    UserStatusEnum(int code, String value)
+    UserStatusEnum(int code, String msg)
     {
         this.code = code;
-        this.value = value;
+        this.msg = msg;
     }
 
-    private int code;
-    private String value;
+    private final Integer code;
+    private final String msg;
 
+    @Override
     public Integer getCode()
     {
-        return this.code;
+        return code;
+    }
+
+    @Override
+    public String getMsg()
+    {
+        return msg;
     }
 
 
-    public String getValue()
-    {
-        return this.value;
+    public static UserStatusEnum ofCode(Integer code){
+        return (UserStatusEnum) IBaseEnum.ofCodeII(code, UserStatusEnum.class);
     }
 
-    public static UserStatusEnum ofCode(int code)
+    public static class Converter extends BaseAttributeConvert<UserStatusEnum>
     {
-        switch (code)
-        {
-            case 0: return NORMAL;
-            case 1: return FORBIDDEN;
-            default:throw new IllegalArgumentException("非法的user statuscode");
+        public Converter(){
+            super(UserStatusEnum.class);
         }
     }
 }

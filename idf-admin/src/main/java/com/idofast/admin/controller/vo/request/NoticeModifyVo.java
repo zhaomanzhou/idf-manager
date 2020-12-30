@@ -52,8 +52,8 @@ public class NoticeModifyVo
     {
         Notice notice = new Notice();
         BeanUtils.copyProperties(noticeAddVo, notice);
-        notice.setVisibility(NoticeVisibilityEnum.codeOf(noticeAddVo.getVisibility()));
-        notice.setNoticeType(NoticeTypeEnum.codeOf(noticeAddVo.getNoticeType()));
+        notice.setVisibility(NoticeVisibilityEnum.ofCode(noticeAddVo.getVisibility()));
+        notice.setNoticeType(NoticeTypeEnum.ofCode(noticeAddVo.getNoticeType()));
         return notice;
     }
 

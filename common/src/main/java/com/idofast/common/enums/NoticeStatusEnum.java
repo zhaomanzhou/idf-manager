@@ -1,39 +1,45 @@
 package com.idofast.common.enums;
 
-public enum NoticeStatusEnum
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
+public enum NoticeStatusEnum implements IBaseEnum<NoticeStatusEnum>
 {
     DRAFT(0, "未发布"),
     PUBLISHED(1, "已发布"),
     DOWN(2, "下架"),
 
     ;
-    private int code;
-    private String message;
-
-    NoticeStatusEnum(int code, String message)
+    NoticeStatusEnum(int code, String msg)
     {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
     }
 
-    public int getCode()
+    private final Integer code;
+    private final String msg;
+
+    @Override
+    public Integer getCode()
     {
         return code;
     }
 
-    public String getMessage()
+    @Override
+    public String getMsg()
     {
-        return message;
+        return msg;
     }
 
-    public static NoticeStatusEnum codeOf(Integer code)
+
+    public static NoticeStatusEnum ofCode(Integer code){
+        return (NoticeStatusEnum) IBaseEnum.ofCodeII(code, NoticeStatusEnum.class);
+    }
+
+    public static class Converter extends BaseAttributeConvert<NoticeStatusEnum>
     {
-        switch (code)
-        {
-            case 0: return DRAFT;
-            case 1: return PUBLISHED;
-            case 2: return DOWN;
+        public Converter(){
+            super(NoticeStatusEnum.class);
         }
-        return null;
     }
 }

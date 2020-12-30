@@ -105,7 +105,6 @@ public class NoticeController
         {
             throw new BusinessException(BusinessErrorEnum.OUT_OF_AUTORITY);
         }
-
         return ServerResponse.success(NoticeUserResponseVo.convertFrom(noticeById));
     }
 
@@ -151,7 +150,7 @@ public class NoticeController
             throw new BusinessException("非法noticeType");
         }
 
-        List<Notice> allNoticeForAdmin = noticeService.getAllNoticeForAdmin(NoticeTypeEnum.codeOf(noticeType));
+        List<Notice> allNoticeForAdmin = noticeService.getAllNoticeForAdmin(NoticeTypeEnum.ofCode(noticeType));
         List<NoticeAdminResponseVo>  noticeListVo= allNoticeForAdmin.stream().map(NoticeAdminResponseVo::convertFrom)
                 .collect(Collectors.toList());
         return ServerResponse.success(noticeListVo);
@@ -175,13 +174,41 @@ public class NoticeController
     @PostMapping("/modify/down/{id}")
     @ApiOperation("下架公告")
     @ApiImplicitParams(
-            @ApiImplicitParam(paramType = "int", name = "noticeType", value = "公告类型；0-教程；1-公告；2-科普", required = true)
+            @ApiImplicitParam(paramType = "long", name = "id", value = "公告的id", required = true)
     )
     @AuthRole(RoleEnum.ADMIN)
     public ServerResponse<String>  downNotice(@PathVariable Long id) throws BusinessException
     {
-//        noticeService.modifyNoticeStickAndOrderValue(id, stick, orderValue);
 
+        noticeService.setNoticeStatus(id, NoticeStatusEnum.DOWN);
+
+        return ServerResponse.success();
+    }
+
+    @PostMapping("/modify/up/{id}")
+    @ApiOperation("上架公告")
+    @ApiImplicitParams(
+            @ApiImplicitParam(paramType = "long", name = "id", value = "公告的id", required = true)
+    )
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<String>  putUpNotice(@PathVariable Long id) throws BusinessException
+    {
+
+        noticeService.setNoticeStatus(id, NoticeStatusEnum.PUBLISHED);
+        return ServerResponse.success();
+    }
+
+
+    @PostMapping("/modify/delete/{id}")
+    @ApiOperation("下架公告")
+    @ApiImplicitParams(
+            @ApiImplicitParam(paramType = "long", name = "id", value = "公告的id", required = true)
+    )
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<String>  deleteNotice(@PathVariable Long id) throws BusinessException
+    {
+
+        noticeService.deleteNotice(id);
         return ServerResponse.success();
     }
 

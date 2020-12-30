@@ -1,30 +1,45 @@
 package com.idofast.common.enums;
 
-public enum EmailTypeEnum implements IBaseEnum
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
+public enum EmailTypeEnum implements IBaseEnum<EmailTypeEnum>
 {
     REGISTER_VCODE(1, "注册验证码"),
     ACCOUNT_EXPIRE(2, "帐号过期提醒");
 
 
-    protected Integer code;
-    protected String value;
-
-    EmailTypeEnum(Integer code, String value)
+    EmailTypeEnum(int code, String msg)
     {
         this.code = code;
-        this.value = value;
+        this.msg = msg;
     }
+
+    private final Integer code;
+    private final String msg;
 
     @Override
     public Integer getCode()
     {
-        return this.code;
+        return code;
     }
 
     @Override
-    public String getValue()
+    public String getMsg()
     {
-        return this.value;
+        return msg;
+    }
+
+
+    public static EmailTypeEnum ofCode(Integer code){
+        return (EmailTypeEnum) IBaseEnum.ofCodeII(code, EmailTypeEnum.class);
+    }
+
+    public static class Converter extends BaseAttributeConvert<EmailTypeEnum>
+    {
+        public Converter(){
+            super(EmailTypeEnum.class);
+        }
     }
 
 

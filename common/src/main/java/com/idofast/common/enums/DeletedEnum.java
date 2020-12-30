@@ -1,29 +1,45 @@
 package com.idofast.common.enums;
 
-public enum  DeletedEnum
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
+public enum  DeletedEnum implements IBaseEnum<DeletedEnum>
 {
-    NORMAL(0),
-    DELETED(1);
+    NORMAL(0, "正常"),
+    DELETED(1, "已删除");
 
-    private int code;
 
-    DeletedEnum(int code)
+    DeletedEnum(int code, String msg)
     {
         this.code = code;
+        this.msg = msg;
     }
 
-    public int getCode()
+    private final Integer code;
+    private final String msg;
+
+    @Override
+    public Integer getCode()
     {
         return code;
     }
 
-    public static DeletedEnum ofCode(int code)
+    @Override
+    public String getMsg()
     {
-        switch (code)
-        {
-            case 0: return NORMAL;
-            case 1: return DELETED;
-            default:throw new IllegalArgumentException("deleted statuscode");
+        return msg;
+    }
+
+
+    public static DeletedEnum ofCode(Integer code){
+        return (DeletedEnum) IBaseEnum.ofCodeII(code, DeletedEnum.class);
+    }
+
+    public static class Converter extends BaseAttributeConvert<DeletedEnum>
+    {
+        public Converter(){
+            super(DeletedEnum.class);
         }
     }
+
 }

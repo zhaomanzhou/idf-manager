@@ -30,7 +30,7 @@ public class NoticeManager
 
     /**
      * 获取notice列表，通用方法
-     * 返回的是可见的notice列表
+     * 返回的是可见的notice列表,即visibility大于等于传入参数的值
      * @return
      */
     public List<Notice> getNoticeList(NoticeTypeEnum noticeTypeEnum, NoticeVisibilityEnum noticeVisibilityEnum, NoticeStatusEnum noticeStatusEnum)

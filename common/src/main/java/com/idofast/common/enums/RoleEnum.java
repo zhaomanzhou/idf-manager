@@ -1,36 +1,45 @@
 package com.idofast.common.enums;
 
-public enum RoleEnum implements IBaseEnum {
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
+public enum RoleEnum implements IBaseEnum<RoleEnum>
+{
     ADMIN(0, "admin"),
     PLAIN(1,"user");
 
-    RoleEnum(int code, String value)
+
+    RoleEnum(int code, String msg)
     {
         this.code = code;
-        this.value = value;
+        this.msg = msg;
     }
 
-    private int code;
-    private String value;
+    private final Integer code;
+    private final String msg;
 
+    @Override
     public Integer getCode()
     {
-        return this.code;
+        return code;
+    }
+
+    @Override
+    public String getMsg()
+    {
+        return msg;
     }
 
 
-    public String getValue()
-    {
-        return this.value;
+    public static RoleEnum ofCode(Integer code){
+        return (RoleEnum) IBaseEnum.ofCodeII(code, RoleEnum.class);
     }
 
-    public static RoleEnum ofCode(int code)
+    public static class Converter extends BaseAttributeConvert<RoleEnum>
     {
-        switch (code)
-        {
-            case 0: return ADMIN;
-            case 1: return PLAIN;
-            default:throw new IllegalArgumentException("非法的role code");
+        public Converter(){
+            super(RoleEnum.class);
         }
     }
+
 }

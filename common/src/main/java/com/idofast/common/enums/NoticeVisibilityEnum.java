@@ -1,38 +1,44 @@
 package com.idofast.common.enums;
 
-public enum NoticeVisibilityEnum
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
+public enum NoticeVisibilityEnum implements IBaseEnum<NoticeVisibilityEnum>
 {
     ALL(0, "所有人可见"),
     USER(1, "所有注册用户可见"),
     ADMIN(2,"只有管理员可见")
     ;
-    private int code;
-    private String message;
-
-    NoticeVisibilityEnum(int code, String message)
+    NoticeVisibilityEnum(int code, String msg)
     {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
     }
 
-    public int getCode()
+    private final Integer code;
+    private final String msg;
+
+    @Override
+    public Integer getCode()
     {
         return code;
     }
 
-    public String getMessage()
+    @Override
+    public String getMsg()
     {
-        return message;
+        return msg;
     }
 
-    public static NoticeVisibilityEnum codeOf(Integer code)
+
+    public static NoticeVisibilityEnum ofCode(Integer code){
+        return (NoticeVisibilityEnum) IBaseEnum.ofCodeII(code, NoticeVisibilityEnum.class);
+    }
+
+    public static class Converter extends BaseAttributeConvert<NoticeVisibilityEnum>
     {
-        switch (code)
-        {
-            case 0: return ALL;
-            case 1: return USER;
-            case 2: return ADMIN;
+        public Converter(){
+            super(NoticeVisibilityEnum.class);
         }
-        return null;
     }
 }

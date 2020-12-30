@@ -3,20 +3,28 @@ package com.idofast.admin.domain;
 
 import com.idofast.common.enums.EmailTypeEnum;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class EmailSendHistory extends BaseEntity
+public class EmailSendHistory
 {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(columnDefinition="bigint")
+    protected Long id;
+
+    @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
+    @CreationTimestamp
+    protected LocalDateTime createTime;
 
     private String content;
     private String receiver;

@@ -1,6 +1,6 @@
 package com.idofast.admin.domain.enumconvert;
 
-import com.idofast.common.enums.IBaseEnum;
+import com.idofast.common.enums.base.IBaseEnum;
 import com.idofast.common.enums.RoleEnum;
 
 import javax.persistence.AttributeConverter;

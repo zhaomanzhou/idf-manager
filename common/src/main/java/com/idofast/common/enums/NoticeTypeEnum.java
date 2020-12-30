@@ -1,5 +1,8 @@
 package com.idofast.common.enums;
 
+import com.idofast.common.enums.base.BaseAttributeConvert;
+import com.idofast.common.enums.base.IBaseEnum;
+
 /**
  * @author zhaomanzhou
  * @version 1.0
@@ -8,7 +11,7 @@ package com.idofast.common.enums;
  * 公告类型
  */
 
-public enum  NoticeTypeEnum
+public enum  NoticeTypeEnum implements IBaseEnum<NoticeTypeEnum>
 {
 
 
@@ -16,32 +19,36 @@ public enum  NoticeTypeEnum
     NOTIFICATION(1, "通知公告"), //通知
     KNOWLEDGE(2, "科普"),       //科普
     ;
-    private int code;
-    private String message;
-
-    NoticeTypeEnum(int code, String message)
+    NoticeTypeEnum(int code, String msg)
     {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
     }
-    public int getCode()
+
+    private final Integer code;
+    private final String msg;
+
+    @Override
+    public Integer getCode()
     {
         return code;
     }
 
-    public String getMessage()
+    @Override
+    public String getMsg()
     {
-        return message;
+        return msg;
     }
 
-    public static NoticeTypeEnum codeOf(Integer code)
+
+    public static NoticeTypeEnum ofCode(Integer code){
+        return (NoticeTypeEnum) IBaseEnum.ofCodeII(code, NoticeTypeEnum.class);
+    }
+
+    public static class Converter extends BaseAttributeConvert<NoticeTypeEnum>
     {
-        switch (code)
-        {
-            case 0: return INSTRUCTION;
-            case 1: return NOTIFICATION;
-            case 2: return KNOWLEDGE;
+        public Converter(){
+            super(NoticeTypeEnum.class);
         }
-        return null;
     }
 }

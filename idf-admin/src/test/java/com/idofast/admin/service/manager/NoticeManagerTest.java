@@ -1,6 +1,8 @@
 package com.idofast.admin.service.manager;
 
 import com.idofast.admin.domain.Notice;
+import com.idofast.admin.repository.NoticeRepository;
+import com.idofast.common.enums.NoticeStatusEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +26,9 @@ public class NoticeManagerTest
     @Autowired
     private NoticeManager noticeManager;
 
+    @Autowired
+    private NoticeRepository noticeRepository;
+
     @Test
     public void getNoticeList()
     {
@@ -31,5 +36,10 @@ public class NoticeManagerTest
         noticeList.stream()
                 .map(Notice::getId)
                 .forEach(System.out::println);
+    }
+
+    @Test
+    public void modifyStatus(){
+        noticeRepository.updateStatusById(1L, NoticeStatusEnum.DOWN);
     }
 }

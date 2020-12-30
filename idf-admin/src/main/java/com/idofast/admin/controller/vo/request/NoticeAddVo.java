@@ -51,9 +51,9 @@ public class NoticeAddVo
     {
         Notice notice = new Notice();
         BeanUtils.copyProperties(noticeAddVo, notice);
-        notice.setStatus(NoticeStatusEnum.codeOf(noticeAddVo.getStatus()));
-        notice.setVisibility(NoticeVisibilityEnum.codeOf(noticeAddVo.getVisibility()));
-        notice.setNoticeType(NoticeTypeEnum.codeOf(noticeAddVo.getNoticeType()));
+        notice.setStatus(NoticeStatusEnum.ofCode(noticeAddVo.getStatus()));
+        notice.setVisibility(NoticeVisibilityEnum.ofCode(noticeAddVo.getVisibility()));
+        notice.setNoticeType(NoticeTypeEnum.ofCode(noticeAddVo.getNoticeType()));
         notice.setOrderValue(OrderByTimeUtil.getOrderByCurTime());
         notice.setStick(false);
         return notice;

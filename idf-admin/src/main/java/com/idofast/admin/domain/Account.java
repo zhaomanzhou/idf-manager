@@ -2,14 +2,27 @@ package com.idofast.admin.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class Account extends BaseEntity
+public class Account
 {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(columnDefinition="bigint")
+    protected Long id;
+
+    @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
+    @CreationTimestamp
+    protected LocalDateTime createTime;
 
     /**
      * 用户等级; 默认0
@@ -21,6 +34,9 @@ public class Account extends BaseEntity
      */
     private String accountNo;
 
+    /**
+     * 限速
+     */
     private Long speed;
 
     /**
@@ -42,6 +58,7 @@ public class Account extends BaseEntity
      * 过期时间
      */
     private LocalDateTime expireDate;
+
 
     private Long bundleType;
 

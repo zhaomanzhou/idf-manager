@@ -114,4 +114,22 @@ public class NoticeService
         }
         throw new BusinessException("该文章不存在");
     }
+
+
+    /**
+     * 改变notice的状态，下架，或上架
+     */
+    public void setNoticeStatus(Long id, NoticeStatusEnum noticeStatusEnum)
+    {
+        noticeRepository.updateStatusById(id, noticeStatusEnum);
+    }
+
+
+    public void deleteNotice(Long id)
+    {
+        noticeRepository.deleteById(id);
+    }
+
+
+
 }

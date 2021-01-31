@@ -49,13 +49,15 @@ public class BundleVo
     @ApiModelProperty("套餐的描述")
     private String description;
 
+    @ApiModelProperty("套餐的价格")
+    private Long price;
+
     public static BundleVo convertFrom(Bundle bundle)
     {
         BundleVo bundleVo = new BundleVo();
         BeanUtils.copyProperties(bundle, bundleVo);
         bundleVo.setCreateTime(LocalDateTimeUtil.toTimeStamp(bundle.getCreateTime()));
         bundleVo.setUpdateTime(LocalDateTimeUtil.toTimeStamp(bundle.getUpdateTime()));
-
         return bundleVo;
     }
 }

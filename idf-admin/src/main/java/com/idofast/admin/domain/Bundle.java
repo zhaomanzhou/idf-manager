@@ -76,6 +76,11 @@ public class Bundle
      */
     private String description;
 
+    /**
+     * 价格，单位为分
+     */
+    public Long price;
+
 
     public static final Bundle DEFAULT_BUNDLE;
 

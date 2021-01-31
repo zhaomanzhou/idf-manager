@@ -22,11 +22,11 @@ public class Notice
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(columnDefinition="bigint")
-    protected Long id;
+    private Long id;
 
     @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
     @CreationTimestamp
-    protected LocalDateTime createTime;
+    private LocalDateTime createTime;
 
     /**
      * 公告标题

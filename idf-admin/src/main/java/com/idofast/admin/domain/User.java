@@ -26,11 +26,11 @@ public class User implements Serializable
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(columnDefinition="bigint")
-    protected Long id;
+    private Long id;
 
     @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
     @CreationTimestamp
-    protected LocalDateTime createTime;
+    private LocalDateTime createTime;
 
     private String nickname;
 
@@ -70,6 +70,6 @@ public class User implements Serializable
     private String vCode;
 
     @Convert(converter = DeletedEnum.Converter.class)
-    private DeletedEnum deleted;
+        private DeletedEnum deleted;
 
 }

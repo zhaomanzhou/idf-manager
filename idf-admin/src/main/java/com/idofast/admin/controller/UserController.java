@@ -4,6 +4,8 @@ package com.idofast.admin.controller;
 import com.idofast.admin.config.context.RequestContext;
 import com.idofast.admin.controller.vo.request.RegisterUserVo;
 import com.idofast.admin.domain.User;
+import com.idofast.admin.event.event.UserRegisterEvent;
+import com.idofast.admin.event.publisher.EventPublisher;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.EmailService;
 import com.idofast.admin.service.UserService;
@@ -42,6 +44,9 @@ public class UserController
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private EventPublisher eventPublisher;
+
     @ApiOperation(value = "获取注册验证码" )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "email", value = "邮箱", required = true,dataType = "string",example = "271832284@qq.com"),
@@ -68,7 +73,8 @@ public class UserController
     @PostMapping("/register")
     public ServerResponse<String> reg(@Validated RegisterUserVo registerUserVo) throws BusinessException
     {
-        userService.registerUser(registerUserVo);
+        User user = userService.registerUser(registerUserVo);
+        eventPublisher.publishEvent(new UserRegisterEvent(this, user.getId()));
         return ServerResponse.success();
     }
 

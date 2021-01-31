@@ -18,13 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Repository
+@Service
 @Slf4j
 public class UserService
 {
@@ -56,7 +56,7 @@ public class UserService
     /**
      * 注册用户
      */
-    public void registerUser(RegisterUserVo registerUserVo) throws BusinessException
+    public User registerUser(RegisterUserVo registerUserVo) throws BusinessException
     {
         String email = registerUserVo.getEmail();
         String verificationCode = emailLockManager.getVerificationCode(email);
@@ -69,8 +69,9 @@ public class UserService
             throw new BusinessException("验证码错误");
         }
         User user = registerUserVo.convertToUserDo();
-        userRepository.save(user);
+        User save = userRepository.save(user);
         log.info("用户{}注册成功", user.getEmail());
+        return save;
     }
 
 

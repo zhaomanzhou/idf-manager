@@ -1,39 +1,48 @@
 package com.idofast.admin.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * 套餐
+ *
+ * package是Java关键字
  */
 @Data
 @Builder
-public class Package
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Bundle
 {
 
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(columnDefinition="bigint")
-    protected Long id;
+    private Long id;
 
     @Column(updatable = false ,columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '创建时间'",insertable = false)
     @CreationTimestamp
-    protected LocalDateTime createTime;
+    private LocalDateTime createTime;
 
+    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '更新时间'",insertable = false)
+    @UpdateTimestamp
+    private LocalDateTime updateTime;
 
     private String name;
+
     /**
-     * 套餐流量
+     * 套餐流量，单位MB
      */
-    private int totalData;
+    private Integer totalData;
 
     /**
      * 套餐速度
@@ -59,6 +68,7 @@ public class Package
     /**
      * 是否上线
      */
+    @Column(nullable = false)
     private Boolean active;
 
     /**
@@ -67,10 +77,10 @@ public class Package
     private String description;
 
 
-    public static final Package DEFAULT_PACKAGE;
+    public static final Bundle DEFAULT_BUNDLE;
 
     static {
-       DEFAULT_PACKAGE = new Package.PackageBuilder()
+         DEFAULT_BUNDLE = new BundleBuilder()
                 .speed(1024L)
                 .duration(1)
                 .level(0)
@@ -78,14 +88,9 @@ public class Package
                 .totalData(2)
                 .active(true)
                 .name("默认初始套餐")
+                .id(0L)
                 .build();
-        //lombok  builder不能继承
-        DEFAULT_PACKAGE.setId(0L);
-
     }
 
-    static class PackageBuilder
-    {
 
-    }
 }

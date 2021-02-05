@@ -48,7 +48,13 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .addPathPatterns("/notice/**")
                 .excludePathPatterns("/notice/detail/**")
 
-                .addPathPatterns("/bundle/**");
+                .addPathPatterns("/bundle/**")
+
+                .addPathPatterns("/order/**")
+
+                .addPathPatterns("/pay/**")
+
+        ;
 
         registry.addInterceptor(requestContextInterceptor)
                 .addPathPatterns("/**");

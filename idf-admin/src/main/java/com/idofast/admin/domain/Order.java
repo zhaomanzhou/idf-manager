@@ -39,14 +39,14 @@ public class Order
 
 
 
-    @Column(columnDefinition="TIMESTAMP comment '关闭时间'")
-    private LocalDateTime closeTime;
 
 
-    @Column(columnDefinition="TIMESTAMP comment '付款时间'")
+
+    @Column(columnDefinition="TIMESTAMP  comment '付款时间'")
     private LocalDateTime payTime;
 
-
+    @Column(columnDefinition="TIMESTAMP  comment '关闭时间'")
+    private LocalDateTime closeTime;
     /**
      * 产生该订单的用户Id
      */

@@ -53,6 +53,7 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .addPathPatterns("/order/**")
 
                 .addPathPatterns("/pay/**")
+                .excludePathPatterns("/pay/callback")
 
         ;
 

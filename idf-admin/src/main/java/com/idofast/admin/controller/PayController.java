@@ -112,16 +112,23 @@ public class PayController
         String orderId = request.getParameter("out_trade_no"); // 商户订单号
         String tradeNo = request.getParameter("trade_no"); // 支付宝订单号
         String totalAmount = request.getParameter("total_amount");
+        String buyerId = request.getParameter("buyer_id");
+        String buyerLogonId = request.getParameter("buyer_logon_id");
 
-        if(tradeStatus.equals("TRADE_FINISHED")){
+        //扫码后的回调
+        if(tradeStatus.equals("WAIT_BUYER_PAY")){
+            Order order = orderService.selectById(Long.parseLong(orderId));
+            if(order.getOrderStatus() == OrderStatusEnum.WAIT_TO_PAY){
+                order.setTradeNo(tradeNo);
+                order.setBuyerId(buyerId);
+                order.setBuyerLogonId(buyerLogonId);
+                orderService.updateOrder(order);
+                return "SUCCESS";
+            }
+            return "FAIL";
             //订单没有退款功能, 这个条件判断是进不来的, 所以此处不必写代码
             //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
         }else if (tradeStatus.equals("TRADE_SUCCESS")){
-            log.info("******************* 支付成功(支付宝异步通知) *******************");
-            log.info("* 订单号: {}", orderId);
-            log.info("* 支付宝交易号: {}", tradeNo);
-            log.info("* 实付金额: {}", totalAmount);
-            log.info("*************************************************************");
             //付款完成后，支付宝系统发送该交易状态通知
             //验证支付成功后 需要验证是否更新过支付状态了
             Order order = orderService.selectById(Long.parseLong(orderId));

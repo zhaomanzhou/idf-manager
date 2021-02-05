@@ -12,7 +12,8 @@ public enum OrderStatusEnum implements IBaseEnum<OrderStatusEnum>
 {
 
     INITIAL_CREATED(0, "刚创建，还未调用付款"),
-    WAIT_TO_PAY(10, "未付款"),
+    WAIT_TO_SCAN(5,"创建了相应的支付宝链接，用户还未扫码"),
+    WAIT_TO_PAY(10, "用户已扫码，但未付款"),
     CANCEL(21, "用户已取消"),
     CANCEL_TIMEOUT(22, "超时自动关闭订单"),
     SUCCESS(30, "已支付");

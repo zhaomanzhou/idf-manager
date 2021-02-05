@@ -48,7 +48,6 @@ public class OrderManager
 
         OrderForPayResponse orderForPayResponse = new OrderForPayResponse();
         orderForPayResponse.setOrderId(orderId);
-        orderForPayResponse.setTradeNo(response.getOutTradeNo());
         orderForPayResponse.setPayLink(response.getQrCode());
         orderForPayResponse.setPayType(PayTypeEnum.Alipay);
         orderForPayResponse.setTotalMoney(order.getTotalMoney());

@@ -39,13 +39,10 @@ public class Order
 
 
 
-
-
-
-    @Column(columnDefinition="TIMESTAMP  comment '付款时间'")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime payTime;
 
-    @Column(columnDefinition="TIMESTAMP  comment '关闭时间'")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime closeTime;
     /**
      * 产生该订单的用户Id
@@ -89,6 +86,17 @@ public class Order
      * 订单二维码
      */
     private String payLink;
+
+    /**
+     * 付款人id
+     */
+    private String buyerId;
+
+    /**
+     * 付款人支付宝账号
+     */
+    private String buyerLogonId;
+
 
     /**
      * 订单状态

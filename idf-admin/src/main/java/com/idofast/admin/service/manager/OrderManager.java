@@ -39,9 +39,8 @@ public class OrderManager
 
         AlipayTradePrecreateResponse response = aliPayService.toPay(order.getOrderName(), Long.toString(orderId), order.getTotalMoney());
         log.info(response.httpBody);
-        order.setTradeNo(response.getOutTradeNo());
         order.setPayLink(response.getQrCode());
-        order.setOrderStatus(OrderStatusEnum.WAIT_TO_PAY);
+        order.setOrderStatus(OrderStatusEnum.WAIT_TO_SCAN);
 
         orderService.updateOrder(order);
 

@@ -37,13 +37,15 @@ public class Order
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-
-
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(columnDefinition="TIMESTAMP NULL DEFAULT NULL comment '支付时间'",nullable = true)
     private LocalDateTime payTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(columnDefinition="TIMESTAMP NULL DEFAULT NULL comment '关闭时间'",nullable = true)
     private LocalDateTime closeTime;
+
+    @Column(columnDefinition="TIMESTAMP NULL DEFAULT NULL comment '扫码时间'",nullable = true)
+    private LocalDateTime scanTime;
+
     /**
      * 产生该订单的用户Id
      */

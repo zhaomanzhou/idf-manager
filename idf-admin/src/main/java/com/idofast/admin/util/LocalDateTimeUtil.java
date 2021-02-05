@@ -10,8 +10,11 @@ import java.time.ZoneOffset;
  */
 public class LocalDateTimeUtil
 {
-    public static long toTimeStamp(LocalDateTime localDateTime)
+    public static Long toTimeStamp(LocalDateTime localDateTime)
     {
+        if(localDateTime == null){
+            return null;
+        }
         return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
 }

@@ -3,6 +3,7 @@ package com.idofast.admin.service.manager;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePrecreateResponse;
 import com.idofast.admin.controller.vo.response.OrderForPayResponse;
 import com.idofast.admin.domain.Order;
+import com.idofast.admin.infrastructure.declare.AlipayOrderGenerator;
 import com.idofast.admin.service.AliPayService;
 import com.idofast.admin.service.OrderService;
 import com.idofast.common.enums.OrderStatusEnum;
@@ -29,6 +30,9 @@ public class OrderManager
     @Autowired
     private AliPayService aliPayService;
 
+    @Autowired
+    private AlipayOrderGenerator alipayOrderGenerator;
+
     public OrderForPayResponse generateOrderPayment(Long orderId) throws BusinessException
     {
         Order order = orderService.selectById(orderId);
@@ -37,7 +41,7 @@ public class OrderManager
             throw new BusinessException("该订单已生成对应的支付链接，请勿重复生成，请去订单管理页面查找");
         }
 
-        AlipayTradePrecreateResponse response = aliPayService.toPay(order.getOrderName(), Long.toString(orderId), order.getTotalMoney());
+        AlipayTradePrecreateResponse response = aliPayService.toPay(alipayOrderGenerator.generateOrderName(order), Long.toString(orderId), order.getTotalMoney());
         log.info(response.httpBody);
         order.setPayLink(response.getQrCode());
         order.setOrderStatus(OrderStatusEnum.WAIT_TO_SCAN);

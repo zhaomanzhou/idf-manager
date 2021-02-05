@@ -16,7 +16,7 @@ import org.springframework.beans.BeanUtils;
  */
 @Data
 @ApiModel("返回给用户的订单对象")
-public class OrderToUserVo
+public class OrderToAdminVo
 {
 
     @ApiModelProperty("系统订单Id")
@@ -32,9 +32,18 @@ public class OrderToUserVo
     @ApiModelProperty("订单关闭时间")
     private Long closeTime;
 
+    @ApiModelProperty("支付二维码扫描时间")
+    private Long scanTime;
+
+
+    @ApiModelProperty("订单更新时间")
+    private Long updateTime;
+
     @ApiModelProperty("订单对应的套餐Id")
     private Long bundleId;
 
+    @ApiModelProperty("订单对应的用户Id")
+    private Long userId;
 
     @ApiModelProperty("购买了几个月的套餐")
     private Integer totalMonth;
@@ -58,9 +67,9 @@ public class OrderToUserVo
     @ApiModelProperty("订单状态")
     private OrderStatusEnum orderStatus;
 
-    public static OrderToUserVo convertFromOrder(Order order)
+    public static OrderToAdminVo convertFromOrder(Order order)
     {
-        OrderToUserVo vo = new OrderToUserVo();
+        OrderToAdminVo vo = new OrderToAdminVo();
         BeanUtils.copyProperties(order, vo);
         vo.setOrderName(order.getBundleName() + order.getTotalMonth() + "个月");
         vo.setCreateTime(LocalDateTimeUtil.toTimeStamp(order.getCreateTime()));

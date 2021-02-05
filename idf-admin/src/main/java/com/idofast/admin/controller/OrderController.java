@@ -1,6 +1,7 @@
 package com.idofast.admin.controller;
 
 import com.idofast.admin.config.context.RequestContext;
+import com.idofast.admin.controller.vo.response.OrderToUserVo;
 import com.idofast.admin.domain.Bundle;
 import com.idofast.admin.domain.Order;
 import com.idofast.admin.service.BundleService;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhaomanzhou
@@ -44,6 +46,7 @@ public class OrderController
     {
         Bundle bundle = bundleService.findById(bundleId);
         Order order = Order.builder()
+                .bundleName(bundle.getName())
                 .orderName("IdoFast" + bundle.getName() + " " + totalMonth + "个月")
                 .bundleId(bundleId)
                 .totalMoney(bundle.getPrice()*totalMonth)
@@ -75,11 +78,14 @@ public class OrderController
 
     @ApiOperation("获取用户所有的订单信息")
     @GetMapping("/user/list")
-    public ServerResponse<List<Order>> getOrderList()
+    public ServerResponse<List<OrderToUserVo>> getOrderList()
     {
         Long id = RequestContext.getCurrentUser().getId();
         List<Order> orders = orderService.selectByUserId(id);
-        return ServerResponse.success(orders);
+        List<OrderToUserVo> collect = orders.stream()
+                .map(OrderToUserVo::convertFromOrder)
+                .collect(Collectors.toList());
+        return ServerResponse.success(collect);
     }
 
 

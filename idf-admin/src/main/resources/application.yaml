@@ -28,7 +28,7 @@ spring:
     properties.mail.smtp.ssl.enable: true
     default-encoding: UTF-8
   profiles:
-    active: docker
+    active: local
 
 email:
   username: zmzsstreet@163.com

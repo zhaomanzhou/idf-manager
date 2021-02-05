@@ -67,6 +67,7 @@ public class PayController
 
             case SUCCESS:throw new BusinessException("该订单已支付成功，请勿重新支付");
 
+            case WAIT_TO_SCAN:
             case WAIT_TO_PAY:{
 
                 OrderForPayResponse orderForPayResponse = new OrderForPayResponse();
@@ -118,7 +119,7 @@ public class PayController
         //扫码后的回调
         if(tradeStatus.equals("WAIT_BUYER_PAY")){
             Order order = orderService.selectById(Long.parseLong(orderId));
-            if(order.getOrderStatus() == OrderStatusEnum.WAIT_TO_PAY){
+            if(order.getOrderStatus() == OrderStatusEnum.WAIT_TO_SCAN){
                 order.setTradeNo(tradeNo);
                 order.setBuyerId(buyerId);
                 order.setBuyerLogonId(buyerLogonId);
@@ -137,8 +138,6 @@ public class PayController
                 log.warn("回调交易号与订单交易号不一致，订单号{}, 支付宝回调交易号{}, 订单交易号{}", orderId, tradeNo, order.getTradeNo());
                 return "FAIL";
             }
-
-
 
             if (order.getOrderStatus() == OrderStatusEnum.SUCCESS){
                 //并且同步回调时已经更改支付状态了 不做任何处理

@@ -55,8 +55,10 @@ public class Order
      */
     private Long bundleId;
 
-
-
+    /**
+     * 套餐名称
+     */
+    private String bundleName;
     /**
      * 套餐购买了几个月
      */
@@ -66,6 +68,7 @@ public class Order
      * 订单名称
      */
     private String orderName;
+
 
     /**
      * 套餐总价

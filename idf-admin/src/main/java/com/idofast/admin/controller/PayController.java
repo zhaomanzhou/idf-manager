@@ -123,6 +123,7 @@ public class PayController
                 order.setTradeNo(tradeNo);
                 order.setBuyerId(buyerId);
                 order.setBuyerLogonId(buyerLogonId);
+                order.setOrderStatus(OrderStatusEnum.WAIT_TO_PAY);
                 orderService.updateOrder(order);
                 return "SUCCESS";
             }
@@ -144,6 +145,7 @@ public class PayController
                 log.info("订单同步回调时已更新支付状态为已支付");
             }else if (order.getOrderStatus() == OrderStatusEnum.WAIT_TO_PAY){
                 //支付成功 并且订单支付状态为待支付 更新状态为已支付
+                log.info("收到支付宝支付成功回调，开始更新订单信息，订单id{}", orderId);
                 orderService.updateOrderStatusPaid(Long.parseLong(orderId));
                 log.info("修改订单状态成功");
             }

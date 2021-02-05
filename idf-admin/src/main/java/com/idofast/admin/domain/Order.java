@@ -106,6 +106,7 @@ public class Order
     /**
      * 订单状态
      */
+    @Convert(converter = OrderStatusEnum.Converter.class)
     private OrderStatusEnum orderStatus;
 
 }

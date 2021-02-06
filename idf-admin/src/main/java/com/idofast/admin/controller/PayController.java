@@ -1,5 +1,7 @@
 package com.idofast.admin.controller;
 
+import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
+import com.idofast.admin.config.context.RequestContext;
 import com.idofast.admin.controller.vo.response.OrderForPayResponse;
 import com.idofast.admin.domain.Order;
 import com.idofast.admin.exception.BusinessErrorEnum;
@@ -48,10 +50,12 @@ public class PayController
     @Autowired
     private OrderManager orderManager;
 
+    @ApiOperation("根据传入的订单id去调用支付宝生成对应的支付信息")
     @PostMapping("/create")
     public ServerResponse<OrderForPayResponse> payForOrder(Long orderId) throws BusinessException
     {
-        OrderForPayResponse orderForPayResponse = orderManager.generateOrderPayment(orderId);
+        Long userId = RequestContext.getCurrentUser().getId();
+        OrderForPayResponse orderForPayResponse = orderManager.generateOrderPayment(orderId, userId);
         return ServerResponse.success(orderForPayResponse);
     }
 
@@ -59,11 +63,15 @@ public class PayController
     @GetMapping("/order/info")
     public ServerResponse<OrderForPayResponse> getOrCreatePayInfo(Long orderId) throws BusinessException
     {
+        Long userId = RequestContext.getCurrentUser().getId();
         Order order = orderService.selectById(orderId);
+        if(!order.getUserId().equals(userId)){
+            throw new BusinessException("非法操作, CODE 44221");
+        }
         switch (order.getOrderStatus())
         {
             case CANCEL_TIMEOUT:
-            case CANCEL: throw new BusinessException("该订单已取消");
+            case CANCEL_USER: throw new BusinessException("该订单已取消");
 
             case SUCCESS:throw new BusinessException("该订单已支付成功，请勿重新支付");
 
@@ -80,7 +88,7 @@ public class PayController
             }
 
             case INITIAL_CREATED:{
-                OrderForPayResponse orderForPayResponse = orderManager.generateOrderPayment(orderId);
+                OrderForPayResponse orderForPayResponse = orderManager.generateOrderPayment(orderId, userId);
                 return ServerResponse.success(orderForPayResponse);
             }
 
@@ -89,6 +97,8 @@ public class PayController
 
     }
 
+
+    @ApiOperation("支付宝回调接口")
     @PostMapping("/callback")
     public String alipayCallback(HttpServletRequest request) throws Exception
     {
@@ -125,7 +135,7 @@ public class PayController
                 order.setBuyerLogonId(buyerLogonId);
                 order.setOrderStatus(OrderStatusEnum.WAIT_TO_PAY);
                 orderService.updateOrder(order);
-                return "SUCCESS";
+                return "success";
             }
             return "FAIL";
             //订单没有退款功能, 这个条件判断是进不来的, 所以此处不必写代码
@@ -149,10 +159,28 @@ public class PayController
                 orderService.updateOrderStatusPaid(Long.parseLong(orderId));
                 log.info("修改订单状态成功");
             }
-            return "SUCCESS";
+            return "success";
         }
         return "FAIL";
     }
 
+
+    @ApiOperation("查询订单信息，管理员才能访问")
+    @RequestMapping("/query/{id}")
+//    @AuthRole(RoleEnum.ADMIN)
+    public Object query(@PathVariable Long id) throws Exception
+    {
+        AlipayTradeQueryResponse query = aliPayService.queryOrder(id + "");
+        return query;
+    }
+
+    @ApiOperation("查询订单信息,返回httpbody，管理员才能访问")
+    @RequestMapping("/query/http/{id}")
+//    @AuthRole(RoleEnum.ADMIN)
+    public Object queryHttp(@PathVariable Long id) throws Exception
+    {
+        AlipayTradeQueryResponse query = aliPayService.queryOrder(id + "");
+        return query.httpBody;
+    }
 
 }

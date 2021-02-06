@@ -32,8 +32,9 @@ public enum BusinessErrorEnum implements CommonError
 
     OUT_OF_AUTORITY(403, "非法权限操作"),
 
-    NOTICE_NOT_EXIST(4004, "文章/公告 不存在")
+    NOTICE_NOT_EXIST(4004, "文章/公告 不存在"),
 
+    ILLEGAL_ORDER_USER(40003,"非法操作，错误码40003")
 
     ;
 

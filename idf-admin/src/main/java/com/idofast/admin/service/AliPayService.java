@@ -9,6 +9,8 @@ package com.idofast.admin.service;
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.kernel.Config;
 import com.alipay.easysdk.kernel.util.ResponseChecker;
+import com.alipay.easysdk.payment.common.models.AlipayTradeCancelResponse;
+import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePrecreateResponse;
 import com.idofast.admin.config.properties.AlipayProperties;
 import com.idofast.common.response.error.BusinessException;
@@ -74,6 +76,29 @@ public class AliPayService implements InitializingBean
             log.debug("verify sigin error, exception is:{}", e.toString());
             return false;
         }
+    }
+
+
+    public AlipayTradeQueryResponse queryOrder(String orderId) throws Exception
+    {
+        try {
+            // 2. 发起API调用（以创建当面付收款二维码为例）
+            AlipayTradeQueryResponse response = Factory.Payment.Common().query(orderId);
+            return response;
+        } catch (Exception e) {
+            log.warn("订单{}调用支付宝遭遇异常，原因：{}",orderId, e.getMessage());
+            throw new BusinessException("调用支付宝失败");
+        }
+    }
+
+    public void cancelOrder(String orderId) throws Exception
+    {
+        AlipayTradeCancelResponse response = Factory.Payment.Common().cancel(orderId);
+        if(ResponseChecker.success(response)){
+            return;
+        }
+        log.info("订单{}调用支付宝取消失败，失败原因{}", orderId, response.msg);
+        throw new BusinessException("订单取消失败");
     }
 
 

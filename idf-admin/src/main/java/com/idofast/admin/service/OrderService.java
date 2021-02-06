@@ -62,6 +62,11 @@ public class OrderService
         orderRepository.save(order);
     }
 
+    public void cancelOrder(Long orderId) throws BusinessException
+    {
+        Order order = selectById(orderId);
+
+    }
 
     public void updateOrder(Order order)
     {

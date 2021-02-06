@@ -60,7 +60,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long>, JpaSpecif
 //class NoticeSpecs
 //{
 //    public Specification<Notice> getNoticeList(Integer noticeType, Integer noticeVisibility, Integer noticeStatus){
-//        return (root, query, builder) -> {
+//        return (root, queryOrder, builder) -> {
 //            final List<Predicate> predicates = new ArrayList<>();
 //            if(noticeType != null)
 //            {

@@ -62,11 +62,13 @@ public class OrderService
         orderRepository.save(order);
     }
 
-    public void cancelOrder(Long orderId) throws BusinessException
+    public List<Order> selectUnpaidOrder()
     {
-        Order order = selectById(orderId);
-
+        List<Order> orders = orderRepository.findAllByOrderStatusBefore(OrderStatusEnum.CANCEL_USER);
+        return orders;
     }
+
+
 
     public void updateOrder(Order order)
     {

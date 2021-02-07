@@ -14,13 +14,18 @@ import java.time.LocalDateTime;
  * @version 1.0
  * @createTime 2021/2/4 12:27 下午
  */
-
+@Data
 @Entity(name = "bundle_order")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Table( indexes = {
+        @Index(name = "idx_order_user", columnList="userId", unique = false),
+        @Index(name = "idx_order_status", columnList="orderStatus", unique = false)
+})
+
 public class Order
 {
 
@@ -49,6 +54,7 @@ public class Order
     /**
      * 产生该订单的用户Id
      */
+
     private Long userId;
     /**
      * 套餐的Id

@@ -1,11 +1,14 @@
 package com.idofast.admin.service;
 
+import com.idofast.admin.domain.Order;
 import com.idofast.common.response.error.BusinessException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 /**
  * @author zhaomanzhou
@@ -24,4 +27,16 @@ public class OrderServiceTest
     {
         orderService.updateOrderStatusPaid(2L);
     }
+
+    @Test
+    public void testUpdateOrder()
+    {
+        List<Order> orders = orderService.selectUnpaidOrder();
+        orders.stream().forEach(
+                System.out::println
+        );
+    }
+
+
+
 }

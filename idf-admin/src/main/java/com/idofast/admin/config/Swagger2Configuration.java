@@ -32,7 +32,7 @@ public class Swagger2Configuration {
         ticketPar.name("token").description("用户凭证")
                 .modelRef(new ModelRef("string")).parameterType("header")
                 .required(false)
-                .defaultValue("eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE2Mzc4OTg3MzQsImlhdCI6MTYwNjM2MjczNH0.Dqhuv9EEVJXa29WYuPS4j4jt19hG6NUYvcR7S9kmT8k")
+                .defaultValue("eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE2NDQxMTkyNDcsImlhdCI6MTYxMjU4MzI0N30.ChCUn8zBVsm6ktrp33g73hxpf7__g7DXPOr0PJsIta8")
                 .build();
         pars.add(ticketPar.build());
 

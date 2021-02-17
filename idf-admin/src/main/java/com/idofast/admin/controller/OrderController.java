@@ -1,6 +1,11 @@
 package com.idofast.admin.controller;
 
+import com.idofast.admin.annotation.AuthRole;
 import com.idofast.admin.config.context.RequestContext;
+import com.idofast.admin.controller.vo.page.PageResponse;
+import com.idofast.admin.controller.vo.request.OrderSearchRequest;
+import com.idofast.admin.controller.vo.response.OrderToAdminDetailVo;
+import com.idofast.admin.controller.vo.response.OrderToAdminVo;
 import com.idofast.admin.controller.vo.response.OrderToUserVo;
 import com.idofast.admin.domain.Bundle;
 import com.idofast.admin.domain.Order;
@@ -8,17 +13,24 @@ import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.BundleService;
 import com.idofast.admin.service.OrderService;
 import com.idofast.admin.service.manager.OrderManager;
+import com.idofast.admin.util.LocalDateTimeUtil;
 import com.idofast.common.enums.OrderStatusEnum;
 import com.idofast.common.enums.PayTypeEnum;
+import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.response.error.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +69,7 @@ public class OrderController
                 .bundleId(bundleId)
                 .totalMoney(bundle.getPrice()*totalMonth)
                 .userId(RequestContext.getCurrentUser().getId())
+                .userEmail(RequestContext.getCurrentUser().getEmail())
                 .orderStatus(OrderStatusEnum.INITIAL_CREATED)
                 .payType(PayTypeEnum.ofCode(payType))
                 .totalMonth(totalMonth)
@@ -78,14 +91,12 @@ public class OrderController
         return ServerResponse.success(success);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/admin/detail")
     @ApiOperation("获取订单详情")
-    //TODO
-    public ServerResponse<Order> selectById(Long orderId) throws BusinessException
+    public ServerResponse<OrderToAdminDetailVo> selectById(Long orderId) throws BusinessException
     {
         Order order = orderService.selectById(orderId);
-        return ServerResponse.success(order);
-
+        return ServerResponse.success(OrderToAdminDetailVo.convertFromOrder(order));
     }
 
 
@@ -113,6 +124,43 @@ public class OrderController
         orderManager.cancelOrder(orderId, OrderStatusEnum.CANCEL_USER);
         return ServerResponse.success();
     }
+
+    @ApiOperation("管理员获取订单列表")
+    @GetMapping("/admin/list")
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<PageResponse<OrderToAdminVo>> queryOrderListAdmin(@Validated OrderSearchRequest searchRequest)
+    {
+        PageRequest pageRequest = PageRequest.of(searchRequest.getCurrentPage() -1, searchRequest.getPageSize());
+
+        Long id = searchRequest.getId();
+        Long userId = searchRequest.getUserId();
+        String userEmail = StringUtils.isBlank(searchRequest.getUserEmail()) ? null: searchRequest.getUserEmail();
+        LocalDateTime startTime = LocalDateTimeUtil.toLocalDateTime(searchRequest.getStartTime());
+        LocalDateTime endTime = LocalDateTimeUtil.toLocalDateTime(searchRequest.getEndTime());
+        if(searchRequest.getOrderStatusList() == null)
+        {
+            searchRequest.setOrderStatusList(new ArrayList<>());
+        }
+        List<OrderStatusEnum> orderStatusEnumList = searchRequest.getOrderStatusList().stream()
+                .map(OrderStatusEnum::ofCode)
+                .collect(Collectors.toList());
+
+        Page<Order> orders = orderService.selectOrderList(id, userId, userEmail,
+                startTime, endTime, orderStatusEnumList, pageRequest);
+
+        List<OrderToAdminVo> collect = orders.stream()
+                .map(OrderToAdminVo::convertFromOrder)
+                .collect(Collectors.toList());
+
+        PageResponse<OrderToAdminVo> response = new PageResponse<>();
+        response.setData(collect);
+        response.setCurrentPageNum(searchRequest.getCurrentPage());
+        response.setPageNum(orders.getTotalPages());
+        response.setTotalElement(orders.getTotalElements());
+
+        return ServerResponse.success(response);
+    }
+
 
 
 

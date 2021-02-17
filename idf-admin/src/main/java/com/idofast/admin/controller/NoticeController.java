@@ -70,9 +70,6 @@ public class NoticeController
     public ServerResponse<NoticeUserResponseVo> getNoticeById(@PathVariable("id") Long id) throws BusinessException
     {
         Notice noticeById = noticeService.getNoticeById(id);
-
-
-
         if(noticeById.getStatus() == NoticeStatusEnum.PUBLISHED)
         {
             //所有人可见，直接返回
@@ -84,7 +81,6 @@ public class NoticeController
 
 
         String token = RequestContext.getToken();
-
         //需要登陆，进行校验
         User userByToken = null;
         try

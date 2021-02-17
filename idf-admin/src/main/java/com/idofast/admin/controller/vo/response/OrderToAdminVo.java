@@ -25,25 +25,14 @@ public class OrderToAdminVo
     @ApiModelProperty("订单创建时间")
     private Long createTime;
 
-
     @ApiModelProperty("订单付款时间")
     private Long payTime;
 
     @ApiModelProperty("订单关闭时间")
     private Long closeTime;
 
-    @ApiModelProperty("支付二维码扫描时间")
-    private Long scanTime;
-
-
-    @ApiModelProperty("订单更新时间")
-    private Long updateTime;
-
     @ApiModelProperty("订单对应的套餐Id")
     private Long bundleId;
-
-    @ApiModelProperty("订单对应的用户Id")
-    private Long userId;
 
     @ApiModelProperty("购买了几个月的套餐")
     private Integer totalMonth;
@@ -66,6 +55,17 @@ public class OrderToAdminVo
 
     @ApiModelProperty("订单状态")
     private OrderStatusEnum orderStatus;
+
+    @ApiModelProperty("套餐名称")
+    private String bundleName;
+
+    @ApiModelProperty("下单用户id")
+    private Long userId;
+
+    @ApiModelProperty("下单用户email")
+    private String userEmail;
+
+
 
     public static OrderToAdminVo convertFromOrder(Order order)
     {

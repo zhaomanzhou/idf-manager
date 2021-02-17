@@ -11,6 +11,9 @@ import com.idofast.admin.repository.OrderRepository;
 import com.idofast.common.enums.OrderStatusEnum;
 import com.idofast.common.response.error.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,12 +36,18 @@ public class OrderService
         return save;
     }
 
+    /**
+     * 查询指定用户的所有订单
+     */
     public List<Order> selectByUserId(Long userId)
     {
         List<Order> allByUserId = orderRepository.findAllByUserId(userId);
         return allByUserId;
     }
 
+    /**
+     * 根据订单id查询指定订单
+     */
     public Order selectById(Long orderId) throws BusinessException
     {
         Optional<Order> byId = orderRepository.findById(orderId);
@@ -49,7 +58,9 @@ public class OrderService
         return byId.get();
     }
 
-
+    /**
+     * 将指定订单的状态更改为已支付
+     */
     public void updateOrderStatusPaid(Long id) throws BusinessException
     {
         Optional<Order> byId = orderRepository.findById(id);
@@ -62,6 +73,10 @@ public class OrderService
         orderRepository.save(order);
     }
 
+    /**
+     * 查询为支付的系统订单，定时关单任务调用
+     * @return
+     */
     public List<Order> selectUnpaidOrder()
     {
         List<Order> orders = orderRepository.findAllByOrderStatusBefore(OrderStatusEnum.CANCEL_USER);
@@ -74,4 +89,17 @@ public class OrderService
     {
         orderRepository.save(order);
     }
+
+    public Page<Order> selectOrderList(Long id,Long userId, String userEmail, LocalDateTime startTime, LocalDateTime endTime, List<OrderStatusEnum> orderStatusList, Pageable pageable)
+    {
+        Order order = new Order();
+        Optional.ofNullable(id).ifPresent(order::setId);
+        Optional.ofNullable(userId).ifPresent(order::setUserId);
+        Optional.ofNullable(userEmail).ifPresent(order::setUserEmail);
+
+        Page<Order> all = orderRepository.findAll(orderRepository.exampleSpecification(Example.of(order))
+                .and(orderRepository.orderListSpec(startTime, endTime, orderStatusList)), pageable);
+        return all;
+    }
+
 }

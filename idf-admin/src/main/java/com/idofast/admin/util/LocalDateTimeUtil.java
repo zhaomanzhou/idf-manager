@@ -1,5 +1,6 @@
 package com.idofast.admin.util;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -16,5 +17,13 @@ public class LocalDateTimeUtil
             return null;
         }
         return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+    }
+
+    public static LocalDateTime toLocalDateTime(Long timestamp)
+    {
+        if(timestamp == null){
+            return null;
+        }
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneOffset.of("+8"));
     }
 }

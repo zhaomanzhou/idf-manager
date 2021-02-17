@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 
 /**
@@ -134,6 +135,7 @@ public class PayController
                 order.setBuyerId(buyerId);
                 order.setBuyerLogonId(buyerLogonId);
                 order.setOrderStatus(OrderStatusEnum.WAIT_TO_PAY);
+                order.setScanTime(LocalDateTime.now());
                 orderService.updateOrder(order);
                 return "success";
             }

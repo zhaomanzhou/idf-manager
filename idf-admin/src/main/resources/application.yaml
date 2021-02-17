@@ -14,7 +14,7 @@ spring:
     timeout: 5000
     password:
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
 
@@ -46,14 +46,14 @@ switch:
   sendEmail: false
 
 
-#logging:
-#  level:
-#    org:
-#      hibernate:
-#        type:
-#          descriptor:
-#            sql:
-#              BasicBinder: trace
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
 
 
 

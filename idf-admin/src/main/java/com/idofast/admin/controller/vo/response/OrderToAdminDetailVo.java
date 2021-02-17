@@ -16,7 +16,7 @@ import org.springframework.beans.BeanUtils;
  */
 @Data
 @ApiModel("返回给用户的订单对象")
-public class OrderToUserVo
+public class OrderToAdminDetailVo
 {
 
     @ApiModelProperty("系统订单Id")
@@ -24,6 +24,15 @@ public class OrderToUserVo
 
     @ApiModelProperty("订单创建时间")
     private Long createTime;
+
+    @ApiModelProperty("订单付款时间")
+    private Long payTime;
+
+    @ApiModelProperty("订单关闭时间")
+    private Long closeTime;
+
+    @ApiModelProperty("订单扫码时间")
+    private Long scanTime;
 
     @ApiModelProperty("订单对应的套餐Id")
     private Long bundleId;
@@ -34,11 +43,15 @@ public class OrderToUserVo
     @ApiModelProperty("订单名称")
     private String orderName;
 
+
     @ApiModelProperty("订单总价")
     private Long totalMoney;
 
     @ApiModelProperty("订单支付方式")
     private PayTypeEnum payType;
+
+    @ApiModelProperty("支付宝交易号")
+    private String tradeNo;
 
     @ApiModelProperty("订单付款链接")
     private String payLink;
@@ -49,12 +62,29 @@ public class OrderToUserVo
     @ApiModelProperty("套餐名称")
     private String bundleName;
 
-    public static OrderToUserVo convertFromOrder(Order order)
+    @ApiModelProperty("下单用户id")
+    private Long userId;
+
+    @ApiModelProperty("下单用户email")
+    private String userEmail;
+
+
+    @ApiModelProperty("付款人支付宝id")
+
+    private String buyerId;
+
+    @ApiModelProperty("付款人支付宝账号")
+    private String buyerLogonId;
+
+    public static OrderToAdminDetailVo convertFromOrder(Order order)
     {
-        OrderToUserVo vo = new OrderToUserVo();
+        OrderToAdminDetailVo vo = new OrderToAdminDetailVo();
         BeanUtils.copyProperties(order, vo);
         vo.setOrderName(order.getBundleName() + order.getTotalMonth() + "个月");
         vo.setCreateTime(LocalDateTimeUtil.toTimeStamp(order.getCreateTime()));
+        vo.setPayTime(LocalDateTimeUtil.toTimeStamp(order.getPayTime()));
+        vo.setCloseTime(LocalDateTimeUtil.toTimeStamp(order.getCloseTime()));
+        vo.setScanTime(LocalDateTimeUtil.toTimeStamp(order.getScanTime()));
         return vo;
     }
 

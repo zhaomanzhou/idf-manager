@@ -56,6 +56,12 @@ public class Order
      */
 
     private Long userId;
+
+    /**
+     * 用户邮箱
+     */
+    private String userEmail;
+
     /**
      * 套餐的Id
      */

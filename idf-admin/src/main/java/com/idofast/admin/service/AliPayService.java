@@ -79,6 +79,10 @@ public class AliPayService implements InitializingBean
     }
 
 
+    /**
+     * 调用支付宝查询订单信息，不校验
+     * 对于预创建的订单，如果用户没有扫过码，该接口查询不出内容
+     */
     public AlipayTradeQueryResponse queryOrder(String orderId) throws Exception
     {
         try {

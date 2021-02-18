@@ -1,6 +1,8 @@
 package com.idofast.admin.controller;
 
+import com.alipay.easysdk.kernel.util.ResponseChecker;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
+import com.idofast.admin.annotation.AuthRole;
 import com.idofast.admin.config.context.RequestContext;
 import com.idofast.admin.controller.vo.response.OrderForPayResponse;
 import com.idofast.admin.domain.Order;
@@ -11,6 +13,7 @@ import com.idofast.admin.service.OrderService;
 import com.idofast.admin.service.manager.OrderManager;
 import com.idofast.common.enums.OrderStatusEnum;
 import com.idofast.common.enums.PayTypeEnum;
+import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.response.error.BusinessException;
 import io.swagger.annotations.Api;
@@ -169,7 +172,7 @@ public class PayController
 
     @ApiOperation("查询订单信息，管理员才能访问")
     @RequestMapping("/query/{id}")
-//    @AuthRole(RoleEnum.ADMIN)
+    @AuthRole(RoleEnum.ADMIN)
     public Object query(@PathVariable Long id) throws Exception
     {
         AlipayTradeQueryResponse query = aliPayService.queryOrder(id + "");
@@ -178,11 +181,41 @@ public class PayController
 
     @ApiOperation("查询订单信息,返回httpbody，管理员才能访问")
     @RequestMapping("/query/http/{id}")
-//    @AuthRole(RoleEnum.ADMIN)
+    @AuthRole(RoleEnum.ADMIN)
     public Object queryHttp(@PathVariable Long id) throws Exception
     {
         AlipayTradeQueryResponse query = aliPayService.queryOrder(id + "");
         return query.httpBody;
+    }
+
+    @ApiOperation("调用支付宝手动同步订单信息")
+    @PostMapping("/sync")
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<String> syncPayInfo(Long orderId) throws Exception
+    {
+
+        Order order = orderService.selectById(orderId);
+        AlipayTradeQueryResponse response = aliPayService.queryOrder(orderId + "");
+        if(!ResponseChecker.success(response)){
+            throw new BusinessException(BusinessErrorEnum.UNKNOWN_ERROR);
+        }
+
+        String tradeStatus = response.tradeStatus;
+        switch (tradeStatus){
+            case "WAIT_BUYER_PAY":
+            {
+                order.setOrderStatus(OrderStatusEnum.WAIT_TO_PAY);
+            }
+            case "TRADE_SUCCESS":
+            {
+                order.setOrderStatus(OrderStatusEnum.SUCCESS);
+            }
+        }
+        order.setTradeNo(response.tradeNo);
+        order.setBuyerId(response.buyerUserId);
+        order.setBuyerLogonId(response.buyerLogonId);
+        orderService.updateOrder(order);
+        return ServerResponse.success();
     }
 
 }

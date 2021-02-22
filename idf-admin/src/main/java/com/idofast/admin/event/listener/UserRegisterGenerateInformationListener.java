@@ -1,8 +1,8 @@
 package com.idofast.admin.event.listener;
 
-import com.idofast.admin.domain.UserInformation;
+import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.event.event.UserRegisterEvent;
-import com.idofast.admin.repository.UserInformationRepository;
+import com.idofast.admin.repository.UserProxyInfoRepository;
 import com.idofast.common.enums.DeletedEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -20,7 +20,7 @@ public class UserRegisterGenerateInformationListener implements ApplicationListe
 {
 
     @Autowired
-    private UserInformationRepository userInformationRepository;
+    private UserProxyInfoRepository userProxyInfoRepository;
 
 //    @Async
     @Override
@@ -28,7 +28,7 @@ public class UserRegisterGenerateInformationListener implements ApplicationListe
     {
         LocalDateTime now = LocalDateTime.now();
         Long id = event.getId();
-        UserInformation information = UserInformation.builder()
+        UserProxyInfo information = UserProxyInfo.builder()
                 .id(id)
                 .level(0)
                 .speed(1024)
@@ -38,9 +38,9 @@ public class UserRegisterGenerateInformationListener implements ApplicationListe
                 .expireDate(now.plusDays(1))
                 .packageId(0)
                 .namespace(0)
-                .diable(false)
+                .totalActiveDay(0)
                 .deleted(DeletedEnum.NORMAL)
                 .build();
-        userInformationRepository.save(information);
+        userProxyInfoRepository.save(information);
     }
 }

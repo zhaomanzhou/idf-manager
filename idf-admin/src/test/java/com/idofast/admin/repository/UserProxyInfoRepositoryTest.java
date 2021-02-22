@@ -1,6 +1,6 @@
 package com.idofast.admin.repository;
 
-import com.idofast.admin.domain.UserInformation;
+import com.idofast.admin.domain.UserProxyInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +16,15 @@ import java.util.Optional;
  */
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class UserInformationRepositoryTest
+public class UserProxyInfoRepositoryTest
 {
     @Autowired
-    private UserInformationRepository userInformationRepository;
+    private UserProxyInfoRepository dataInfoRepository;
 
     @Test
     public void testSelect()
     {
-        Optional<UserInformation> byId = userInformationRepository.findById(1L);
+        Optional<UserProxyInfo> byId = dataInfoRepository.findById(1L);
         System.out.println(byId.get().getExpireDate());
     }
 }

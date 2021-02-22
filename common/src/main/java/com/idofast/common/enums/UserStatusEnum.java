@@ -6,7 +6,6 @@ import com.idofast.common.enums.base.IBaseEnum;
 public enum  UserStatusEnum implements IBaseEnum<UserStatusEnum>
 {
     NORMAL(0, "正常"),
-    LOGOFF(0, "正常"),
     FORBIDDEN(2, "封禁");
 
     UserStatusEnum(int code, String msg)

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Where(clause = "deleted=0")
-public class UserInformation
+public class UserProxyInfo
 {
 
     @Id
@@ -70,7 +70,6 @@ public class UserInformation
      */
     private Integer maxConnection;
 
-
     /**
      * 目前使用的套餐ID
      */
@@ -81,20 +80,18 @@ public class UserInformation
      */
     private String packageName;
 
-    /**
-     * 是否有过付费记录
-     */
-    private Boolean recharged;
 
     /**
      * 账号命名空间
      */
     private Integer namespace;
 
+
     /**
-     * 账号是否被封禁
+     * 账号总付费了多少天
      */
-    private Boolean diable;
+    private Integer totalActiveDay;
+
     /**
      * 账号是否被删除
      */

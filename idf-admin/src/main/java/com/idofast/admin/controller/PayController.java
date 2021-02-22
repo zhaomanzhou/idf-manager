@@ -173,10 +173,10 @@ public class PayController
     @ApiOperation("查询订单信息，管理员才能访问")
     @RequestMapping("/query/{id}")
     @AuthRole(RoleEnum.ADMIN)
-    public Object query(@PathVariable Long id) throws Exception
+    public ServerResponse<Object> query(@PathVariable Long id) throws Exception
     {
         AlipayTradeQueryResponse query = aliPayService.queryOrder(id + "");
-        return query;
+        return ServerResponse.success(query);
     }
 
     @ApiOperation("查询订单信息,返回httpbody，管理员才能访问")

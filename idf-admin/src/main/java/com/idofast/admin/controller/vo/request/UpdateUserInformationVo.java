@@ -1,6 +1,6 @@
 package com.idofast.admin.controller.vo.request;
 
-import com.idofast.admin.domain.UserInformation;
+import com.idofast.admin.domain.UserProxyInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -50,11 +50,11 @@ public class UpdateUserInformationVo
     @ApiModelProperty("账号是否被封禁")
     private Boolean disable;
 
-    public static UpdateUserInformationVo convertFrom(UserInformation userInformation){
+    public static UpdateUserInformationVo convertFrom(UserProxyInfo userProxyInfo){
         UpdateUserInformationVo vo = new UpdateUserInformationVo();
-        BeanUtils.copyProperties(userInformation, vo);
-        vo.setNextSettleDate(userInformation.getNextSettleDate().toEpochSecond(ZoneOffset.UTC));
-        vo.setExpireDate(userInformation.getExpireDate().toEpochSecond(ZoneOffset.UTC));
+        BeanUtils.copyProperties(userProxyInfo, vo);
+        vo.setNextSettleDate(userProxyInfo.getNextSettleDate().toEpochSecond(ZoneOffset.UTC));
+        vo.setExpireDate(userProxyInfo.getExpireDate().toEpochSecond(ZoneOffset.UTC));
         return vo;
     }
 

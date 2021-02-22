@@ -4,6 +4,8 @@ package com.idofast.admin.service;
 import com.idofast.admin.constant.TokenHashConst;
 import com.idofast.admin.controller.vo.request.RegisterUserVo;
 import com.idofast.admin.domain.User;
+import com.idofast.admin.event.event.UserRegisterEvent;
+import com.idofast.admin.event.publisher.EventPublisher;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.repository.UserRepository;
 import com.idofast.admin.service.manager.EmailLockManager;
@@ -21,6 +23,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +36,10 @@ public class UserService
 
     @Autowired
     private EmailLockManager emailLockManager;
+
+
+    @Autowired
+    private EventPublisher eventPublisher;
 
     @Value("${token.expiration}")
     private int expiration;
@@ -56,6 +63,7 @@ public class UserService
     /**
      * 注册用户
      */
+    @Transactional
     public User registerUser(RegisterUserVo registerUserVo) throws BusinessException
     {
         String email = registerUserVo.getEmail();
@@ -71,6 +79,8 @@ public class UserService
         User user = registerUserVo.convertToUserDo();
         User save = userRepository.save(user);
         log.info("用户{}注册成功", user.getEmail());
+        eventPublisher.publishEvent(new UserRegisterEvent(this, user.getId()));
+
         return save;
     }
 

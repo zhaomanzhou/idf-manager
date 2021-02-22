@@ -66,10 +66,10 @@ public class User implements Serializable
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-    @Transient
-    private String vCode;
+
+
 
     @Convert(converter = DeletedEnum.Converter.class)
-        private DeletedEnum deleted;
+    private DeletedEnum deleted;
 
 }

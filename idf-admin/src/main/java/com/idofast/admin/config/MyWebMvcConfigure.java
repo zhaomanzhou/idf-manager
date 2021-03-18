@@ -55,6 +55,7 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .addPathPatterns("/pay/**")
                 .excludePathPatterns("/pay/callback")
 
+                .addPathPatterns("/users/**")
         ;
 
         registry.addInterceptor(requestContextInterceptor)

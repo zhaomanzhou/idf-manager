@@ -12,6 +12,7 @@ import com.idofast.admin.service.manager.EmailLockManager;
 import com.idofast.common.common.JwtToken;
 import com.idofast.common.common.RedisPrefixConst;
 import com.idofast.common.enums.DeletedEnum;
+import com.idofast.common.enums.OsDeviceEnum;
 import com.idofast.common.enums.UserStatusEnum;
 import com.idofast.common.response.error.BusinessException;
 import com.idofast.common.util.MD5Util;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -68,17 +70,17 @@ public class UserService
     {
         String email = registerUserVo.getEmail();
         String verificationCode = emailLockManager.getVerificationCode(email);
-        if(verificationCode == null)
-        {
-            throw new BusinessException("验证码已失效");
-        }
-        if(!verificationCode.equals(registerUserVo.getVcode()))
-        {
-            throw new BusinessException("验证码错误");
-        }
+//        if(verificationCode == null)
+//        {
+//            throw new BusinessException("验证码已失效");
+//        }
+//        if(!verificationCode.equals(registerUserVo.getVcode()))
+//        {
+//            throw new BusinessException("验证码错误");
+//        }
         User user = registerUserVo.convertToUserDo();
         User save = userRepository.save(user);
-        log.info("用户{}注册成功", user.getEmail());
+        log.info("用户{}注册成功, 开始同步proxyInfo数据...", user.getEmail());
         eventPublisher.publishEvent(new UserRegisterEvent(this, user.getId()));
 
         return save;
@@ -186,6 +188,11 @@ public class UserService
         return true;
     }
 
+    public void updateUserRemark(Long userId, String newRemark)
+    {
+        userRepository.updateRemarkById(userId, newRemark);
+    }
+
 
     /**
      * 注销用户
@@ -197,5 +204,25 @@ public class UserService
         userToLogout.setDeleted(DeletedEnum.DELETED);
         userRepository.save(userToLogout);
         return true;
+    }
+
+    public void updateUserDevice(Long userId, List<OsDeviceEnum> deviceEnums)
+    {
+        Integer initialDevice = 0;
+        for(OsDeviceEnum deviceEnum: deviceEnums)
+        {
+            initialDevice = OsDeviceEnum.addDevice(initialDevice, deviceEnum);
+        }
+        userRepository.updateOsDeviceById(userId, initialDevice);
+    }
+
+
+    public void updateUserStatus(Long userId, UserStatusEnum userStatus) throws BusinessException
+    {
+        int i = userRepository.updateUserStatusById(userId, userStatus);
+        if(i <= 0)
+        {
+            throw new BusinessException("更新失败");
+        }
     }
 }

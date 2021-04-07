@@ -27,4 +27,23 @@ public class UserProxyInfoRepositoryTest
         Optional<UserProxyInfo> byId = dataInfoRepository.findById(1L);
         System.out.println(byId.get().getExpireDate());
     }
+
+
+    @Test
+    public void testSave()
+    {
+        UserProxyInfo info = new UserProxyInfo();
+        info.setBundleName("aa");
+        dataInfoRepository.save(info);
+    }
+
+    @Test
+    public void testCustomerInsert()
+    {
+        UserProxyInfo info = new UserProxyInfo();
+        info.setId(1212L);
+        info.setBundleName("aa");
+        info.setBundleId(124L);
+        dataInfoRepository.insertWithGivenId(info);
+    }
 }

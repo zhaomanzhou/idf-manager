@@ -6,6 +6,8 @@ import com.idofast.admin.annotation.AuthRole;
 import com.idofast.admin.config.context.RequestContext;
 import com.idofast.admin.controller.vo.response.OrderForPayResponse;
 import com.idofast.admin.domain.Order;
+import com.idofast.admin.event.event.RechargeEvent;
+import com.idofast.admin.event.publisher.EventPublisher;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.AliPayService;
 import com.idofast.admin.service.BundleService;
@@ -24,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
 
@@ -53,6 +56,10 @@ public class PayController
 
     @Autowired
     private OrderManager orderManager;
+
+
+    @Autowired
+    private EventPublisher eventPublisher;
 
     @ApiOperation("根据传入的订单id去调用支付宝生成对应的支付信息")
     @PostMapping("/create")
@@ -163,6 +170,8 @@ public class PayController
                 log.info("收到支付宝支付成功回调，开始更新订单信息，订单id{}", orderId);
                 orderService.updateOrderStatusPaid(Long.parseLong(orderId));
                 log.info("修改订单状态成功");
+                eventPublisher.publishEvent(new RechargeEvent(this,order.getId(), order.getUserId(), order.getTotalMonth(), order.getBundleId(), false));
+
             }
             return "success";
         }
@@ -209,12 +218,21 @@ public class PayController
             case "TRADE_SUCCESS":
             {
                 order.setOrderStatus(OrderStatusEnum.SUCCESS);
+                eventPublisher.publishEvent(new RechargeEvent(this, order.getId(), order.getUserId(), order.getTotalMonth(), order.getBundleId(), false));
             }
         }
         order.setTradeNo(response.tradeNo);
         order.setBuyerId(response.buyerUserId);
         order.setBuyerLogonId(response.buyerLogonId);
         orderService.updateOrder(order);
+        return ServerResponse.success();
+    }
+
+    @ApiOperation("手动套餐充值接口")
+    @PostMapping("/recharge/human")
+    public ServerResponse<String> rechargeByHuman(@NotNull Long bundleId, @NotNull Integer period, @NotNull Long userId)
+    {
+        eventPublisher.publishEvent(new RechargeEvent(this,0L, userId, period, bundleId, true));
         return ServerResponse.success();
     }
 

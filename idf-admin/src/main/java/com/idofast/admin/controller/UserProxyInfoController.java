@@ -2,7 +2,8 @@ package com.idofast.admin.controller;
 
 import com.idofast.admin.annotation.AuthRole;
 import com.idofast.admin.config.context.RequestContext;
-import com.idofast.admin.controller.vo.response.UserInformationVo;
+import com.idofast.admin.controller.vo.request.ProxyInfoUpdateVo;
+import com.idofast.admin.controller.vo.response.UserProxyInfoVo;
 import com.idofast.admin.domain.User;
 import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.domain.dto.UserInfoLite;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * @createTime 2020/12/31 12:32 上午
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/users/proxy")
 @Api(tags = "用户代理信息相关的API")
 @CrossOrigin
 @Slf4j
@@ -38,28 +39,40 @@ public class UserProxyInfoController
     @GetMapping("/detail/{id}")
     @ApiOperation("根据id获取用户的系统信息")
     @AuthRole(RoleEnum.ADMIN)
-    public ServerResponse<UserInformationVo> getUserInformation(@PathVariable Long id) throws BusinessException
+    public ServerResponse<UserProxyInfoVo> getUserInformation(@PathVariable Long id) throws BusinessException
     {
-        UserProxyInfo information = userProxyInfoService.selectById(id, false);
-        return ServerResponse.success(UserInformationVo.convertFrom(information));
+        UserProxyInfo information = userProxyInfoService.selectById(id, true);
+        return ServerResponse.success(UserProxyInfoVo.convertFrom(information));
     }
 
-    @GetMapping("/detail/")
+    @GetMapping("/detail")
     @ApiOperation("获取自己的系统信息")
-    public ServerResponse<UserInformationVo> getSelfInformation() throws BusinessException
+    public ServerResponse<UserProxyInfoVo> getSelfInformation() throws BusinessException
     {
         User currentUser = RequestContext.getCurrentUser();
         UserProxyInfo information = userProxyInfoService.selectById(currentUser.getId(), true);
-        return ServerResponse.success(UserInformationVo.convertFrom(information));
+        return ServerResponse.success(UserProxyInfoVo.convertFrom(information));
     }
 
-    @GetMapping("/proxyinfo/list")
+    @GetMapping("/list")
     @ApiOperation("获取用户列表")
     public ServerResponse<Object> getUserProxyInfoList()
     {
         Page<UserInfoLite> userList = userProxyInfoService.getUserList(null);
         return ServerResponse.success(userList);
     }
+
+    @GetMapping("/update")
+    @ApiOperation("更改用户信息")
+    public ServerResponse<Object> updateUserProxyInfo(@Validated ProxyInfoUpdateVo proxyInfoUpdateVo) throws BusinessException
+    {
+        userProxyInfoService.updateUserProxyInfo(proxyInfoUpdateVo);
+        return ServerResponse.success();
+    }
+
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.idofast.admin.domain.dto;
 
+import com.idofast.admin.domain.Bundle;
 import com.idofast.admin.domain.User;
 import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.util.LocalDateTimeUtil;
@@ -24,6 +25,12 @@ public class UserInfoLite
         createTime = LocalDateTimeUtil.toTimeStamp(u.getCreateTime());
         nextSettleDate = LocalDateTimeUtil.toTimeStamp(userProxyInfo.getNextSettleDate());
         expireDate = LocalDateTimeUtil.toTimeStamp(userProxyInfo.getExpireDate());
+
+        if(this.getBundleId() == null)
+        {
+            setBundleId(Bundle.DEFAULT_BUNDLE.getId());
+            setBundleName(Bundle.DEFAULT_BUNDLE.getName());
+        }
 
     }
 
@@ -88,12 +95,12 @@ public class UserInfoLite
     /**
      * 目前使用的套餐ID
      */
-    private Integer packageId;
+    private Long BundleId;
 
     /**
      * 目前使用的套餐名
      */
-    private String packageName;
+    private String BundleName;
 
     /**
      * vip总时间

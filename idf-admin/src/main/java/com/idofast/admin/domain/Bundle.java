@@ -86,13 +86,13 @@ public class Bundle
 
     static {
          DEFAULT_BUNDLE = new BundleBuilder()
-                .speed(1024L)
+                .speed(1024*8L)
                 .duration(1)
                 .level(0)
                 .maxConnection(128)
-                .totalData(2)
+                .totalData(2*1024)
                 .active(true)
-                .name("默认初始套餐")
+                .name("默认初始试用套餐")
                 .id(0L)
                 .build();
     }

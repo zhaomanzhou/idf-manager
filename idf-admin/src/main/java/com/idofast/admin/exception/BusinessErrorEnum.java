@@ -34,7 +34,9 @@ public enum BusinessErrorEnum implements CommonError
 
     NOTICE_NOT_EXIST(4004, "文章/公告 不存在"),
 
-    ILLEGAL_ORDER_USER(40003,"非法操作，错误码40003")
+    ILLEGAL_ORDER_USER(40003,"非法操作，错误码40003"),
+
+    INVALID_BUNDLE_OPERATION(4200, "非当前使用套餐，如需更换请联系管理员")
 
     ;
 

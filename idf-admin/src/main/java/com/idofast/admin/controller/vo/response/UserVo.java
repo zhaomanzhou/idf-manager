@@ -2,13 +2,14 @@ package com.idofast.admin.controller.vo.response;
 
 
 import com.idofast.admin.domain.User;
+import com.idofast.admin.util.LocalDateTimeUtil;
+import com.idofast.common.enums.OsDeviceEnum;
 import com.idofast.common.enums.RoleEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -36,21 +37,32 @@ public class UserVo
     private String remark;
 
     @ApiModelProperty("使用的设备")
-    private List<Integer> osDevice;
+    private List<String> osDevice;
+
+    private Integer status;
 
     private String ext;
 
-    private LocalDateTime updateTime;
+    private Long updateTime;
 
-    private LocalDateTime createTime;
+    private Long createTime;
 
-    public static UserVo convertUserToVo(User user)
+    /**
+     *
+     * @param hidden  是否对敏感信息隐藏， 管理员访问不需要，普通用户需要
+     */
+    public static UserVo convertUserToVo(User user, boolean hidden)
     {
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(user, userVo);
         userVo.setRole(user.getRole().getMsg());
+        userVo.setOsDevice(OsDeviceEnum.convertToStringList(user.getOsDevice()));
+        userVo.setCreateTime(LocalDateTimeUtil.toTimeStamp(user.getCreateTime()));
+        userVo.setUpdateTime(LocalDateTimeUtil.toTimeStamp(user.getUpdateTime()));
+        userVo.setStatus(user.getStatus().getCode());
+
         //不是管理员，屏蔽掉一些数据
-        if(user.getRole().getCode() > RoleEnum.ADMIN.getCode())
+        if(hidden && user.getRole().getCode() > RoleEnum.ADMIN.getCode())
         {
             userVo.setAvatarUrl(null);
             userVo.setRemark(null);
@@ -59,5 +71,6 @@ public class UserVo
         }
         return userVo;
     }
+
 
 }

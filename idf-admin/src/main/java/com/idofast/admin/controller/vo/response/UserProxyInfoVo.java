@@ -1,17 +1,16 @@
 package com.idofast.admin.controller.vo.response;
 
 import com.idofast.admin.domain.UserProxyInfo;
+import com.idofast.admin.util.LocalDateTimeUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-import java.time.ZoneOffset;
-
 
 @Data
 @ApiModel("用户系统信息返回的vo对象；流量，到期时间等")
-public class UserInformationVo
+public class UserProxyInfoVo
 {
 
     @ApiModelProperty("用户的id")
@@ -21,7 +20,7 @@ public class UserInformationVo
     private Integer level;
 
     @ApiModelProperty("限速值，单位kb/s")
-    private Integer speed;
+    private Long speed;
 
     @ApiModelProperty("用户总流量")
     private Integer totalData;
@@ -39,26 +38,23 @@ public class UserInformationVo
     private Integer maxConnection;
 
     @ApiModelProperty("账号用的套餐Id")
-    private Integer packageId;
+    private Long bundleId;
 
     @ApiModelProperty("账号用的套餐名")
-    private String packageName;
+    private String bundleName;
 
-    @ApiModelProperty("账号是否有过付费记录")
-    private Boolean recharged;
-
+    @ApiModelProperty("账号已开通的会员天数")
+    private Integer totalActiveDay;
 
     @ApiModelProperty("账号命名空间")
     private Integer namespace;
 
-    @ApiModelProperty("账号是否被封禁")
-    private Boolean disable;
 
-    public static UserInformationVo convertFrom(UserProxyInfo userProxyInfo){
-        UserInformationVo vo = new UserInformationVo();
+    public static UserProxyInfoVo convertFrom(UserProxyInfo userProxyInfo){
+        UserProxyInfoVo vo = new UserProxyInfoVo();
         BeanUtils.copyProperties(userProxyInfo, vo);
-        vo.setNextSettleDate(userProxyInfo.getNextSettleDate().toEpochSecond(ZoneOffset.UTC));
-        vo.setExpireDate(userProxyInfo.getExpireDate().toEpochSecond(ZoneOffset.UTC));
+        vo.setNextSettleDate(LocalDateTimeUtil.toTimeStamp(userProxyInfo.getNextSettleDate()));
+        vo.setExpireDate(LocalDateTimeUtil.toTimeStamp(userProxyInfo.getExpireDate()));
         return vo;
     }
 

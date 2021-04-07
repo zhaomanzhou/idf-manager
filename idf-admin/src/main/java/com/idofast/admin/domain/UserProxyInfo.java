@@ -22,7 +22,7 @@ public class UserProxyInfo
 {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(columnDefinition="bigint")
     private Long id;
 
@@ -37,53 +37,63 @@ public class UserProxyInfo
     /**
      * 用户等级; 默认0
      */
+    @Column(nullable = false)
     private Integer level;
 
 
     /**
-     * 限速,单位kb
+     * 限速,单位kbps
      */
-    private Integer speed;
+    @Column(nullable = false)
+    private Long speed;
 
     /**
      *总流量,单位MB
      */
+    @Column(nullable = false)
     private Integer totalData;
 
     /**
      * 已用流量
      */
+    @Column(nullable = false)
     private Integer usedData;
 
     /**
      * 下一个结算日期
      */
+    @Column(nullable = false)
     private LocalDateTime nextSettleDate;
 
     /**
      * 过期时间
      */
+    @Column(nullable = false)
     private LocalDateTime expireDate;
 
     /**
-     * 最大连接数
+     * 最大连接数, 0表示不限制
      */
+    @Column(nullable = false)
     private Integer maxConnection;
 
     /**
      * 目前使用的套餐ID
      */
-    private Integer packageId;
+    @Column(nullable = false)
+    private Long bundleId;
 
     /**
      * 目前使用的套餐名
      */
-    private String packageName;
+    @Column(nullable = false)
+    private String bundleName;
 
 
     /**
      * 账号命名空间
      */
+    @Column(nullable = false)
     private Integer namespace;
 
 

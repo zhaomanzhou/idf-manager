@@ -16,7 +16,8 @@ public enum OrderStatusEnum implements IBaseEnum<OrderStatusEnum>
     WAIT_TO_PAY(10, "用户已扫码，但未付款"),
     CANCEL_USER(21, "用户已取消"),
     CANCEL_TIMEOUT(22, "超时自动关闭订单"),
-    SUCCESS(30, "已支付");
+    SUCCESS(30, "已支付"),
+    INVALID_SUCCESS(31, "已支付,但该订单无效，不做处理");
 
 
     private final Integer code;

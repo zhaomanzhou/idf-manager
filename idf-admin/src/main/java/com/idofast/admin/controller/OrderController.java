@@ -9,9 +9,11 @@ import com.idofast.admin.controller.vo.response.OrderToAdminVo;
 import com.idofast.admin.controller.vo.response.OrderToUserVo;
 import com.idofast.admin.domain.Bundle;
 import com.idofast.admin.domain.Order;
+import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.BundleService;
 import com.idofast.admin.service.OrderService;
+import com.idofast.admin.service.UserProxyInfoService;
 import com.idofast.admin.service.manager.OrderManager;
 import com.idofast.admin.util.LocalDateTimeUtil;
 import com.idofast.common.enums.OrderStatusEnum;
@@ -58,11 +60,21 @@ public class OrderController
     @Autowired
     private OrderManager orderManager;
 
+    @Autowired
+    private UserProxyInfoService proxyInfoService;
+
     @ApiOperation("创建订单")
     @PostMapping("/create")
     public ServerResponse<Order> createOrder(Long bundleId, Integer totalMonth, Integer payType) throws BusinessException
     {
         Bundle bundle = bundleService.findById(bundleId);
+
+        UserProxyInfo proxyInfo = proxyInfoService.selectById(RequestContext.getCurrentUser().getId(), true);
+        if(proxyInfo.getBundleId() != 0 && !proxyInfo.getBundleId().equals(bundleId) && proxyInfo.getExpireDate().isAfter(LocalDateTime.now()))
+        {
+            throw new BusinessException(BusinessErrorEnum.INVALID_BUNDLE_OPERATION);
+        }
+
         Order order = Order.builder()
                 .bundleName(bundle.getName())
                 .orderName("IdoFast" + bundle.getName() + " " + totalMonth + "个月")

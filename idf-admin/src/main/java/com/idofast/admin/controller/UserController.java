@@ -1,13 +1,19 @@
 package com.idofast.admin.controller;
 
 
+import com.idofast.admin.annotation.AuthRole;
 import com.idofast.admin.config.context.RequestContext;
 import com.idofast.admin.controller.vo.request.RegisterUserVo;
 import com.idofast.admin.controller.vo.response.UserVo;
 import com.idofast.admin.domain.User;
+import com.idofast.admin.event.event.UserDisableEvent;
+import com.idofast.admin.event.publisher.EventPublisher;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.EmailService;
 import com.idofast.admin.service.UserService;
+import com.idofast.common.enums.OsDeviceEnum;
+import com.idofast.common.enums.RoleEnum;
+import com.idofast.common.enums.UserStatusEnum;
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.response.error.BusinessException;
 import io.swagger.annotations.Api;
@@ -22,6 +28,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Validator;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -40,22 +51,25 @@ public class UserController
     private EmailService emailService;
 
     @Autowired
+    private EventPublisher eventPublisher;
+
+    @Autowired
     private Validator validator;
 
 
-    @ApiOperation(value = "获取注册验证码" )
+    @ApiOperation(value = "获取注册验证码")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "邮箱", required = true,dataType = "string",example = "271832284@qq.com"),
+            @ApiImplicitParam(name = "email", value = "邮箱", required = true, dataType = "string", example = "271832284@qq.com"),
     })
     @GetMapping("/vcode/register")
     public ServerResponse<String> registerForVcode(@Email(message = "邮箱格式不正确") @RequestParam("email") String email) throws Exception
     {
-        if(StringUtils.isBlank(email))
+        if (StringUtils.isBlank(email))
         {
             throw new BusinessException("email不能为空");
         }
         boolean exist = userService.userExistByEmail(email);
-        if(exist)
+        if (exist)
         {
             throw new BusinessException("用户已存在");
         }
@@ -65,7 +79,7 @@ public class UserController
     }
 
 
-    @ApiOperation(value = "用户注册" )
+    @ApiOperation(value = "用户注册")
     @PostMapping("/register")
     public ServerResponse<String> reg(@Validated RegisterUserVo registerUserVo) throws BusinessException
     {
@@ -74,58 +88,63 @@ public class UserController
     }
 
 
-
-
-    @ApiOperation(value = "登录" )
+    @ApiOperation(value = "登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "用户邮箱", required = true,dataType = "string",example = "271832284@qq.com"),
-            @ApiImplicitParam(name = "password", value = "密码",required = true,dataType = "string", example = "123456"),
+            @ApiImplicitParam(name = "email", value = "用户邮箱", required = true, dataType = "string", example = "271832284@qq.com"),
+            @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "string", example = "123456"),
     })
     @PostMapping(value = "/login")
-    public ServerResponse<String> login(String email, String password) throws BusinessException {
+    public ServerResponse<String> login(String email, String password) throws BusinessException
+    {
         String token = userService.genTokenByAuthentication(email, password);
         return ServerResponse.success(token);
     }
 
 
-
     @ApiOperation("根据token获取当前用户信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "token", value = "token信息", required = true,dataType = "String"),
+            @ApiImplicitParam(name = "token", value = "token信息", required = true, dataType = "String"),
     })
     @GetMapping(value = "/detail/token")
-    public ServerResponse<UserVo> getUserInfo(String token) throws BusinessException {
+    public ServerResponse<UserVo> getUserInfo(String token) throws BusinessException
+    {
 
-        if(token == null){
+        if (token == null)
+        {
             throw new BusinessException(BusinessErrorEnum.NEED_LOGIN);
         }
 
-            User user = userService.getUserByToken(token);
-            UserVo userVo = UserVo.convertUserToVo(user);
-            return ServerResponse.success(userVo);
+        User user = userService.getUserByToken(token);
+        UserVo userVo = UserVo.convertUserToVo(user, true);
+        return ServerResponse.success(userVo);
 
     }
 
 
-    @ApiOperation(value = "根据id查询用户信息" )
+    @ApiOperation(value = "根据id查询用户信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "用户id", required = true,dataType = "Long"),
+            @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "Long"),
     })
-    @GetMapping("/detail/id/")
-    public ServerResponse<UserVo> queryById(Long id) throws BusinessException {
+    @GetMapping("/detail/id")
+    @AuthRole(RoleEnum.ADMIN)
+    public ServerResponse<UserVo> queryById(@NotNull Long id) throws BusinessException
+    {
         User user = userService.getUserById(id);
-        return ServerResponse.success(UserVo.convertUserToVo(user));
+        UserVo userVo = UserVo.convertUserToVo(user, false);
+        return ServerResponse.success(userVo);
     }
 
     @ApiOperation(value = "重置密码")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "passwordOld", value = "用户原密码", required = true,dataType = "String"),
-            @ApiImplicitParam(name = "passwordNew", value = "用户新密码", required = true,dataType = "String"),
+            @ApiImplicitParam(name = "passwordOld", value = "用户原密码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "passwordNew", value = "用户新密码", required = true, dataType = "String"),
     })
     @PostMapping(value = "/reset_password")
-    public ServerResponse<String> resetPassword(String passwordOld,String passwordNew) throws BusinessException {
+    public ServerResponse<String> resetPassword(String passwordOld, String passwordNew) throws BusinessException
+    {
         User user = userService.getUserByToken(RequestContext.getToken());
-        if(user == null){
+        if (user == null)
+        {
             return ServerResponse.error("用户未登录");
         }
         userService.resetPassword(passwordOld, passwordNew, user);
@@ -134,9 +153,11 @@ public class UserController
 
     @ApiOperation(value = "更新用户信息")
     @PostMapping(value = "/update")
-    public ServerResponse<String> update_information(UserVo userVoNew) throws BusinessException {
+    public ServerResponse<String> update_information(UserVo userVoNew) throws BusinessException
+    {
         User user = userService.getUserByToken(RequestContext.getToken());
-        if(user == null){
+        if (user == null)
+        {
             return ServerResponse.error("用户未登录");
         }
 //        User user = new User();
@@ -162,14 +183,67 @@ public class UserController
         return ServerResponse.success();
     }
 
+
     @ApiOperation(value = "注销用户")
     @PostMapping(value = "/delete")
-    public ServerResponse<String>  LogOutUser() throws BusinessException{
+    public ServerResponse<String> LogOutUser() throws BusinessException
+    {
         User user = userService.getUserByToken(RequestContext.getToken());
-        if(user == null){
+        if (user == null)
+        {
             return ServerResponse.error("用户未登录");
         }
         userService.deleteUser(user);
+        return ServerResponse.success();
+    }
+
+    @ApiOperation(value = "更新用户备注")
+    @AuthRole(RoleEnum.ADMIN)
+    @PostMapping(value = "/update/remark")
+    public ServerResponse<String> updateUserRemark(@NotNull Long userId, String newRemark)
+    {
+        userService.updateUserRemark(userId, newRemark);
+        return ServerResponse.success();
+    }
+
+    @ApiOperation(value = "更新用户设备")
+    @AuthRole(RoleEnum.ADMIN)
+    @PostMapping(value = "/update/device")
+    public ServerResponse<String> updateUserDevice(@NotNull Long userId,String[] newDevice)
+    {
+        List<OsDeviceEnum> list = new ArrayList<>();
+        for (String device : newDevice)
+        {
+            OsDeviceEnum deviceEnum = OsDeviceEnum.ofMsg(device);
+            if (deviceEnum != null)
+            {
+                list.add(deviceEnum);
+            }
+        }
+        userService.updateUserDevice(userId, list);
+        return ServerResponse.success();
+    }
+
+
+    @ApiOperation(value = "获取所有的设备信息")
+    @AuthRole(RoleEnum.ADMIN)
+    @GetMapping(value = "/device/list")
+    public ServerResponse<List<String>> getDeviceList()
+    {
+        OsDeviceEnum[] values = OsDeviceEnum.values();
+        List<String> collect = Arrays.stream(values).map(OsDeviceEnum::getMsg).collect(Collectors.toList());
+        return ServerResponse.success(collect);
+    }
+
+
+    @ApiOperation(value = "修改用户状态")
+    @AuthRole(RoleEnum.ADMIN)
+    @PostMapping(value = "/status/update")
+    public ServerResponse<String> updateUserStatus(@NotNull Long userId, @NotNull Boolean enable) throws BusinessException
+    {
+        UserStatusEnum toBeUpdated = enable ? UserStatusEnum.NORMAL : UserStatusEnum.FORBIDDEN;
+        userService.updateUserStatus(userId, toBeUpdated);
+        eventPublisher.publishEvent(new UserDisableEvent(this, userId));
         return ServerResponse.success();
     }
 

@@ -66,7 +66,8 @@ public class User implements Serializable
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-
+    //邀请码，同时也是旧账号的AccountNo
+    private String inviteCode;
 
 
     @Convert(converter = DeletedEnum.Converter.class)

@@ -1,16 +1,21 @@
 package com.idofast.admin.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import com.idofast.admin.controller.vo.request.ProxyInfoUpdateVo;
 import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.domain.dto.UserInfoLite;
+import com.idofast.admin.event.event.UserRegisterEvent;
+import com.idofast.admin.event.publisher.EventPublisher;
 import com.idofast.admin.repository.UserProxyInfoRepository;
-import com.idofast.common.enums.DeletedEnum;
+import com.idofast.admin.util.LocalDateTimeUtil;
 import com.idofast.common.response.error.BusinessException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -19,10 +24,14 @@ import java.util.Optional;
  * @createTime 2020/12/31 12:32 上午
  */
 @Service
+@Slf4j
 public class UserProxyInfoService
 {
     @Autowired
     private UserProxyInfoRepository userProxyInfoRepository;
+
+    @Autowired
+    private EventPublisher eventPublisher;
 
 
     /**
@@ -37,24 +46,11 @@ public class UserProxyInfoService
         //TODO  报警
         if(byId.isEmpty())
         {
+            log.error("用户{}没有生成相应的UserProxy代理信息", id);
             if(ifCreate)
             {
-                LocalDateTime now = LocalDateTime.now();
-                UserProxyInfo information = UserProxyInfo.builder()
-                        .id(id)
-                        .level(0)
-                        .speed(1024)
-                        .totalData(1024)
-                        .usedData(0)
-                        .nextSettleDate(now.plusDays(1))
-                        .expireDate(now.plusDays(1))
-                        .packageId(0)
-                        .namespace(0)
-                        .totalActiveDay(1)
-                        .deleted(DeletedEnum.NORMAL)
-                        .build();
-                userProxyInfoRepository.save(information);
-                return information;
+                eventPublisher.publishEvent(new UserRegisterEvent(this, id));
+               return userProxyInfoRepository.findById(id).get();
             }else
             {
                 throw new BusinessException("用户信息不存在");
@@ -71,4 +67,25 @@ public class UserProxyInfoService
     {
         return userProxyInfoRepository.queryUserInfo(page);
     }
+
+
+    public void updateUserProxyInfo(ProxyInfoUpdateVo updateVo) throws BusinessException
+    {
+
+
+        Optional<UserProxyInfo> proxyInfoHolder = userProxyInfoRepository.findById(updateVo.getId());
+        if(proxyInfoHolder.isEmpty()){
+            throw new BusinessException("用户不存在");
+        }
+        UserProxyInfo proxyInfo = proxyInfoHolder.get();
+        BeanUtil.copyProperties(updateVo, proxyInfo,true, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        proxyInfo.setExpireDate(LocalDateTimeUtil.toLocalDateTime(updateVo.getExpireDate()));
+        proxyInfo.setNextSettleDate(LocalDateTimeUtil.toLocalDateTime(updateVo.getNextSettleDate()));
+
+        userProxyInfoRepository.save(proxyInfo);
+
+    }
+
+
+
 }

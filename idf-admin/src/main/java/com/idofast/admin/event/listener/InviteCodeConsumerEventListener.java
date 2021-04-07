@@ -3,6 +3,7 @@ package com.idofast.admin.event.listener;
 import com.idofast.admin.event.event.InviteCodeConsumerEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 /**
  * @author zhaomanzhou
@@ -10,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
  * @createTime 2021/1/1 12:06 上午
  * 邀请码生效后进行返现奖励
  */
+@Component
 public class InviteCodeConsumerEventListener implements ApplicationListener<InviteCodeConsumerEvent>
 {
     @Async

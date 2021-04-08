@@ -38,7 +38,7 @@ public class OrderRepositoryTest
     @Test
     public void test2()
     {
-        List<Order> orders = orderRepository.findAllByCreateTimeAfterAndOrderStatusBefore(LocalDateTime.now().plusHours(-1), OrderStatusEnum.SUCCESS);
+        List<Order> orders = orderRepository.findAllByCreateTimeBeforeAndOrderStatusIsLessThan(LocalDateTime.now().plusHours(-1), OrderStatusEnum.SUCCESS);
         for(Order order: orders)
         {
             if(order.getCreateTime().plusHours(2).isAfter(LocalDateTime.now()))

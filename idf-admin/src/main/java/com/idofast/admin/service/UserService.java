@@ -70,14 +70,14 @@ public class UserService
     {
         String email = registerUserVo.getEmail();
         String verificationCode = emailLockManager.getVerificationCode(email);
-//        if(verificationCode == null)
-//        {
-//            throw new BusinessException("验证码已失效");
-//        }
-//        if(!verificationCode.equals(registerUserVo.getVcode()))
-//        {
-//            throw new BusinessException("验证码错误");
-//        }
+        if(verificationCode == null)
+        {
+            throw new BusinessException("验证码已失效");
+        }
+        if(!verificationCode.equals(registerUserVo.getVcode()))
+        {
+            throw new BusinessException("验证码错误");
+        }
         User user = registerUserVo.convertToUserDo();
         User save = userRepository.save(user);
         log.info("用户{}注册成功, 开始同步proxyInfo数据...", user.getEmail());
@@ -182,8 +182,13 @@ public class UserService
         }
         User userToUpdate = new User();
         userToUpdate.setId(user.getId());
-        userToUpdate.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
-        userRepository.save(userToUpdate);
+        log.info("用户{},更新新密码为{}", user.getId(), passwordNew);
+        int i = userRepository.updatePasswordById(user.getId(), MD5Util.MD5EncodeUtf8(passwordNew));
+        if(i <= 0)
+        {
+            throw new BusinessException("更新失败");
+        }
+
 
         return true;
     }
@@ -224,5 +229,27 @@ public class UserService
         {
             throw new BusinessException("更新失败");
         }
+    }
+
+    public boolean resetPasswordByVcode(String email, String passwordNew, String vcode) throws BusinessException
+    {
+
+        String verificationCode = emailLockManager.getVerificationCode(email);
+        if(verificationCode == null)
+        {
+            throw new BusinessException("验证码已失效");
+        }
+        if(!verificationCode.equals(vcode))
+        {
+            throw new BusinessException("验证码错误");
+        }
+        log.info("用户{},更新新密码为{}", email, passwordNew);
+
+        int i = userRepository.updatePasswordByEmail(email, MD5Util.MD5EncodeUtf8(passwordNew));
+        if(i <= 0)
+        {
+            throw new BusinessException("更新失败");
+        }
+        return true;
     }
 }

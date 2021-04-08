@@ -27,7 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 {
     List<Order> findAllByUserId(Long userId);
     List<Order> findAllByOrderStatusBefore(OrderStatusEnum orderStatus);
-    List<Order> findAllByCreateTimeAfterAndOrderStatusBefore(LocalDateTime startTime,OrderStatusEnum orderStatus);
+    List<Order> findAllByCreateTimeBeforeAndOrderStatusIsLessThan(LocalDateTime startTime, OrderStatusEnum orderStatus);
 
 
     default Specification<Order> exampleSpecification(Example<Order> example){

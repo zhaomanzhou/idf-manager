@@ -8,6 +8,7 @@ import com.idofast.admin.service.manager.EmailLockManager;
 import com.idofast.admin.service.manager.EmailManager;
 import com.idofast.admin.util.EmailUtils;
 import com.idofast.admin.util.VcodeUtil;
+import com.idofast.common.enums.EmailTypeEnum;
 import com.idofast.common.response.error.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,20 @@ public class EmailService
         }
         String vcode = VcodeUtil.generateVCode();
 
-        emailManager.sendMailAndSaveToDb(toEmail, vcode);
+        emailManager.sendMailAndSaveToDb(toEmail, vcode, EmailTypeEnum.REGISTER_VCODE);
+
+    }
+
+
+    public void sendVcodeForResetPassword(String toEmail) throws Exception
+    {
+        if(!emailLockManager.canSendVerificationCode(toEmail))
+        {
+            throw new BusinessException("操作过于频繁，请两分钟后尝试");
+        }
+        String vcode = VcodeUtil.generateVCode();
+
+        emailManager.sendMailAndSaveToDb(toEmail, vcode, EmailTypeEnum.RESET_PASSWORD);
 
     }
 

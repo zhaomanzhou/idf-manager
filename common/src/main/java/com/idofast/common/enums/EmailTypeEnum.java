@@ -6,7 +6,8 @@ import com.idofast.common.enums.base.IBaseEnum;
 public enum EmailTypeEnum implements IBaseEnum<EmailTypeEnum>
 {
     REGISTER_VCODE(1, "注册验证码"),
-    ACCOUNT_EXPIRE(2, "帐号过期提醒");
+    ACCOUNT_EXPIRE(2, "帐号过期提醒"),
+    RESET_PASSWORD(3, "重置密码");
 
 
     EmailTypeEnum(int code, String msg)

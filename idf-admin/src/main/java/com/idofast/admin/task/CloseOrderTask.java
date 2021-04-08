@@ -28,11 +28,11 @@ public class CloseOrderTask
     private OrderManager orderManager;
 
 
-    @Scheduled(cron = "0 0 0/2 * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void test()
     {
         log.info("--------------开始进行取消订单定时任务--------------------------");
-        List<Order> orders = orderRepository.findAllByCreateTimeAfterAndOrderStatusBefore(LocalDateTime.now().plusHours(-1), OrderStatusEnum.SUCCESS);
+        List<Order> orders = orderRepository.findAllByCreateTimeBeforeAndOrderStatusIsLessThan(LocalDateTime.now().plusHours(-1), OrderStatusEnum.SUCCESS);
         for(Order order: orders)
         {
             log.info("处理超时取消订单{}", order.toString());

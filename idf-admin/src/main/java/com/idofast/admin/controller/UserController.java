@@ -134,13 +134,13 @@ public class UserController
         return ServerResponse.success(userVo);
     }
 
-    @ApiOperation(value = "重置密码")
+    @ApiOperation(value = "通过旧密码来重置密码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "passwordOld", value = "用户原密码", required = true, dataType = "String"),
             @ApiImplicitParam(name = "passwordNew", value = "用户新密码", required = true, dataType = "String"),
     })
-    @PostMapping(value = "/reset_password")
-    public ServerResponse<String> resetPassword(String passwordOld, String passwordNew) throws BusinessException
+    @PostMapping(value = "/resetPassword/withOldPassword")
+    public ServerResponse<String> resetPassword(@NotNull String passwordOld, @NotNull String passwordNew) throws BusinessException
     {
         User user = userService.getUserByToken(RequestContext.getToken());
         if (user == null)
@@ -248,4 +248,40 @@ public class UserController
     }
 
 
+    @ApiOperation(value = "获取重置密码验证码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "邮箱", required = true, dataType = "string", example = "271832284@qq.com"),
+    })
+    @GetMapping("/vcode/resetPassword")
+    public ServerResponse<String> resetPasswordForVcode(@Email(message = "邮箱格式不正确") @RequestParam("email") String email) throws Exception
+    {
+        if (StringUtils.isBlank(email))
+        {
+            throw new BusinessException("email不能为空");
+        }
+        boolean exist = userService.userExistByEmail(email);
+        if (!exist)
+        {
+            log.warn("有用户尝试重置不存在email:{}的密码", email);
+            return ServerResponse.success();
+        }
+
+        emailService.sendVcodeForResetPassword(email);
+        return ServerResponse.success();
+    }
+
+
+
+    @ApiOperation(value = "通过验证码来重置密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "用户邮箱", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "vcode", value = "用户验证码", required = true, dataType = "String"),
+    })
+    @PostMapping(value = "/resetPassword/withVcode")
+    public ServerResponse<String> resetPasswordWithVcode(@NotNull String email, @NotNull String vcode, @NotNull String password) throws BusinessException
+    {
+
+        userService.resetPasswordByVcode(email, password, vcode);
+        return ServerResponse.success();
+    }
 }

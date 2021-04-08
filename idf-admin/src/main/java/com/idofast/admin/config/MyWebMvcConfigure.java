@@ -44,6 +44,8 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/user/detail/token")
                 .excludePathPatterns("/user/vcode/register")
+                .excludePathPatterns("/user/vcode/resetPassword")
+                .excludePathPatterns("/user/resetPassword/withVcode")
                 .excludePathPatterns("/error/**")
 
                 .addPathPatterns("/notice/**")

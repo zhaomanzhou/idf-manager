@@ -26,6 +26,6 @@ public class SpringEmailAdapterTest
         HashMap<String, Object> hashMap = Maps.newHashMap();
         hashMap.put("vcode", VcodeUtil.generateVCode());
 
-        emailAdapter.sendThymeleafMail("测试主题", "liujingjie@siyizn.com", hashMap, "vcode.html");
+        emailAdapter.sendThymeleafMail("测试主题", "liujingjie@siyizn.com", hashMap, "vcode_register.html");
     }
 }

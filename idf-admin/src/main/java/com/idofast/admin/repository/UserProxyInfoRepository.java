@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author zhaomanzhou
@@ -39,4 +41,6 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
 
     @Transactional
     public void insertWithGivenId(@Param("info") UserProxyInfo userProxyInfo);
+
+    List<UserProxyInfo> findAllByNextSettleDateBeforeAndAndExpireDateAfter(LocalDateTime currentDatTime, LocalDateTime currentDateTime);
 }

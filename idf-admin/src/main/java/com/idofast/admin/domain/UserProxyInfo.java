@@ -18,6 +18,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Where(clause = "deleted=0")
+@Table( indexes = {
+        @Index(name = "idx_user_proxy_next_settle_date_user", columnList="nextSettleDate", unique = false),
+        @Index(name = "idx_user_proxy_expire_date_user", columnList="expireDate", unique = false),
+        @Index(name = "idx_user_bundle_id_date_user", columnList="bundleName", unique = false),
+})
 public class UserProxyInfo
 {
 
@@ -48,16 +53,16 @@ public class UserProxyInfo
     private Long speed;
 
     /**
-     *总流量,单位MB
+     *总流量,单位kb
      */
     @Column(nullable = false)
-    private Integer totalData;
+    private Long totalData;
 
     /**
-     * 已用流量
+     * 已用流量 kb
      */
     @Column(nullable = false)
-    private Integer usedData;
+    private Long usedData;
 
     /**
      * 下一个结算日期

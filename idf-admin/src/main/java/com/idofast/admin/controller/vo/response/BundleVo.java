@@ -29,7 +29,7 @@ public class BundleVo
     private String name;
 
     @ApiModelProperty("套餐含有的总流量，单位MB")
-    private int totalData;
+    private Long totalData;
 
     @ApiModelProperty("套餐限制最大速度，0代表不限速，单位Mbps")
     private Long speed;

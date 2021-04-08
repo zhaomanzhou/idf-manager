@@ -4,6 +4,8 @@ import com.idofast.admin.domain.SystemPreference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author zhaomanzhou
  * @version 1.0
@@ -13,4 +15,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SystemPreferenceRepository extends JpaRepository<SystemPreference, Long>
 {
+    List<SystemPreference> findAllByPreKeyLike(String preKey);
 }

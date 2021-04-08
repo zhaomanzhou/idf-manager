@@ -15,12 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 /**
  * @author zhaomanzhou
  * @version 1.0
  * @createTime 2021/4/7 10:35 上午
+ *
+ * 用户充值
+ * 可以支付宝扫码，也可以管理员手动
  */
 @Component
 @Slf4j
@@ -40,6 +44,7 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
     private RechargeLogRepository rechargeLogRepository;
 
     @SneakyThrows
+    @Transactional
     @Override
     public void onApplicationEvent(RechargeEvent event)
     {
@@ -92,8 +97,8 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
             proxyInfo.setSpeed(bundle.getSpeed());
             proxyInfo.setTotalActiveDay(totalDay);
             proxyInfo.setMaxConnection(proxyInfo.getMaxConnection());
-            proxyInfo.setTotalData(bundle.getTotalData());
-            proxyInfo.setUsedData(0);
+            proxyInfo.setTotalData(bundle.getTotalData()*1024);
+            proxyInfo.setUsedData(0L);
             proxyInfoRepository.save(proxyInfo);
             saveRechargeLog(rechargeLog);
             return;
@@ -143,7 +148,7 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
             {
 
                 proxyInfo.setExpireDate(LocalDateTime.now().plusDays(totalDay));
-                proxyInfo.setTotalData(bundle.getTotalData());
+                proxyInfo.setTotalData(bundle.getTotalData()*1024);
                 proxyInfo.setNextSettleDate(LocalDateTime.now().plusDays(bundle.getDuration()));
                 proxyInfo.setBundleId(bundleId);
                 proxyInfo.setBundleName(bundle.getName());
@@ -151,7 +156,7 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
                 proxyInfo.setSpeed(bundle.getSpeed());
                 proxyInfo.setTotalActiveDay(totalDay);
                 proxyInfo.setMaxConnection(proxyInfo.getMaxConnection());
-                proxyInfo.setUsedData(0);
+                proxyInfo.setUsedData(0L);
                 saveRechargeLog(rechargeLog);
                 proxyInfoRepository.save(proxyInfo);
 

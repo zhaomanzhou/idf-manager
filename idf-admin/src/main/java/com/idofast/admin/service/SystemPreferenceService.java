@@ -1,14 +1,13 @@
 package com.idofast.admin.service;
 
 import com.idofast.admin.domain.SystemPreference;
-import com.idofast.admin.domain.enums.SystemPreferenceKeyEnum;
+import com.idofast.admin.domain.enums.SystemPreferenceEnum;
 import com.idofast.admin.repository.SystemPreferenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,8 +27,8 @@ public class SystemPreferenceService
 
 
 
-    @Cacheable(value = "preference-cache",key = ("#keyEnum.key"))
-    public String getPreference(SystemPreferenceKeyEnum keyEnum)
+//    @Cacheable(value = "preference-cache",key = ("#keyEnum.key"))
+    public String getPreference(SystemPreferenceEnum keyEnum)
     {
         SystemPreference preference = new SystemPreference();
         preference.setPreKey(keyEnum.getKey());
@@ -38,8 +37,8 @@ public class SystemPreferenceService
         return one.isPresent()? one.get().getPreValue(): keyEnum.getDefaultValue();
     }
 
-    @CachePut(value = "preference-cache",key = ("#keyEnum.key}]"))
-    public void updatePreference(SystemPreferenceKeyEnum keyEnum, String value)
+//    @CachePut(value = "preference-cache",key = ("#keyEnum.key"))
+    public void updatePreference(SystemPreferenceEnum keyEnum, String value)
     {
         SystemPreference preference = new SystemPreference();
         preference.setPreKey(keyEnum.getKey());
@@ -52,6 +51,18 @@ public class SystemPreferenceService
 
         preference.setPreValue(value);
         systemPreferenceRepository.save(preference);
+    }
+
+
+    public List<SystemPreference> getAllPreference()
+    {
+        List<SystemPreference> all = systemPreferenceRepository.findAll();
+        return all;
+    }
+
+    public List<SystemPreference> getAllInstruction()
+    {
+        return systemPreferenceRepository.findAllByPreKeyLike("INSTRUCTION_LINK%");
     }
 
 

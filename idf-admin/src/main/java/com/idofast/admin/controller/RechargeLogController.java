@@ -7,6 +7,8 @@ import com.idofast.admin.repository.RechargeLogRepository;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.response.ServerResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class RechargeLogController
     private RechargeLogRepository rechargeLogRepository;
 
     @ApiOperation("获取用户的充值记录接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "number", example = "12233"),
+    })
     @GetMapping("/user/list")
     @AuthRole(RoleEnum.ADMIN)
     public ServerResponse<List<RechargeLogVo>> getRechargeLogByUserId(@NotNull Long userId)

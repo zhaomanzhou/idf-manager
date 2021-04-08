@@ -1,6 +1,6 @@
 package com.idofast.admin.service.manager;
 
-import com.idofast.admin.domain.enums.SystemPreferenceKeyEnum;
+import com.idofast.admin.domain.enums.SystemPreferenceEnum;
 import com.idofast.admin.service.SystemPreferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class SystemPreferenceManager
      */
     public Integer getResetPeriod()
     {
-        String resetPeriod = preferenceService.getPreference(SystemPreferenceKeyEnum.DATA_RESET_PERIOD);
+        String resetPeriod = preferenceService.getPreference(SystemPreferenceEnum.DATA_RESET_PERIOD);
         return Integer.parseInt(resetPeriod);
     }
 
@@ -34,7 +34,7 @@ public class SystemPreferenceManager
      */
     public Integer getFreeUseTime()
     {
-        String preference = preferenceService.getPreference(SystemPreferenceKeyEnum.FREE_USER_TIME);
+        String preference = preferenceService.getPreference(SystemPreferenceEnum.FREE_USER_TIME);
         return Integer.parseInt(preference);
     }
 

@@ -70,12 +70,12 @@ public class UserInfoLite
     /**
      *总流量,单位MB
      */
-    private Integer totalData;
+    private Long totalData;
 
     /**
      * 已用流量
      */
-    private Integer usedData;
+    private Long usedData;
 
     /**
      * 下一个结算日期

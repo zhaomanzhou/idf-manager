@@ -42,7 +42,7 @@ public class Bundle
     /**
      * 套餐流量，单位MB
      */
-    private Integer totalData;
+    private Long totalData;
 
     /**
      * 套餐速度
@@ -90,7 +90,7 @@ public class Bundle
                 .duration(1)
                 .level(0)
                 .maxConnection(128)
-                .totalData(2*1024)
+                .totalData(2*1024L)
                 .active(true)
                 .name("默认初始试用套餐")
                 .id(0L)

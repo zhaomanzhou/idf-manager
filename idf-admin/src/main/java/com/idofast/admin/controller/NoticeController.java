@@ -8,8 +8,10 @@ import com.idofast.admin.controller.vo.response.NoticeAdminResponseVo;
 import com.idofast.admin.controller.vo.response.NoticeUserResponseVo;
 import com.idofast.admin.domain.Notice;
 import com.idofast.admin.domain.User;
+import com.idofast.admin.domain.enums.SystemPreferenceEnum;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.service.NoticeService;
+import com.idofast.admin.service.SystemPreferenceService;
 import com.idofast.admin.service.UserService;
 import com.idofast.common.enums.NoticeStatusEnum;
 import com.idofast.common.enums.NoticeTypeEnum;
@@ -21,6 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +44,9 @@ public class NoticeController
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SystemPreferenceService systemPreferenceService;
 
 
     @PostMapping("/add")
@@ -206,6 +212,22 @@ public class NoticeController
 
         noticeService.deleteNotice(id);
         return ServerResponse.success();
+    }
+
+
+    @GetMapping("/dashboard")
+    @ApiOperation("获取首页公告内容")
+    public ServerResponse<NoticeUserResponseVo>  getDashboardNotice() throws BusinessException
+    {
+        String preference = systemPreferenceService.getPreference(SystemPreferenceEnum.DASHBOARD_NOTICE_LINK);
+        if(StringUtils.isEmpty(preference))
+        {
+            return ServerResponse.success();
+        }
+        Long noticeId = Long.parseLong(preference);
+        Notice noticeById = noticeService.getNoticeById(noticeId);
+        NoticeUserResponseVo noticeUserResponseVo = NoticeUserResponseVo.convertFrom(noticeById);
+        return ServerResponse.success(noticeUserResponseVo);
     }
 
 }

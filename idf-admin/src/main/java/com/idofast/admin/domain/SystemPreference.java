@@ -19,7 +19,7 @@ public class SystemPreference
     @Column(columnDefinition="bigint")
     private Long id;
 
-    private String PreKey;
+    private String preKey;
 
     /**
      * value 是mysql关键字

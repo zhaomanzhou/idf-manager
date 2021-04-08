@@ -43,7 +43,7 @@ public class UserRegisterGenerateInformationListener implements ApplicationListe
                 .level(defaultBundle.getLevel())
                 .speed(defaultBundle.getSpeed())
                 .totalData(defaultBundle.getTotalData())
-                .usedData(0)
+                .usedData(0L)
                 .nextSettleDate(now.plusMinutes(freeUseTime))
                 .expireDate(now.plusMinutes(freeUseTime))
                 .bundleId(defaultBundle.getId())

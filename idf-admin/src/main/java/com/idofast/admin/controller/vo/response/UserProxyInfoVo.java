@@ -22,11 +22,11 @@ public class UserProxyInfoVo
     @ApiModelProperty("限速值，单位kb/s")
     private Long speed;
 
-    @ApiModelProperty("用户总流量")
-    private Integer totalData;
+    @ApiModelProperty("用户总流量,单位kb")
+    private Long totalData;
 
-    @ApiModelProperty("用户已用流量")
-    private Integer usedData;
+    @ApiModelProperty("用户已用流量，单位kb")
+    private Long usedData;
 
     @ApiModelProperty("下一个结算日期；时间戳格式")
     private Long nextSettleDate;

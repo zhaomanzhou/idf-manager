@@ -39,6 +39,7 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
 
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/user/**")
+//                .addPathPatterns("/**")
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/user/detail/token")
@@ -58,6 +59,12 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .addPathPatterns("/users/**")
 
                 .addPathPatterns("/rechargelog/**")
+
+                .addPathPatterns("/data/**")
+
+                .addPathPatterns("/system/preference/**")
+
+
         ;
 
         registry.addInterceptor(requestContextInterceptor)

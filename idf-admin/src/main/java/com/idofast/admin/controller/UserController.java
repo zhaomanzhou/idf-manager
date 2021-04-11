@@ -151,37 +151,7 @@ public class UserController
         return ServerResponse.success();
     }
 
-    @ApiOperation(value = "更新用户信息")
-    @PostMapping(value = "/update")
-    public ServerResponse<String> update_information(UserVo userVoNew) throws BusinessException
-    {
-        User user = userService.getUserByToken(RequestContext.getToken());
-        if (user == null)
-        {
-            return ServerResponse.error("用户未登录");
-        }
-//        User user = new User();
-//        userVoNew.setId(userVo.getId());
-//        BeanUtils.copyProperties(userVoNew, user);
-//        if(userVoNew.getAvatarUrl() == null){
-//            user.setAvatarUrl(userVo.getAvatarUrl());
-//        }
-//        if(userVoNew.getUsername() == null){
-//            user.setAvatarUrl(userVo.getUsername());
-//        }
-//        String gender = userVoNew.getGender();
-//        GenderEnum genderEnum = GenderEnum.nameOf(gender);
-//        if(genderEnum != null){
-//            user.setGender(genderEnum.getCode());
-//        }
-//
-//
-//        Optional.ofNullable(userVoNew.getBirthday()).ifPresent(birthday -> user.setBirthday(new Date(birthday)));
-//        iUserService.updateUserInfo(user);
 
-
-        return ServerResponse.success();
-    }
 
 
     @ApiOperation(value = "注销用户")

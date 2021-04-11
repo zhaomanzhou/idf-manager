@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author zhaomanzhou
@@ -28,9 +29,11 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
      * @return
      */
 
-    @Query("select new com.idofast.admin.domain.dto.UserInfoLite (u , d) " +
-            "from User u INNER JOIN  UserProxyInfo d " +
-            "on u.id = d.id ")
+    @Query("select new com.idofast.admin.domain.dto.UserInfoLite " +
+            "(u.id, u.createTime, u.email, u.avatarUrl, u.role, u.status, u.remark, u.osDevice, u.ext,\n" +
+            "d.level, d.speed, d.totalData, d.usedData, d.nextSettleDate, d.expireDate, d.maxConnection, d.bundleId, d.bundleName, d.totalActiveDay, d.namespace" +
+            ") \n" +
+            "from User u INNER JOIN  UserProxyInfo d on u.id = d.id ")
     public Page<UserInfoLite> queryUserInfo( Pageable pageable);
 
 
@@ -43,4 +46,8 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
     public void insertWithGivenId(@Param("info") UserProxyInfo userProxyInfo);
 
     List<UserProxyInfo> findAllByNextSettleDateBeforeAndAndExpireDateAfter(LocalDateTime currentDatTime, LocalDateTime currentDateTime);
+
+
+
+    Optional<UserProxyInfo> findBySubscribeCodeEquals(String subscribeCode);
 }

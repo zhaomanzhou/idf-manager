@@ -9,6 +9,8 @@ import com.idofast.common.enums.UserStatusEnum;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
+
 /**
  * @author zhaomanzhou
  * @version 1.0
@@ -34,6 +36,29 @@ public class UserInfoLite
 
     }
 
+    public UserInfoLite(Long id, LocalDateTime createTime, String email, String avatarUrl, RoleEnum role, UserStatusEnum status, String remark, Integer osDevice, String ext, Integer level, Long speed, Long totalData, Long usedData, LocalDateTime nextSettleDate, LocalDateTime expireDate, Integer maxConnection, Long bundleId, String bundleName, Integer totalActiveDay, Integer namespace)
+    {
+        this.id = id;
+        this.createTime = LocalDateTimeUtil.toTimeStamp(createTime);
+        this.email = email;
+        this.avatarUrl = avatarUrl;
+        this.role = role;
+        this.status = status;
+        this.remark = remark;
+        this.osDevice = osDevice;
+        this.ext = ext;
+        this.level = level;
+        this.speed = speed;
+        this.totalData = totalData;
+        this.usedData = usedData;
+        this.nextSettleDate = LocalDateTimeUtil.toTimeStamp(nextSettleDate);
+        this.expireDate = LocalDateTimeUtil.toTimeStamp(expireDate);
+        this.maxConnection = maxConnection;
+        this.bundleId = bundleId;
+        this.bundleName = bundleName;
+        this.totalActiveDay = totalActiveDay;
+        this.namespace = namespace;
+    }
 
     private Long id;
 
@@ -65,7 +90,7 @@ public class UserInfoLite
     /**
      * 限速,单位kb
      */
-    private Integer speed;
+    private Long speed;
 
     /**
      *总流量,单位MB
@@ -95,12 +120,12 @@ public class UserInfoLite
     /**
      * 目前使用的套餐ID
      */
-    private Long BundleId;
+    private Long bundleId;
 
     /**
      * 目前使用的套餐名
      */
-    private String BundleName;
+    private String bundleName;
 
     /**
      * vip总时间

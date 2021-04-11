@@ -36,9 +36,12 @@ public enum BusinessErrorEnum implements CommonError
 
     ILLEGAL_ORDER_USER(40003,"非法操作，错误码40003"),
 
-    INVALID_BUNDLE_OPERATION(4200, "非当前使用套餐，如需更换请联系管理员")
+    INVALID_BUNDLE_OPERATION(4200, "非当前使用套餐，如需更换请联系管理员"),
 
-    ;
+    NO_PROXY_INFO(5200, "错误码5200")
+
+
+            ;
 
     BusinessErrorEnum(int errorCode, String errorMessage)
     {

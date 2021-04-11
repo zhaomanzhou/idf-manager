@@ -113,4 +113,14 @@ public class UserProxyInfo
     private DeletedEnum deleted;
 
 
+    /**
+     * 订阅链接的码
+     */
+    private String subscribeCode;
+
+
+    /**
+     * v2ray账号的uuid
+     */
+    private String uuid;
 }

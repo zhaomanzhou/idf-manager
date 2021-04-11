@@ -9,6 +9,7 @@ import com.idofast.admin.event.publisher.EventPublisher;
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.admin.repository.UserRepository;
 import com.idofast.admin.service.manager.EmailLockManager;
+import com.idofast.admin.util.randomCharUtil;
 import com.idofast.common.common.JwtToken;
 import com.idofast.common.common.RedisPrefixConst;
 import com.idofast.common.enums.DeletedEnum;
@@ -79,6 +80,7 @@ public class UserService
             throw new BusinessException("验证码错误");
         }
         User user = registerUserVo.convertToUserDo();
+        user.setInviteCode(randomCharUtil.generateInviteCode(6));
         User save = userRepository.save(user);
         log.info("用户{}注册成功, 开始同步proxyInfo数据...", user.getEmail());
         eventPublisher.publishEvent(new UserRegisterEvent(this, user.getId()));

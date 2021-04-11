@@ -5,12 +5,14 @@ import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.event.event.UserRegisterEvent;
 import com.idofast.admin.repository.UserProxyInfoRepository;
 import com.idofast.admin.service.manager.SystemPreferenceManager;
+import com.idofast.admin.util.randomCharUtil;
 import com.idofast.common.enums.DeletedEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * @author zhaomanzhou
@@ -51,6 +53,8 @@ public class UserRegisterGenerateInformationListener implements ApplicationListe
                 .totalActiveDay(0)
                 .maxConnection(defaultBundle.getMaxConnection())
                 .bundleName(defaultBundle.getName())
+                .uuid(UUID.randomUUID().toString())
+                .subscribeCode(randomCharUtil.generateInviteCode(8))
                 .deleted(DeletedEnum.NORMAL)
                 .build();
         userProxyInfoRepository.insertWithGivenId(information);

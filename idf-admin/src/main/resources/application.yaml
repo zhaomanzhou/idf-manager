@@ -45,6 +45,10 @@ token:
 switch:
   sendEmail: false
 
+site:
+  host: 127.0.0.1
+  enableTls: false
+
 
 logging:
   level:

@@ -66,6 +66,11 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
 
                 .addPathPatterns("/system/preference/**")
 
+                .addPathPatterns("/node/**")
+
+                .addPathPatterns("/subscription/**")
+                .excludePathPatterns("/subscription/v2ray/**")
+
 
         ;
 

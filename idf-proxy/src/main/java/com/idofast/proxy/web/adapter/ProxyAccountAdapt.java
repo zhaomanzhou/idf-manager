@@ -39,7 +39,7 @@ public class ProxyAccountAdapt
     {
         log.info("开始请求 {}?id={}", urlUtil.getProxyInfoUrl(), id);
         MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
-        paramMap.add("id", "12233");
+        paramMap.add("id", id);
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap);
         ResponseEntity<ServerResponse<V2rayAccountDto>> entity = restTemplate.exchange(

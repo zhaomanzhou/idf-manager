@@ -10,7 +10,7 @@ proxy:
   v2ray:
     port: 6001
     apiPort: 62789
-    host: back.idofast.com
+    host: local
 
   netty:
     port: 8888

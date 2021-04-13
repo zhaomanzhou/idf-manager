@@ -1,13 +1,9 @@
 package com.idofast.admin.domain.dto;
 
-import com.idofast.admin.domain.Bundle;
-import com.idofast.admin.domain.User;
-import com.idofast.admin.domain.UserProxyInfo;
-import com.idofast.common.util.LocalDateTimeUtil;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.enums.UserStatusEnum;
+import com.idofast.common.util.LocalDateTimeUtil;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 
@@ -20,21 +16,7 @@ import java.time.LocalDateTime;
 public class UserInfoLite
 {
 
-    public UserInfoLite(User u, UserProxyInfo userProxyInfo)
-    {
-        BeanUtils.copyProperties(u, this);
-        BeanUtils.copyProperties(userProxyInfo, this);
-        createTime = LocalDateTimeUtil.toTimeStamp(u.getCreateTime());
-        nextSettleDate = LocalDateTimeUtil.toTimeStamp(userProxyInfo.getNextSettleDate());
-        expireDate = LocalDateTimeUtil.toTimeStamp(userProxyInfo.getExpireDate());
 
-        if(this.getBundleId() == null)
-        {
-            setBundleId(Bundle.DEFAULT_BUNDLE.getId());
-            setBundleName(Bundle.DEFAULT_BUNDLE.getName());
-        }
-
-    }
 
     public UserInfoLite(Long id, LocalDateTime createTime, String email, String avatarUrl, RoleEnum role, UserStatusEnum status, String remark, Integer osDevice, String ext, Integer level, Long speed, Long totalData, Long usedData, LocalDateTime nextSettleDate, LocalDateTime expireDate, Integer maxConnection, Long bundleId, String bundleName, Integer totalActiveDay, Integer namespace)
     {

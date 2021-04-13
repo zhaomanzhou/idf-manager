@@ -2,18 +2,14 @@ package com.idofast.proxy.framework.proxy;
 
 
 import com.idofast.proxy.bean.RemoteConst;
-import com.idofast.proxy.framework.proxy.handler.ParserHandler;
 import com.idofast.proxy.framework.service.AccountService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +38,8 @@ public final class ProxyServer
     private Integer port;
 
 
-    private static EventLoopGroup bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("boss"));
-    private static EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
+    private static EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    private static EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     @PostConstruct
     public void initNettyServer() {
@@ -54,22 +50,14 @@ public final class ProxyServer
             ServerBootstrap b = new ServerBootstrap();
             b.option(ChannelOption.SO_BACKLOG, 1024)
                     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                    .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                    .childOption(ChannelOption.TCP_NODELAY, true);
+                    .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
 
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-//                        .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        protected void initChannel(SocketChannel ch) {
-                            ch.pipeline().addLast(new ParserHandler(accountService, remoteConst));
-                        }
-                    })
-                                        .childOption(ChannelOption.AUTO_READ, false)
-
+                    .childHandler(new ProxyInitializer(accountService, remoteConst))
                     .childOption(ChannelOption.AUTO_READ, false)
-                    .bind(port).sync()
+                    .bind(port)
                     .addListener((ChannelFutureListener) future -> log.info("Proxying on:" + port + " ..."));
 
 

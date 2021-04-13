@@ -1,6 +1,7 @@
 package com.idofast.proxy.framework.proxy.handler;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -11,25 +12,25 @@ import lombok.extern.slf4j.Slf4j;
 public class ForwardHandler extends ChannelInboundHandlerAdapter
 {
 
-    private final ParserHandler parserHandler;
+    private final Channel inboundChannel;
 
-    public ForwardHandler(ParserHandler parserHandler) {
-        this.parserHandler = parserHandler;
+    public ForwardHandler(Channel inboundChannel)
+    {
+        this.inboundChannel = inboundChannel;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception
     {
-        ctx.channel().read();
+        ctx.read();
     }
 
     @Override
     public void channelRead(final ChannelHandlerContext ctx, Object msg) {
-        parserHandler.getChannel().writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
+        inboundChannel.writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
-                release((ByteBuf) msg);
+                future.channel().close();
                 log.error("-----------v2ray服务端数据回写失败------------");
-                parserHandler.close();
             }else
             {
                 ctx.channel().read();
@@ -41,14 +42,13 @@ public class ForwardHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        parserHandler.close();
+        ParserHandler.closeOnFlush(inboundChannel);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error(" Receiver exceptionCaught: {}", cause.getMessage());
-        parserHandler.close();
-
+        ParserHandler.closeOnFlush(inboundChannel);
     }
 
 

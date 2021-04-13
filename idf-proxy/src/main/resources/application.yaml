@@ -10,10 +10,13 @@ proxy:
   v2ray:
     port: 6001
     apiPort: 62789
-    host: local
+    host: back.idofast.com
 
   netty:
     port: 8888
+
+
+
 #logging:
 #  level:
 #    root: error

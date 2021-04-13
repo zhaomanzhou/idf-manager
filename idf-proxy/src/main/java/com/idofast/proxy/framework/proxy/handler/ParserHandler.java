@@ -1,11 +1,13 @@
 package com.idofast.proxy.framework.proxy.handler;
 
 import com.idofast.common.dto.V2rayAccountDto;
+import com.idofast.common.response.error.BusinessException;
 import com.idofast.proxy.bean.RemoteConst;
 import com.idofast.proxy.framework.service.AccountService;
 import com.idofast.proxy.util.NettyClientFactory;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 import io.netty.handler.traffic.TrafficCounter;
@@ -50,7 +52,11 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception
     {
-        close();
+        if(outboundChannel != null)
+        {
+            closeOnFlush(outboundChannel);
+        }
+
         if (trafficShapingHandler != null)
         {
             TrafficCounter trafficCounter = trafficShapingHandler.trafficCounter();
@@ -59,7 +65,6 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
             log.info("账号:{},当前服务器完全断开连接,累计字节:{} KB", accountDto.getEmail(), (writtenBytes + readBytes) >> 10);
             log.info("总流量：{}MB", total.addAndGet(writtenBytes + readBytes) >> 10 >> 10);
         }
-
 
     }
 
@@ -72,20 +77,21 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
             try
             {
                 parserUser(ctx, msg);
+                attachTrafficController(ctx, accountDto);
+                connectToClient(ctx, (ByteBuf) msg, ctx.channel());
             } catch (Exception e)
             {
-                release((ByteBuf) msg);
-                close();
-                log.warn("解析用户发生异常, {}", e.getMessage());
+
+                log.warn("解析用户或连接v2ray发生异常, {}", e.getMessage());
+                ReferenceCountUtil.release(msg);
+                ctx.channel().close();
                 return;
             }
-            attachTrafficController(ctx, accountDto);
-            connectToClient(ctx, (ByteBuf) msg, ctx.channel());
+
             isHandshaking = false;
             return;
         }
         writeToOutBoundChannel(msg, ctx);
-
 
     }
 
@@ -106,14 +112,14 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         Bootstrap client = NettyClientFactory.getClient(inboundChannel.eventLoop());
         ChannelFuture f = client.connect(remoteConst.getV2rayHost(), remoteConst.getV2rayPort());
         outboundChannel = f.channel();
-        outboundChannel.pipeline().addLast(new ForwardHandler(this));
+        outboundChannel.pipeline().addLast(new ForwardHandler(ctx.channel()));
 
         f.addListener(future -> {
             if (!future.isSuccess())
             {
                 future.cause().printStackTrace();
                 System.out.println("与v2ray连接失败");
-                close();
+                ctx.channel().close();
             } else
             {
                 writeToOutBoundChannel(handshakeByteBuf, ctx);
@@ -127,10 +133,9 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         outboundChannel.writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess())
             {
-                release((ByteBuf) msg);
                 log.info("channel1 写入数据失败");
-                close();
-            }else
+                future.channel().close();
+            } else
             {
                 ctx.channel().read();
             }
@@ -141,16 +146,16 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
     {
-//        cause.printStackTrace();
+        cause.printStackTrace();
         log.warn("连接发生异常exceptionCaught....{}", cause.getMessage());
-        close();
+        closeOnFlush(ctx.channel());
     }
 
 
     /**
      * 通过http头部解析用户信息，并返回去除掉用户信息的数据
      */
-    private void parserUser(ChannelHandlerContext ctx, Object msg)
+    private void parserUser(ChannelHandlerContext ctx, Object msg) throws BusinessException
     {
         ByteBuf byteBuf = ((ByteBuf) msg);
         String httpHead = byteBuf.toString(Charset.defaultCharset());
@@ -159,7 +164,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         accountDto = accountService.getAndSynchUserById(Long.parseLong(id));
         if (accountDto == null)
         {
-            throw new RuntimeException("获取用户失败");
+            throw new BusinessException("获取用户失败");
         }
         String replace = httpHead.replace(id, "");
         byteBuf.clear().writeBytes(replace.getBytes());
@@ -167,7 +172,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
 
     public void release(ByteBuf buf)
     {
-        if(ReferenceCountUtil.refCnt(buf) > 0)
+        if (ReferenceCountUtil.refCnt(buf) > 0)
         {
             ReferenceCountUtil.safeRelease(buf);
         }
@@ -213,5 +218,11 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         }
     }
 
+
+    static void closeOnFlush(Channel ch) {
+        if (ch.isActive()) {
+            ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+        }
+    }
 
 }

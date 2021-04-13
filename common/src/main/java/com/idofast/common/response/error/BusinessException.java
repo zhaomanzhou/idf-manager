@@ -28,7 +28,7 @@ public class BusinessException extends Exception implements CommonError
 
     public BusinessException(String message)
     {
-        super();
+        super(message);
         this.commonError = new CommonErrorAdapter(ResponseCode.ERROR.getCode(), message);
     }
 

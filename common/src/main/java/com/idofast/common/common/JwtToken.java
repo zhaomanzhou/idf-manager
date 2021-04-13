@@ -1,7 +1,6 @@
 package com.idofast.common.common;
 
 
-
 import io.jsonwebtoken.*;
 
 import javax.crypto.spec.SecretKeySpec;

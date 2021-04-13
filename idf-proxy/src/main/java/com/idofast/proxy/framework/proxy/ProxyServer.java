@@ -5,7 +5,7 @@ import com.idofast.proxy.bean.RemoteConst;
 import com.idofast.proxy.framework.proxy.handler.ParserHandler;
 import com.idofast.proxy.framework.service.AccountService;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -53,8 +53,8 @@ public final class ProxyServer
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.option(ChannelOption.SO_BACKLOG, 1024)
-                    .option(ChannelOption.ALLOCATOR, UnpooledByteBufAllocator.DEFAULT)
-                    .childOption(ChannelOption.ALLOCATOR, UnpooledByteBufAllocator.DEFAULT)
+                    .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                    .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .childOption(ChannelOption.TCP_NODELAY, true);
 
 
@@ -66,7 +66,9 @@ public final class ProxyServer
                             ch.pipeline().addLast(new ParserHandler(accountService, remoteConst));
                         }
                     })
-//                    .childOption(ChannelOption.AUTO_READ, false)
+                                        .childOption(ChannelOption.AUTO_READ, false)
+
+                    .childOption(ChannelOption.AUTO_READ, false)
                     .bind(port).sync()
                     .addListener((ChannelFutureListener) future -> log.info("Proxying on:" + port + " ..."));
 

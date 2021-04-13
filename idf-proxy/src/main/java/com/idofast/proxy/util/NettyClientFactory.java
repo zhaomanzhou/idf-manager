@@ -40,6 +40,7 @@ public  class NettyClientFactory
             })
                     .option(ChannelOption.ALLOCATOR, UnpooledByteBufAllocator.DEFAULT)
                     .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WriteBufferWaterMark.DEFAULT)
+                    .option(ChannelOption.AUTO_READ, false)
                     .option(ChannelOption.TCP_NODELAY, true);
         }
         return b;

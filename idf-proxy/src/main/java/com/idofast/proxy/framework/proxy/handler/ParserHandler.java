@@ -50,13 +50,14 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception
     {
+        close();
         if (trafficShapingHandler != null)
         {
             TrafficCounter trafficCounter = trafficShapingHandler.trafficCounter();
             long writtenBytes = trafficCounter.cumulativeWrittenBytes();
             long readBytes = trafficCounter.cumulativeReadBytes();
             log.info("账号:{},当前服务器完全断开连接,累计字节:{} KB", accountDto.getEmail(), (writtenBytes + readBytes) >> 10);
-            log.info("总流量：{}", total.addAndGet(writtenBytes + readBytes) >> 10 >> 10);
+            log.info("总流量：{}MB", total.addAndGet(writtenBytes + readBytes) >> 10 >> 10);
         }
 
 
@@ -68,22 +69,18 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
 
         if (isHandshaking)
         {
-            ByteBuf byteBuf;
             try
             {
-                byteBuf = parserUser(ctx, msg);
+                parserUser(ctx, msg);
             } catch (Exception e)
             {
+                release((ByteBuf) msg);
                 close();
                 log.warn("解析用户发生异常, {}", e.getMessage());
                 return;
-            } finally
-            {
-                release((ByteBuf) msg);
             }
-
             attachTrafficController(ctx, accountDto);
-            connectToClient(ctx, byteBuf, ctx.channel());
+            connectToClient(ctx, (ByteBuf) msg, ctx.channel());
             isHandshaking = false;
             return;
         }
@@ -117,10 +114,9 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
                 future.cause().printStackTrace();
                 System.out.println("与v2ray连接失败");
                 close();
-            }else
+            } else
             {
                 writeToOutBoundChannel(handshakeByteBuf, ctx);
-
             }
         });
 
@@ -131,8 +127,12 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         outboundChannel.writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess())
             {
+                release((ByteBuf) msg);
                 log.info("channel1 写入数据失败");
                 close();
+            }else
+            {
+                ctx.channel().read();
             }
         });
     }
@@ -150,7 +150,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     /**
      * 通过http头部解析用户信息，并返回去除掉用户信息的数据
      */
-    private ByteBuf parserUser(ChannelHandlerContext ctx, Object msg)
+    private void parserUser(ChannelHandlerContext ctx, Object msg)
     {
         ByteBuf byteBuf = ((ByteBuf) msg);
         String httpHead = byteBuf.toString(Charset.defaultCharset());
@@ -162,22 +162,15 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
             throw new RuntimeException("获取用户失败");
         }
         String replace = httpHead.replace(id, "");
-        return ctx.alloc().buffer().writeBytes(replace.getBytes());
+        byteBuf.clear().writeBytes(replace.getBytes());
     }
 
     public void release(ByteBuf buf)
     {
-        if (ReferenceCountUtil.refCnt(buf) > 0)
+        if(ReferenceCountUtil.refCnt(buf) > 0)
         {
-            synchronized (buf)
-            {
-                if (ReferenceCountUtil.refCnt(buf) > 0)
-                {
-                    ReferenceCountUtil.release(buf);
-                }
-            }
+            ReferenceCountUtil.safeRelease(buf);
         }
-
     }
 
 
@@ -185,7 +178,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     public void channelActive(ChannelHandlerContext ctx) throws Exception
     {
         this.ctx = ctx;
-        super.channelActive(ctx);
+        ctx.channel().read();
     }
 
     public Channel getChannel()

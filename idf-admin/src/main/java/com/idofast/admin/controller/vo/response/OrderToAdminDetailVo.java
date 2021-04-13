@@ -1,7 +1,7 @@
 package com.idofast.admin.controller.vo.response;
 
 import com.idofast.admin.domain.Order;
-import com.idofast.admin.util.LocalDateTimeUtil;
+import com.idofast.common.util.LocalDateTimeUtil;
 import com.idofast.common.enums.OrderStatusEnum;
 import com.idofast.common.enums.PayTypeEnum;
 import io.swagger.annotations.ApiModel;

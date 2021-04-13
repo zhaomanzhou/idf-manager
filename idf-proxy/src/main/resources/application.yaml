@@ -1,0 +1,19 @@
+server:
+  port: 8100
+
+proxy:
+  remote:
+    host: qy.zmz121.cn
+    port: 8001
+    tls: false
+    getProxyInfoUrl: '/proxy/api/detail'
+  v2ray:
+    port: 6001
+    apiPort: 62789
+    host: localhost
+
+  netty:
+    port: 8888
+#logging:
+#  level:
+#    root: error

@@ -1,7 +1,7 @@
 package com.idofast.admin.controller.vo.response;
 
 import com.idofast.admin.domain.RechargeLog;
-import com.idofast.admin.util.LocalDateTimeUtil;
+import com.idofast.common.util.LocalDateTimeUtil;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

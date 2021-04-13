@@ -10,8 +10,9 @@
 
     <modules>
         <module>idf-admin</module>
-        <module>mybatis-generator</module>
         <module>common</module>
+        <module>idf-proxy</module>
+        <module>v2ray-sdk</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

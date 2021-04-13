@@ -3,7 +3,7 @@ package com.idofast.admin.domain.dto;
 import com.idofast.admin.domain.Bundle;
 import com.idofast.admin.domain.User;
 import com.idofast.admin.domain.UserProxyInfo;
-import com.idofast.admin.util.LocalDateTimeUtil;
+import com.idofast.common.util.LocalDateTimeUtil;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.enums.UserStatusEnum;
 import lombok.Data;

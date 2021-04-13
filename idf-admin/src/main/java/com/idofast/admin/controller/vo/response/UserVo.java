@@ -2,7 +2,7 @@ package com.idofast.admin.controller.vo.response;
 
 
 import com.idofast.admin.domain.User;
-import com.idofast.admin.util.LocalDateTimeUtil;
+import com.idofast.common.util.LocalDateTimeUtil;
 import com.idofast.common.enums.OsDeviceEnum;
 import com.idofast.common.enums.RoleEnum;
 import io.swagger.annotations.ApiModel;

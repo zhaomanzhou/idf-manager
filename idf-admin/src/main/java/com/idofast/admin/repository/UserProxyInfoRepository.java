@@ -2,6 +2,7 @@ package com.idofast.admin.repository;
 
 import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.domain.dto.UserInfoLite;
+import com.idofast.admin.domain.dto.V2rayAccount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,6 +37,12 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
             "from User u INNER JOIN  UserProxyInfo d on u.id = d.id ")
     public Page<UserInfoLite> queryUserInfo( Pageable pageable);
 
+    @Query("select new com.idofast.admin.domain.dto.V2rayAccount(u.id, u.email, p.speed, p.usedData, p.totalData, p.expireDate, p.maxConnection, p.uuid)  \n" +
+            "from User u \n" +
+            "INNER JOIN UserProxyInfo p\n" +
+            "ON u.id = p.id\n" +
+            "where u.id = :id")
+    Optional<V2rayAccount> queryAccount(@Param("id") Long id);
 
     @Modifying
     @Query(value = "insert into user_proxy_info (bundle_id, bundle_name, deleted,  level, max_connection, namespace, next_settle_date, expire_date,speed, total_active_day, total_data, used_data, id) " +
@@ -50,4 +57,7 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
 
 
     Optional<UserProxyInfo> findBySubscribeCodeEquals(String subscribeCode);
+
+
+
 }

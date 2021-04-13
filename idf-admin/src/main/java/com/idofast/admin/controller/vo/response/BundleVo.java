@@ -1,7 +1,7 @@
 package com.idofast.admin.controller.vo.response;
 
 import com.idofast.admin.domain.Bundle;
-import com.idofast.admin.util.LocalDateTimeUtil;
+import com.idofast.common.util.LocalDateTimeUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

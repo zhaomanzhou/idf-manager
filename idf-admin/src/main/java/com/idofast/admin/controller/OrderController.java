@@ -15,7 +15,7 @@ import com.idofast.admin.service.BundleService;
 import com.idofast.admin.service.OrderService;
 import com.idofast.admin.service.UserProxyInfoService;
 import com.idofast.admin.service.manager.OrderManager;
-import com.idofast.admin.util.LocalDateTimeUtil;
+import com.idofast.common.util.LocalDateTimeUtil;
 import com.idofast.common.enums.OrderStatusEnum;
 import com.idofast.common.enums.PayTypeEnum;
 import com.idofast.common.enums.RoleEnum;

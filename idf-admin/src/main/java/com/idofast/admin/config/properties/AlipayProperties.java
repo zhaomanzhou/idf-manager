@@ -4,8 +4,6 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-
 /**
  * @author zhaomanzhou
  * @version 1.0
@@ -25,9 +23,5 @@ public class AlipayProperties
     private String alipayPublicKey;
     private String notifyUrl;
 
-    @PostConstruct
-    public void init()
-    {
-        System.out.println(this);
-    }
+
 }

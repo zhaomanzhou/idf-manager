@@ -48,4 +48,6 @@ public class V2rayAccountDto
     private String uuid;
 
 
+    private Boolean enable;
+
 }

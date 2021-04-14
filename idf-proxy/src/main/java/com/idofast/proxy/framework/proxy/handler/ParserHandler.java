@@ -4,7 +4,8 @@ import com.idofast.common.dto.V2rayAccountDto;
 import com.idofast.common.response.error.BusinessException;
 import com.idofast.proxy.bean.RemoteConst;
 import com.idofast.proxy.framework.service.AccountService;
-import com.idofast.proxy.util.NettyClientFactory;
+import com.idofast.proxy.framework.proxy.factory.NettyClientFactory;
+import com.idofast.proxy.framework.service.UserReportService;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -28,23 +29,23 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
 
     private boolean isHandshaking = true;
     private AccountService accountService;
+    private UserReportService userReportService;
     private V2rayAccountDto accountDto;
     private RemoteConst remoteConst;
 
 
     private Channel outboundChannel;
-    private ChannelHandlerContext ctx;
 
     private GlobalTrafficShapingHandler trafficShapingHandler;
 
 
     static AtomicLong total = new AtomicLong(0);
-    private volatile boolean closed = false;
 
 
-    public ParserHandler(AccountService accountService, RemoteConst remoteConst)
+    public ParserHandler(AccountService accountService, UserReportService userReportService,RemoteConst remoteConst)
     {
         this.accountService = accountService;
+        this.userReportService = userReportService;
         this.remoteConst = remoteConst;
     }
 
@@ -62,8 +63,13 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
             TrafficCounter trafficCounter = trafficShapingHandler.trafficCounter();
             long writtenBytes = trafficCounter.cumulativeWrittenBytes();
             long readBytes = trafficCounter.cumulativeReadBytes();
-            log.info("账号:{},当前服务器完全断开连接,累计字节:{} KB", accountDto.getEmail(), (writtenBytes + readBytes) >> 10);
-            log.info("总流量：{}MB", total.addAndGet(writtenBytes + readBytes) >> 10 >> 10);
+            userReportService.addUsedData(accountDto.getId(), (writtenBytes + readBytes) >> 10 + 1);
+            if(!isHandshaking)
+            {
+                int i = userReportService.decreaseConnectionNum(accountDto.getId());
+                log.info("账号:{},断开一个连接,累计字节:{} KB，目前连接数{}", accountDto.getEmail(), (writtenBytes + readBytes) >> 10,i);
+            }
+
         }
 
     }
@@ -88,6 +94,8 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
                 return;
             }
 
+            int i = userReportService.addConnectionNum(accountDto.getId());
+            log.info("账号{}已连接, 连接数{}", accountDto.getEmail(), i);
             isHandshaking = false;
             return;
         }
@@ -118,7 +126,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
             if (!future.isSuccess())
             {
                 future.cause().printStackTrace();
-                System.out.println("与v2ray连接失败");
+                log.info("与v2ray连接失败", future.cause());
                 ctx.channel().close();
             } else
             {
@@ -133,7 +141,6 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         outboundChannel.writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess())
             {
-                log.info("channel1 写入数据失败");
                 future.channel().close();
             } else
             {
@@ -146,7 +153,6 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
     {
-        cause.printStackTrace();
         log.warn("连接发生异常exceptionCaught....{}", cause.getMessage());
         closeOnFlush(ctx.channel());
     }
@@ -162,61 +168,19 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         int endIndex = httpHead.indexOf("HTTP");
         String id = httpHead.substring(8, endIndex).trim();
         accountDto = accountService.getAndSynchUserById(Long.parseLong(id));
-        if (accountDto == null)
-        {
-            throw new BusinessException("获取用户失败");
-        }
         String replace = httpHead.replace(id, "");
         byteBuf.clear().writeBytes(replace.getBytes());
     }
 
-    public void release(ByteBuf buf)
-    {
-        if (ReferenceCountUtil.refCnt(buf) > 0)
-        {
-            ReferenceCountUtil.safeRelease(buf);
-        }
-    }
 
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception
     {
-        this.ctx = ctx;
         ctx.channel().read();
     }
 
-    public Channel getChannel()
-    {
-        return this.ctx.channel();
-    }
 
-    public void close()
-    {
-        if (!closed)
-        {
-            closed = true;
-            if (outboundChannel != null)
-            {
-                outboundChannel.close().addListener(f -> {
-                    if (!f.isSuccess())
-                    {
-                        log.warn("Channel2 关闭失败, 失败原因。。。");
-                        log.warn(f.cause().getLocalizedMessage());
-                    }
-                });
-            }
-
-            ctx.close().addListener(f -> {
-                if (!f.isSuccess())
-                {
-                    log.warn("Channel2 关闭失败, 失败原因。。。");
-                    log.warn(f.cause().getLocalizedMessage());
-                }
-            });
-
-        }
-    }
 
 
     static void closeOnFlush(Channel ch) {

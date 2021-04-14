@@ -1,5 +1,7 @@
 package com.idofast.proxy.web.adapter;
 
+import com.idofast.common.dto.V2rayAccountDto;
+import com.idofast.proxy.service.V2rayService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,18 @@ public class ProxyAccountAdaptTest
     @Autowired
     private ProxyAccountAdapt accountAdapt;
 
+    @Autowired
+    private V2rayService v2rayService;
+
     @Test
     public void getRemoteV2rayAccountDto()
     {
+        V2rayAccountDto dto = new V2rayAccountDto();
+        dto.setEmail("27128@qq.com");
+        dto.setUuid("e744367c-1e30-49bb-96e1-ed80b7188752");
+        v2rayService.addProxyAccount("127.0.0.1", 62789,dto);
+
+
 //        System.out.println(accountAdapt.getRemoteV2rayAccountDto(12233L));
     }
 }

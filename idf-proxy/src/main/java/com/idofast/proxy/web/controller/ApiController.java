@@ -2,8 +2,8 @@ package com.idofast.proxy.web.controller;
 
 
 import com.idofast.common.response.ServerResponse;
+import com.idofast.proxy.framework.service.AccountService;
 import com.idofast.proxy.service.V2rayService;
-import com.idofast.proxy.web.adapter.ProxyAccountAdapt;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +21,26 @@ public class ApiController {
     private V2rayService v2rayService;
 
     @Autowired
-    private ProxyAccountAdapt proxyAccountService;
+    private AccountService accountService;
 
     @Value("${proxy.v2ray.apiPort}")
     private Integer v2rayApiPort;
 
+    @Value("${proxy.v2ray.host}")
+    private String host;
+
 
     @ResponseBody
     @PostMapping(value = "/account/del")
-    public ServerResponse<String> rmAccount(@NonNull String email) {
+    public ServerResponse<String> rmAccount(@NonNull String email, @NonNull Long id) {
+        log.info("收到删除账号的通知，id:{}, email:{}",id, email);
         try {
-//            String accountNo = proxyAccount.getAccountNo();
-//            proxyAccountService.rmProxyAccountCache(accountNo,proxyAccount.getHost());
-            v2rayService.rmProxyAccount( v2rayApiPort, email);
+            accountService.invalidUser(id);
+            v2rayService.rmProxyAccount(host, v2rayApiPort, email);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("删除账号出错 :{}", e.getLocalizedMessage());
-            return ServerResponse.error();
+//            return ServerResponse.error();
         }
         return ServerResponse.success();
 

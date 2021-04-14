@@ -36,7 +36,7 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
             " from User u INNER JOIN  UserProxyInfo d on u.id = d.id ")
     public Page<UserInfoLite> queryUserInfo( Pageable pageable);
 
-    @Query("select new com.idofast.admin.domain.dto.V2rayAccount(u.id, u.email, p.speed, p.usedData, p.totalData, p.expireDate, p.maxConnection, p.uuid)  \n" +
+    @Query("select new com.idofast.admin.domain.dto.V2rayAccount(u.id, u.email, p.speed, p.usedData, p.totalData, p.expireDate, p.maxConnection, p.uuid, u.status)  \n" +
             "from User u \n" +
             "INNER JOIN UserProxyInfo p\n" +
             "ON u.id = p.id\n" +

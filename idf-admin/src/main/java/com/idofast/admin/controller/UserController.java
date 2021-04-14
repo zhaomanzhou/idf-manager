@@ -213,7 +213,10 @@ public class UserController
     {
         UserStatusEnum toBeUpdated = enable ? UserStatusEnum.NORMAL : UserStatusEnum.FORBIDDEN;
         userService.updateUserStatus(userId, toBeUpdated);
-        eventPublisher.publishEvent(new UserDisableEvent(this, userId));
+        if(!enable)
+        {
+            eventPublisher.publishEvent(new UserDisableEvent(this, userId));
+        }
         return ServerResponse.success();
     }
 

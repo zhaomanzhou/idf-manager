@@ -19,6 +19,7 @@ public class ProxyConstant
 
     private String authPassword;
     private String getProxyInfoUrl;
+    private String reportStateUrl;
     private String host;
     private Integer port;
     private Boolean tls;

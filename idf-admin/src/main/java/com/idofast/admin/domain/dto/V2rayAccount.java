@@ -1,5 +1,6 @@
 package com.idofast.admin.domain.dto;
 
+import com.idofast.common.enums.UserStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -51,4 +52,6 @@ public class V2rayAccount
      * uuid
      */
     private String uuid;
+
+    private UserStatusEnum status;
 }

@@ -2,7 +2,9 @@ package com.idofast.proxy.framework.proxy;
 
 
 import com.idofast.proxy.bean.RemoteConst;
+import com.idofast.proxy.framework.proxy.factory.ProxyInitializer;
 import com.idofast.proxy.framework.service.AccountService;
+import com.idofast.proxy.framework.service.UserReportService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
@@ -10,6 +12,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,14 +35,17 @@ public final class ProxyServer
     private AccountService accountService;
 
     @Autowired
+    private UserReportService userReportService;
+
+    @Autowired
     private RemoteConst remoteConst;
 
     @Value("${proxy.netty.port}")
     private Integer port;
 
 
-    private static EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    private static EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private static EventLoopGroup bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("boss"));
+    private static EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
 
     @PostConstruct
     public void initNettyServer() {
@@ -55,7 +61,7 @@ public final class ProxyServer
 
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new ProxyInitializer(accountService, remoteConst))
+                    .childHandler(new ProxyInitializer(accountService, userReportService, remoteConst))
                     .childOption(ChannelOption.AUTO_READ, false)
                     .bind(port)
                     .addListener((ChannelFutureListener) future -> log.info("Proxying on:" + port + " ..."));

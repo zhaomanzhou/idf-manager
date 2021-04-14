@@ -46,12 +46,15 @@ switch:
   sendEmail: false
 
 site:
-  host: 127.0.0.1
+  host: bwggia2.idofast.com
   enableTls: false
 
 
 logging:
+  file: /opt/jar/logs/admin.log
+  file.max-history: 7
   level:
+    root: info
     org:
       hibernate:
         type:
@@ -61,4 +64,8 @@ logging:
 
 
 
+proxy:
+  port: 8100
+  api:
+    rmAccount: /proxy/api/account/del
 

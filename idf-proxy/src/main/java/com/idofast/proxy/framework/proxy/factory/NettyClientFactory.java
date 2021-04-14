@@ -1,4 +1,4 @@
-package com.idofast.proxy.util;
+package com.idofast.proxy.framework.proxy.factory;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;

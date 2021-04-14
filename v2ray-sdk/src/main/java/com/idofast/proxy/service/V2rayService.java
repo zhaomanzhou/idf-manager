@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 public class V2rayService
 {
 
-    public static final String DEFAULT_INBOUND_TAG = "tt";
+    public static final String DEFAULT_INBOUND_TAG = "6001";
 
-    public void rmProxyAccount(Integer port,String email) {
+    public void rmProxyAccount(String host, Integer port,String email) {
         try {
-            V2RayApiClient client = V2RayApiClient.getInstance("127.0.0.1", port);
+            V2RayApiClient client = V2RayApiClient.getInstance(host, port);
             
             TypedMessage rmOp = TypedMessage.newBuilder().setType(RemoveUserOperation.getDescriptor().getFullName())
                     .setValue(RemoveUserOperation.newBuilder().setEmail(email).build().toByteString()).build();
@@ -32,7 +32,7 @@ public class V2rayService
             client.getHandlerServiceBlockingStub().alterInbound(req);
         } catch (Exception e) {
             if (e.getLocalizedMessage().contains("not found"))return;
-
+            e.printStackTrace();
             log.error("rmProxyAccount error:{},{}", e.getLocalizedMessage(), new Gson().toJson(email));
         }
     }

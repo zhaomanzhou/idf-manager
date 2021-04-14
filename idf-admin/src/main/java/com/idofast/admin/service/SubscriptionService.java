@@ -78,7 +78,7 @@ public class SubscriptionService
             entity.setTls(node.getSupportTls()? "tls": "");
             entity.setHost("");
             entity.setPs(node.getName());
-            entity.setPath("/idf/" + proxyInfo.getId());
+            entity.setPath("/ws/" + proxyInfo.getId());
 
 
             String encode = Base64.getEncoder().encodeToString(JsonUtil.obj2StringPretty(entity).getBytes(StandardCharsets.UTF_8));

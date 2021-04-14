@@ -1,11 +1,9 @@
 package com.idofast.proxy.framework.proxy.handler;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,7 +28,6 @@ public class ForwardHandler extends ChannelInboundHandlerAdapter
         inboundChannel.writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
                 future.channel().close();
-                log.error("-----------v2ray服务端数据回写失败------------");
             }else
             {
                 ctx.channel().read();
@@ -52,13 +49,7 @@ public class ForwardHandler extends ChannelInboundHandlerAdapter
     }
 
 
-    public void release(ByteBuf byteBuf)
-    {
-        if(ReferenceCountUtil.refCnt(byteBuf) > 0)
-        {
-            ReferenceCountUtil.release(byteBuf);
-        }
-    }
+
 
 
 }

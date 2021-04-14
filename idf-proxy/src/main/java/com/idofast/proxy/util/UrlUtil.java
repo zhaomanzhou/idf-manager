@@ -31,6 +31,16 @@ public class UrlUtil
         }
     }
 
+    public String getStateReportUrl()
+    {
+        if(proxyConstant.getReportStateUrl().startsWith("/"))
+        {
+            return genPrefix() + proxyConstant.getReportStateUrl();
+        }else
+        {
+            return genPrefix() + "/" + proxyConstant.getReportStateUrl();
+        }
+    }
 
     private String genPrefix()
     {

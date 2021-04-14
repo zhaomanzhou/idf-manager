@@ -1,21 +1,31 @@
 server:
   port: 8100
-
+  tomcat:
+    min-spare-threads: 2
 proxy:
   remote:
-    host: qy.zmz121.cn
+    #master端所在的地址  api地址
+    host: bwg2.idofast.com
     port: 8001
     tls: false
-    getProxyInfoUrl: '/proxy/api/detail'
+    getProxyInfoUrl: '/proxy/api/user/detail'
+    reportStateUrl: '/proxy/api/state/report'
   v2ray:
     port: 6001
     apiPort: 62789
     host: 127.0.0.1
+  local:
+    #本地主机域名，报告给服务器用的
+    host: bwg2.idofast.com
 
   netty:
     port: 8888
 
-
+logging:
+  file: /opt/jar/logs/v2ray-proxy.log
+  file.max-history: 7
+  level:
+    root: info
 
 #logging:
 #  level:

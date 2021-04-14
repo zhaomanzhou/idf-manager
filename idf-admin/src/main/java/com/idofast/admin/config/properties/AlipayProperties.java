@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 
 @Data
 @Component
-@ConfigurationProperties("alipay")
+@ConfigurationProperties(prefix = "alipay")
 public class AlipayProperties
 {
     private String signType;

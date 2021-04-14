@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 @Builder
 @Where(clause = "deleted=0")
 @Table( indexes = {
-        @Index(name = "idx_next_settle_user", columnList="nextSettleDate", unique = false),
-        @Index(name = "idx_expire_date_user", columnList="expireDate", unique = false),
-        @Index(name = "idx_bundle_id_date_user", columnList="bundleName", unique = false),
+        @Index(name = "idx_next_settle", columnList="nextSettleDate", unique = false),
+        @Index(name = "idx_expire_date", columnList="expireDate", unique = false),
+        @Index(name = "idx_bundle_name", columnList="bundleName", unique = false),
 })
 public class UserProxyInfo
 {

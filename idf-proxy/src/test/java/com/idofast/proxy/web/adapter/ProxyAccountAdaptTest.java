@@ -30,7 +30,7 @@ public class ProxyAccountAdaptTest
         V2rayAccountDto dto = new V2rayAccountDto();
         dto.setEmail("27128@qq.com");
         dto.setUuid("e744367c-1e30-49bb-96e1-ed80b7188752");
-        v2rayService.addProxyAccount("127.0.0.1", 62789,dto);
+        v2rayService.addProxyAccount("127.0.0.1", 62789, "6001",dto);
 
 
 //        System.out.println(accountAdapt.getRemoteV2rayAccountDto(12233L));

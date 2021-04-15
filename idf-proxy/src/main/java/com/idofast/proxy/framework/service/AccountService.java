@@ -44,6 +44,8 @@ public class AccountService
     @Value("${proxy.v2ray.apiPort}")
     private Integer v2rayPort;
 
+    @Value("${proxy.v2ray.tag}")
+    private String tag;
     /**
      * 最多重试三次
      * value为错误原因
@@ -131,7 +133,7 @@ public class AccountService
 
             try
             {
-                v2rayService.addProxyAccount(v2rayHost, v2rayPort, accountDto);
+                v2rayService.addProxyAccount(v2rayHost, v2rayPort, tag, accountDto);
             } catch (Exception e)
             {
                 e.printStackTrace();

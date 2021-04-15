@@ -36,7 +36,7 @@ public class ApiController {
         log.info("收到删除账号的通知，id:{}, email:{}",id, email);
         try {
             accountService.invalidUser(id);
-            v2rayService.rmProxyAccount(host, v2rayApiPort, email);
+            v2rayService.rmProxyAccount(host, v2rayApiPort, "6001", email);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("删除账号出错 :{}", e.getLocalizedMessage());

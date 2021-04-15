@@ -53,16 +53,7 @@ public class SubscriptionService
 
         return buildBase64Subscription(allNodes, proxyInfo);
     }
-    // V2rayAccount v2rayAccount = new V2rayAccount();
-    //            v2rayAccount.setId(uuid);
-    //            v2rayAccount.setAdd(s.getClientDomain());
-    //            v2rayAccount.setPort(String.valueOf(s.getClientPort()));
-    //            String token = V2RayPathEncoder.encoder(account.getAccountNo(), s.getClientDomain(), proxyConstant.getAuthPassword());
-    //            v2rayAccount.setPath(String.format(s.getWsPath(), account.getAccountNo()+":"+token));
-    //            v2rayAccount.setTls(s.getSupportTLS() ? "tls" : "");
-    //            v2rayAccount.setHost("");
-    //            v2rayAccount.setPs(s.getServerName());
-    //            result.add(v2rayAccount);
+
 
     public String buildBase64Subscription(List<V2rayNode> allNodes, UserProxyInfo proxyInfo)
     {

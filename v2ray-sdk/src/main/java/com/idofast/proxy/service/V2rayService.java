@@ -21,15 +21,14 @@ import org.springframework.stereotype.Service;
 public class V2rayService
 {
 
-    public static final String DEFAULT_INBOUND_TAG = "6001";
 
-    public void rmProxyAccount(String host, Integer port,String email) {
+    public void rmProxyAccount(String host, Integer port,String email, String tag) {
         try {
             V2RayApiClient client = V2RayApiClient.getInstance(host, port);
             
             TypedMessage rmOp = TypedMessage.newBuilder().setType(RemoveUserOperation.getDescriptor().getFullName())
                     .setValue(RemoveUserOperation.newBuilder().setEmail(email).build().toByteString()).build();
-            AlterInboundRequest req = AlterInboundRequest.newBuilder().setTag(DEFAULT_INBOUND_TAG).setOperation(rmOp).build();
+            AlterInboundRequest req = AlterInboundRequest.newBuilder().setTag(tag).setOperation(rmOp).build();
             client.getHandlerServiceBlockingStub().alterInbound(req);
         } catch (Exception e) {
             if (e.getLocalizedMessage().contains("not found"))return;
@@ -38,7 +37,7 @@ public class V2rayService
         }
     }
 
-    public void addProxyAccount(String host, Integer port, V2rayAccountDto proxyAccount) {
+    public void addProxyAccount(String host, Integer port, String tag, V2rayAccountDto proxyAccount) {
         try {
             V2RayApiClient client = V2RayApiClient.getInstance(host, port);
             Account account = Account.newBuilder().setAlterId(1).setId(proxyAccount.getUuid())
@@ -54,7 +53,7 @@ public class V2rayService
             TypedMessage typedMessage = TypedMessage.newBuilder().setType(AddUserOperation.getDescriptor().getFullName())
                     .setValue(addUserOperation.toByteString()).build();
 
-            AlterInboundResponse alterInboundResponse = client.getHandlerServiceBlockingStub().alterInbound(AlterInboundRequest.newBuilder().setTag(DEFAULT_INBOUND_TAG).setOperation(typedMessage).build());
+            AlterInboundResponse alterInboundResponse = client.getHandlerServiceBlockingStub().alterInbound(AlterInboundRequest.newBuilder().setTag(tag).setOperation(typedMessage).build());
             System.out.println(alterInboundResponse);
         } catch (Exception e) {
             e.printStackTrace();

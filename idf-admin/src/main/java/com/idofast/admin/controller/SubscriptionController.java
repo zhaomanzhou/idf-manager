@@ -86,7 +86,7 @@ public class SubscriptionController
         String subscribeCode = proxyInfo.getSubscribeCode();
 
 
-        String s = getServerUrl() + "/subscription/" + type + "/" + subscribeCode;
+        String s = getServerUrl() + "/api/subscription/" + type + "/" + subscribeCode;
         return ServerResponse.success(s);
 
 

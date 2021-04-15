@@ -46,7 +46,7 @@ public class ForwardHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error(" Receiver exceptionCaught: {}", cause.getMessage());
+        log.error("channel2发生异常: {}", cause.getMessage());
         parserHandler.close();
     }
 

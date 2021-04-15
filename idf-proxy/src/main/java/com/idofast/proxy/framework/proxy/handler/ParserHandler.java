@@ -177,7 +177,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         int endIndex = httpHead.indexOf("HTTP");
         String id = httpHead.substring(8, endIndex).trim();
         accountDto = accountService.getAndSynchUserById(Long.parseLong(id));
-        String replace = httpHead.replace(id, "");
+        String replace = httpHead.substring(0, 8) + " " + httpHead.substring(endIndex);
         byteBuf.clear().writeBytes(replace.getBytes());
     }
 

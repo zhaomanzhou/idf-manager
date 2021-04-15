@@ -90,7 +90,7 @@ public class Bundle
                 .duration(1)
                 .level(0)
                 .maxConnection(128)
-                .totalData(2*1024L)
+                .totalData(200*1024L)
                 .active(true)
                 .name("默认初始试用套餐")
                 .id(0L)

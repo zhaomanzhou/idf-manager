@@ -94,6 +94,7 @@ public class AccountService
                         errorCache.put(id, "用户不存在, id:" + id);
                         throw new BusinessException(errorCache.getIfPresent(id));
                     }
+                    System.out.println(accountDto);
                     accountMap.put(id, accountDto);
                     break;
                 } catch (Exception e)

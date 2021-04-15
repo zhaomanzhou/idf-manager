@@ -6,6 +6,7 @@ import com.idofast.common.dto.V2rayAccountDto;
 import com.idofast.proxy.V2RayApiClient;
 import com.v2ray.core.app.proxyman.command.AddUserOperation;
 import com.v2ray.core.app.proxyman.command.AlterInboundRequest;
+import com.v2ray.core.app.proxyman.command.AlterInboundResponse;
 import com.v2ray.core.app.proxyman.command.RemoveUserOperation;
 import com.v2ray.core.common.protocol.SecurityConfig;
 import com.v2ray.core.common.protocol.SecurityType;
@@ -53,8 +54,8 @@ public class V2rayService
             TypedMessage typedMessage = TypedMessage.newBuilder().setType(AddUserOperation.getDescriptor().getFullName())
                     .setValue(addUserOperation.toByteString()).build();
 
-            client.getHandlerServiceBlockingStub().alterInbound(AlterInboundRequest.newBuilder().setTag(DEFAULT_INBOUND_TAG).setOperation(typedMessage).build())
-            ;
+            AlterInboundResponse alterInboundResponse = client.getHandlerServiceBlockingStub().alterInbound(AlterInboundRequest.newBuilder().setTag(DEFAULT_INBOUND_TAG).setOperation(typedMessage).build());
+            System.out.println(alterInboundResponse);
         } catch (Exception e) {
             e.printStackTrace();
             if (e.getLocalizedMessage().contains("already exists")) return;

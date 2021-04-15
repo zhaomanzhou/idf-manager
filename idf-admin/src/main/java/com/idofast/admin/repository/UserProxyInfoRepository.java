@@ -44,9 +44,10 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
     Optional<V2rayAccount> queryAccount(@Param("id") Long id);
 
     @Modifying
-    @Query(value = "insert into user_proxy_info (bundle_id, bundle_name, deleted,  level, max_connection, namespace, next_settle_date, expire_date,speed, total_active_day, total_data, used_data, id) " +
+    @Query(value = "insert into user_proxy_info (bundle_id, bundle_name, deleted,  level, max_connection, namespace, next_settle_date, expire_date,speed, total_active_day, total_data, used_data, id, subscribe_code, uuid) " +
             "values (:#{#info.bundleId}, :#{#info.bundleName}, :#{#info.deleted.code},  :#{#info.level}, :#{#info.maxConnection}, :#{#info.namespace}, :#{#info.nextSettleDate},  :#{#info.expireDate}," +
-            ":#{#info.speed}, :#{#info.totalActiveDay}, :#{#info.totalData}, :#{#info.usedData}, :#{#info.id})", nativeQuery = true)
+            ":#{#info.speed}, :#{#info.totalActiveDay}, :#{#info.totalData}, :#{#info.usedData}, :#{#info.id},\n" +
+            "#{#info.subscribeCode}, #{#info.uuid})", nativeQuery = true)
 
     @Transactional
     public void insertWithGivenId(@Param("info") UserProxyInfo userProxyInfo);

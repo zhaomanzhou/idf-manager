@@ -46,7 +46,7 @@ switch:
   sendEmail: false
 
 site:
-  host: bwggia2.idofast.com
+  host: preview.idofast.com
   enableTls: false
 
 

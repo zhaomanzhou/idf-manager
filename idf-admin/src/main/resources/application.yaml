@@ -51,7 +51,7 @@ site:
 
 
 logging:
-  file: /opt/jar/logs/admin.log
+  file: /var/log/idf/admin.log
   file.max-history: 7
   level:
     root: info

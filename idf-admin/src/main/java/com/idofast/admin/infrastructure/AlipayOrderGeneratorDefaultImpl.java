@@ -15,6 +15,6 @@ public class AlipayOrderGeneratorDefaultImpl implements AlipayOrderGenerator
     @Override
     public String generateOrderName(Order order)
     {
-        return order.getOrderName();
+        return order.getId() + "_" + order.getBundleId();
     }
 }

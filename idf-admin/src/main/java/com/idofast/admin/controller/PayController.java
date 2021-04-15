@@ -166,7 +166,7 @@ public class PayController
             if (order.getOrderStatus() == OrderStatusEnum.SUCCESS){
                 //并且同步回调时已经更改支付状态了 不做任何处理
                 log.info("订单同步回调时已更新支付状态为已支付");
-            }else if (order.getOrderStatus() == OrderStatusEnum.WAIT_TO_PAY){
+            }else if (order.getOrderStatus() == OrderStatusEnum.WAIT_TO_PAY || order.getOrderStatus() == OrderStatusEnum.WAIT_TO_SCAN){
                 //支付成功 并且订单支付状态为待支付 更新状态为已支付
                 log.info("收到支付宝支付成功回调，开始更新订单信息，订单id{}", orderId);
                 order.setTradeNo(tradeNo);

@@ -157,10 +157,11 @@ public class PayController
             //验证支付成功后 需要验证是否更新过支付状态了
             Order order = orderService.selectById(Long.parseLong(orderId));
 
-            if(!order.getTradeNo().equals(tradeNo)){
-                log.warn("回调交易号与订单交易号不一致，订单号{}, 支付宝回调交易号{}, 订单交易号{}", orderId, tradeNo, order.getTradeNo());
-                return "FAIL";
-            }
+            //支付宝不一定有WAIT_BUYER_PAY回调
+//            if(!order.getTradeNo().equals(tradeNo)){
+//                log.warn("回调交易号与订单交易号不一致，订单号{}, 支付宝回调交易号{}, 订单交易号{}", orderId, tradeNo, order.getTradeNo());
+//                return "FAIL";
+//            }
 
             if (order.getOrderStatus() == OrderStatusEnum.SUCCESS){
                 //并且同步回调时已经更改支付状态了 不做任何处理
@@ -168,7 +169,12 @@ public class PayController
             }else if (order.getOrderStatus() == OrderStatusEnum.WAIT_TO_PAY){
                 //支付成功 并且订单支付状态为待支付 更新状态为已支付
                 log.info("收到支付宝支付成功回调，开始更新订单信息，订单id{}", orderId);
-                orderService.updateOrderStatusPaid(Long.parseLong(orderId));
+                order.setTradeNo(tradeNo);
+                order.setBuyerId(buyerId);
+                order.setBuyerLogonId(buyerLogonId);
+                order.setOrderStatus(OrderStatusEnum.SUCCESS);
+                orderService.updateOrder(order);
+//                orderService.updateOrderStatusPaid(Long.parseLong(orderId));
                 log.info("修改订单状态成功");
                 eventPublisher.publishEvent(new RechargeEvent(this,order.getId(), order.getUserId(), order.getTotalMonth(), order.getBundleId(), false));
 

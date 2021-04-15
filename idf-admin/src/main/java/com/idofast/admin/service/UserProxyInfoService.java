@@ -41,6 +41,7 @@ public class UserProxyInfoService
      */
     public UserProxyInfo selectById(Long id, boolean ifCreate) throws BusinessException
     {
+        ifCreate = false;
         Optional<UserProxyInfo> byId = userProxyInfoRepository.findById(id);
 
         //TODO  报警

@@ -173,6 +173,7 @@ public class PayController
                 order.setBuyerId(buyerId);
                 order.setBuyerLogonId(buyerLogonId);
                 order.setOrderStatus(OrderStatusEnum.SUCCESS);
+                order.setPayTime(LocalDateTime.now());
                 orderService.updateOrder(order);
 //                orderService.updateOrderStatusPaid(Long.parseLong(orderId));
                 log.info("修改订单状态成功");

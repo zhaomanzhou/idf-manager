@@ -45,9 +45,6 @@ public class SubscriptionController
     @Value("${site.host}")
     private String siteHost;
 
-    @Value("${server.port}")
-    private Integer port;
-
     @Autowired
     private UserProxyInfoService proxyInfoService;
 
@@ -100,10 +97,6 @@ public class SubscriptionController
     {
         String prefix = enableTls? "https": "http";
         String s = prefix + "://" + siteHost;
-        if(port != 80)
-        {
-            s += ":" + port;
-        }
         return s;
     }
 }

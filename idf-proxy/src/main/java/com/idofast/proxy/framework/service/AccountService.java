@@ -153,7 +153,7 @@ public class AccountService
         }
         if(!accountDto.getEnable())
         {
-            throw new BusinessException("用户已封禁");
+            throw new BusinessException("用户已封禁，id:" + accountDto.getId());
         }
     }
 

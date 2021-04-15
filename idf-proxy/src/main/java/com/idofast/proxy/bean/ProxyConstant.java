@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @createTime 2021/4/12 2:41 下午
  */
 @Component
-@ConfigurationProperties(prefix = "proxy.remote")
+@ConfigurationProperties(prefix = "proxy.master")
 @Data
 @Slf4j
 public class ProxyConstant

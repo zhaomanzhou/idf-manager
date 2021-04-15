@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @RestController
-@RequestMapping("/proxy/api")
+@RequestMapping("/master/api")
 @Api(tags = "订单相关的api")
 @CrossOrigin
 @Slf4j

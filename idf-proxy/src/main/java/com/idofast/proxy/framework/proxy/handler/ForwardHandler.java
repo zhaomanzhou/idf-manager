@@ -11,9 +11,11 @@ public class ForwardHandler extends ChannelInboundHandlerAdapter
 {
 
     private final Channel inboundChannel;
+    private final ParserHandler parserHandler;
 
-    public ForwardHandler(Channel inboundChannel)
+    public ForwardHandler(ParserHandler parserHandler, Channel inboundChannel)
     {
+        this.parserHandler = parserHandler;
         this.inboundChannel = inboundChannel;
     }
 
@@ -27,7 +29,7 @@ public class ForwardHandler extends ChannelInboundHandlerAdapter
     public void channelRead(final ChannelHandlerContext ctx, Object msg) {
         inboundChannel.writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
-                future.channel().close();
+                parserHandler.close();
             }else
             {
                 ctx.channel().read();
@@ -39,13 +41,13 @@ public class ForwardHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        ParserHandler.closeOnFlush(inboundChannel);
+        parserHandler.close();
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error(" Receiver exceptionCaught: {}", cause.getMessage());
-        ParserHandler.closeOnFlush(inboundChannel);
+        parserHandler.close();
     }
 
 

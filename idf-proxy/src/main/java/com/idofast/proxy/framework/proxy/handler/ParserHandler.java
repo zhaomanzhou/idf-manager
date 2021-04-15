@@ -3,8 +3,8 @@ package com.idofast.proxy.framework.proxy.handler;
 import com.idofast.common.dto.V2rayAccountDto;
 import com.idofast.common.response.error.BusinessException;
 import com.idofast.proxy.bean.RemoteConst;
-import com.idofast.proxy.framework.service.AccountService;
 import com.idofast.proxy.framework.proxy.factory.NettyClientFactory;
+import com.idofast.proxy.framework.service.AccountService;
 import com.idofast.proxy.framework.service.UserReportService;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -16,7 +16,7 @@ import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.Charset;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author zhaomanzhou
@@ -35,11 +35,12 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
 
 
     private Channel outboundChannel;
+    private Channel inboundChannel;
 
     private GlobalTrafficShapingHandler trafficShapingHandler;
 
 
-    static AtomicLong total = new AtomicLong(0);
+    private AtomicBoolean isClosed = new AtomicBoolean(false);
 
 
     public ParserHandler(AccountService accountService, UserReportService userReportService,RemoteConst remoteConst)
@@ -53,10 +54,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception
     {
-        if(outboundChannel != null)
-        {
-            closeOnFlush(outboundChannel);
-        }
+        close();
 
         if (trafficShapingHandler != null)
         {
@@ -83,14 +81,25 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
             try
             {
                 parserUser(ctx, msg);
-                attachTrafficController(ctx, accountDto);
-                connectToClient(ctx, (ByteBuf) msg, ctx.channel());
+
             } catch (Exception e)
             {
 
-                log.warn("解析用户或连接v2ray发生异常, {}", e.getMessage());
+                log.warn("解析用户异常, {}", e.getMessage());
                 ReferenceCountUtil.release(msg);
-                ctx.channel().close();
+                close();
+                return;
+            }
+
+
+            try {
+                attachTrafficController(ctx, accountDto);
+                connectToClient(ctx, (ByteBuf) msg, ctx.channel());
+            }catch (Exception e)
+            {
+                log.warn("连接v2ray发生异常, {}", e.getMessage());
+                ReferenceCountUtil.release(msg);
+                close();
                 return;
             }
 
@@ -120,14 +129,14 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         Bootstrap client = NettyClientFactory.getClient(inboundChannel.eventLoop());
         ChannelFuture f = client.connect(remoteConst.getV2rayHost(), remoteConst.getV2rayPort());
         outboundChannel = f.channel();
-        outboundChannel.pipeline().addLast(new ForwardHandler(ctx.channel()));
+        outboundChannel.pipeline().addLast(new ForwardHandler(this, ctx.channel()));
 
         f.addListener(future -> {
             if (!future.isSuccess())
             {
                 future.cause().printStackTrace();
                 log.info("与v2ray连接失败", future.cause());
-                ctx.channel().close();
+                close();
             } else
             {
                 writeToOutBoundChannel(handshakeByteBuf, ctx);
@@ -141,7 +150,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         outboundChannel.writeAndFlush(msg).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess())
             {
-                future.channel().close();
+                close();
             } else
             {
                 ctx.channel().read();
@@ -154,7 +163,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
     {
         log.warn("连接发生异常exceptionCaught....{}", cause.getMessage());
-        closeOnFlush(ctx.channel());
+        close();
     }
 
 
@@ -177,6 +186,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception
     {
+        this.inboundChannel = ctx.channel();
         ctx.channel().read();
     }
 
@@ -184,8 +194,18 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
 
 
     static void closeOnFlush(Channel ch) {
-        if (ch.isActive()) {
+        if (ch != null && ch.isActive()) {
             ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+        }
+    }
+
+
+    public void close()
+    {
+        if(isClosed.compareAndSet(false, true))
+        {
+            closeOnFlush(inboundChannel);
+            closeOnFlush(outboundChannel);
         }
     }
 

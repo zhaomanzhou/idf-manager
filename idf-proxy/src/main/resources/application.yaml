@@ -3,13 +3,13 @@ server:
   tomcat:
     min-spare-threads: 2
 proxy:
-  remote:
-    #master端所在的地址  api地址
+  #master端所在的地址  api地址
+  master:
     host: bwg2.idofast.com
-    port: 8001
-    tls: false
-    getProxyInfoUrl: '/proxy/api/user/detail'
-    reportStateUrl: '/proxy/api/state/report'
+    port: 443
+    tls: true
+    getProxyInfoUrl: '/master/api/user/detail'   #获取用户信息
+    reportStateUrl: '/master/api/state/report'   #上报状态
   v2ray:
     port: 6001
     apiPort: 62789
@@ -22,11 +22,7 @@ proxy:
     port: 8888
 
 logging:
-  file: /opt/jar/logs/v2ray-proxy.log
+  file: /var/log/idf/idf-proxy.log
   file.max-history: 7
   level:
     root: info
-
-#logging:
-#  level:
-#    root: error

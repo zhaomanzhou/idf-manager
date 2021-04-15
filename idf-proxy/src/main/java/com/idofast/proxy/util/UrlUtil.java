@@ -42,6 +42,7 @@ public class UrlUtil
         }
     }
 
+    //  http://idofast.com
     private String genPrefix()
     {
         if (prefix == null)
@@ -58,7 +59,7 @@ public class UrlUtil
                     }
                     sb.append("://");
                     sb.append(proxyConstant.getHost());
-                    if (proxyConstant.getPort() != 80)
+                    if (proxyConstant.getPort() != 80 && !proxyConstant.getTls())
                     {
                         sb.append(":").append(proxyConstant.getPort());
                     }

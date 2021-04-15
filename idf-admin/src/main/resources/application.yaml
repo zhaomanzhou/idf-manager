@@ -55,13 +55,13 @@ logging:
   file.max-history: 7
   level:
     root: info
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql:
-              BasicBinder: trace
-
+#    org:
+#      hibernate:
+#        type:
+#          descriptor:
+#            sql:
+#              BasicBinder: trace
+#把jpa的参数绑定打印出来
 
 
 proxy:

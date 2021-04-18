@@ -33,7 +33,7 @@ public class UrlUtil
 
     public String getRmAccountUrl(String host)
     {
-        if(tls)
+        if(!tls)
             return "http://" + host + ":" + port + apiUrl;
         else
             return "https://" + host + ":" + port + apiUrl;

@@ -60,7 +60,7 @@ public class FlowAnalysisService
 
     public void updateFlowInfo(StateReportDto stateReportDto )
     {
-        LocalDateTime now = LocalDateTime.now().plusDays(13);
+        LocalDateTime now = LocalDateTime.now();
         String hashName = now.format(DateTimeFormatter.ofPattern("-yyyy-MM"));
         String key = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 

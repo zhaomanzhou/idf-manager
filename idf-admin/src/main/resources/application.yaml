@@ -27,11 +27,10 @@ spring:
     properties.mail.smtp.starttls.required: true
     properties.mail.smtp.ssl.enable: true
     default-encoding: UTF-8
-  profiles:
-    active: local
+
 
 email:
-  username: zmzsstreet@163.com
+  username: idofast2020@gmail.com
   senderName: IdoFast加速器
 
 
@@ -68,7 +67,7 @@ proxy:
   port: 443
   tls: true
   authPassword: idofast
-  wsPath: /idf/
+  wsPath: /ws/
   api:
     rmAccount: /proxy/api/account/del
 

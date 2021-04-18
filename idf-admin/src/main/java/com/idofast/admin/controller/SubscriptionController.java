@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * @author zhaomanzhou
@@ -57,10 +59,12 @@ public class SubscriptionController
     public void subscribe(@PathVariable String subscribeCode, HttpServletResponse response) throws BusinessException, IOException
     {
         String subscriptionContent = subscriptionService.getSubscriptionContent(subscribeCode);
-        byte[] bytes = subscriptionContent.getBytes();
-        response.setHeader("Content-Length",bytes.length+"");
+
+        //需要再进行一次base64
+        String result = Base64.getEncoder().encodeToString(subscriptionContent.getBytes(StandardCharsets.UTF_8));
+        response.setHeader("Content-Length",result.getBytes().length+"");
         response.setHeader("Content-Type", MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        response.getOutputStream().write(bytes);
+        response.getOutputStream().write(result.getBytes());
         response.flushBuffer();
     }
 

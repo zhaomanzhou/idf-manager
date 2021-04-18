@@ -68,6 +68,7 @@ proxy:
   port: 443
   tls: true
   authPassword: idofast
+  wsPath: /idf/
   api:
     rmAccount: /proxy/api/account/del
 

@@ -9,6 +9,7 @@ import com.idofast.common.response.error.BusinessException;
 import com.idofast.common.util.JsonUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -31,6 +32,8 @@ public class SubscriptionService
     @Autowired
     private V2rayNodeRepository v2rayNodeRepository;
 
+    @Value("${proxy.wsPath}")
+    private String wsPath;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -69,10 +72,11 @@ public class SubscriptionService
             entity.setTls(node.getSupportTls()? "tls": "");
             entity.setHost("");
             entity.setPs(node.getName());
-            entity.setPath("/ws/" + proxyInfo.getId());
+            entity.setPath(wsPath+ proxyInfo.getId());
 
 
-            String encode = Base64.getEncoder().encodeToString(JsonUtil.obj2StringPretty(entity).getBytes(StandardCharsets.UTF_8));
+
+            String encode = Base64.getEncoder().encodeToString(JsonUtil.objToString(entity).getBytes(StandardCharsets.UTF_8));
             sb.append("vmess://").append(encode).append("\n");
         }
 

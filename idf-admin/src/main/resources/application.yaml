@@ -19,8 +19,8 @@ spring:
       ddl-auto: update
 
   mail:
-    host: smtp.163.com
-    username: zmzsstreet@163.com
+    host: smtp.gmail.com
+    username: idofast2020@gmail.com
     password:
     properties.mail.smtp.port: 465 #465或者994
     properties.mail.smtp.starttls.enable: true

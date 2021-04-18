@@ -1,13 +1,17 @@
 package com.idofast.admin.controller;
 
 import com.idofast.admin.annotation.AuthRole;
+import com.idofast.admin.config.context.RequestContext;
+import com.idofast.admin.controller.vo.response.DashBoradDataLog;
 import com.idofast.admin.controller.vo.response.DataResetLogVo;
 import com.idofast.admin.domain.DataResetLog;
 import com.idofast.admin.service.DataFlowService;
+import com.idofast.admin.service.FlowAnalysisService;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.response.ServerResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,9 +38,12 @@ public class DataFlowController
     @Autowired
     private DataFlowService dataFlowService;
 
+    @Autowired
+    private FlowAnalysisService flowAnalysisService;
+
     @GetMapping("/resetlog")
     @AuthRole(RoleEnum.ADMIN)
-    @ApiOperation("获取用户的流量使用记录")
+    @ApiOperation("获取用户的每月流量使用记录")
     public ServerResponse<List<DataResetLogVo>> getDataResetLogByUserId(@NotNull Long userId)
     {
         List<DataResetLog> allByUserId = dataFlowService.findAllByUserId(userId);
@@ -46,4 +53,26 @@ public class DataFlowController
                 .collect(Collectors.toList());
         return ServerResponse.success(collect);
     }
+
+
+    @RequestMapping("/flowOfDay")
+    @ApiOperation("获取首页的流量使用记录")
+    public ServerResponse<List<DashBoradDataLog>> getDataUsageOfDay()
+    {
+        Long id = RequestContext.getCurrentUser().getId();
+        List<DashBoradDataLog> flowData = flowAnalysisService.getFlowData(id);
+
+        return ServerResponse.success(flowData);
+    }
+
+    @RequestMapping("/admin/flowOfDay")
+    @ApiOperation("获取指定用户首页的流量使用记录")
+    public ServerResponse<List<DashBoradDataLog>> getDataUsageOfDayForAdmin(@NonNull Long id)
+    {
+        List<DashBoradDataLog> flowData = flowAnalysisService.getFlowData(id);
+        return ServerResponse.success(flowData);
+    }
+
+
+
 }

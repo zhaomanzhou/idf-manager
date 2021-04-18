@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.*;
  * @createTime 2020/12/31 12:32 上午
  */
 @RestController
-@RequestMapping("/users/proxy")
+@RequestMapping("/proxyinfo")
 @Api(tags = "用户代理信息相关的API")
 @CrossOrigin
 @Slf4j
 @Validated
-public class UserProxyInfoController
+public class ProxyInfoController
 {
 
     @Autowired

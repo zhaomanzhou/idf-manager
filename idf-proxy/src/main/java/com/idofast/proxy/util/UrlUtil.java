@@ -17,7 +17,7 @@ public class UrlUtil
 
     private String prefix;
 
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
 
     public String getProxyInfoUrl()
@@ -59,10 +59,7 @@ public class UrlUtil
                     }
                     sb.append("://");
                     sb.append(proxyConstant.getHost());
-                    if (proxyConstant.getPort() != 80 && !proxyConstant.getTls())
-                    {
-                        sb.append(":").append(proxyConstant.getPort());
-                    }
+                    sb.append(":").append(proxyConstant.getPort());
                     prefix = sb.toString();
                 }
 

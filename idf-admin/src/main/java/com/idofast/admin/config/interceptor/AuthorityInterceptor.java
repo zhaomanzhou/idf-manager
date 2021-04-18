@@ -1,29 +1,17 @@
 package com.idofast.admin.config.interceptor;
 
 import com.idofast.admin.annotation.AuthRole;
-import com.idofast.admin.constant.TokenHashConst;
 import com.idofast.admin.domain.User;
-import com.idofast.admin.util.Jwtutil;
-import com.idofast.common.common.RedisPrefixConst;
-
 import com.idofast.common.enums.RoleEnum;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author zhaomanzhou
@@ -69,7 +57,7 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter
                 log.debug("校验完毕，用户已登录，开始校验权限");
                 RoleEnum requiredRole = authRole.role();
                 RoleEnum actualRole = user.getRole();
-                if (actualRole.getCode() <= requiredRole.getCode())
+                if (actualRole.getCode() >= requiredRole.getCode())
                 {
                     request.setAttribute("currentUser", user);
                     log.info("用户{}, 成功访问了{}接口", user.getEmail(), callBackUrl);

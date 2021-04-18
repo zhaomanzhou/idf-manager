@@ -1,5 +1,7 @@
 package com.idofast.admin.controller.api;
 
+import com.idofast.admin.service.ConnectionService;
+import com.idofast.admin.service.FlowAnalysisService;
 import com.idofast.admin.service.V2rayApiService;
 import com.idofast.common.dto.StateReportDto;
 import com.idofast.common.dto.V2rayAccountDto;
@@ -14,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author zhaomanzhou
@@ -37,6 +36,13 @@ public class V2rayApiController
    @Autowired
    private V2rayApiService v2rayApiService;
 
+   @Autowired
+   private ConnectionService connectionService;
+
+   @Autowired
+   private FlowAnalysisService flowAnalysisService;
+
+
    private ExecutorService es = new ThreadPoolExecutor(3, 10, 10, TimeUnit.MINUTES,
            new ArrayBlockingQueue<>(100), new DefaultThreadFactory("report-handler"));
 
@@ -54,6 +60,17 @@ public class V2rayApiController
     {
         es.submit(()->{
             v2rayApiService.updateUseState(stateReportDto);
+        });
+        es.submit(() ->{
+            try
+            {
+                connectionService.updateStateInfo(stateReportDto);
+                flowAnalysisService.updateFlowInfo(stateReportDto);
+            } catch (ExecutionException e)
+            {
+                log.warn("更新用户连接缓存失败");
+                log.error(e.toString());
+            }
         });
         log.info(stateReportDto.toString());
         return ServerResponse.success();

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Api(tags = "套餐相关的api")
 @CrossOrigin
 @Slf4j
-public class BundleController
+public class ShopController
 {
 
     @Autowired
@@ -70,7 +70,7 @@ public class BundleController
     public ServerResponse<BundleVo> getBundleById(Long id) throws BusinessException
     {
         Bundle bundle = bundleService.findById(id);
-        if(bundle.getActive() == false)
+        if(!bundle.getActive())
         {
             throw new BusinessException("套餐不存在");
         }

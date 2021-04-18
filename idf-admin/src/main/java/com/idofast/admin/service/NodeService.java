@@ -53,6 +53,17 @@ public class NodeService
     }
 
 
+    public Optional<V2rayNode> getByHost(String host)
+    {
+        List<V2rayNode> allByHostEquals = v2rayNodeRepository.findAllByHostEquals(host);
+        if(allByHostEquals.size() == 0)
+        {
+            return Optional.empty();
+        }
+        return Optional.of(allByHostEquals.get(0));
+    }
+
+
     public List<V2rayNodeVo> getAllV2rayNodes()
     {
         List<V2rayNode> all = v2rayNodeRepository.findAll();
@@ -92,6 +103,14 @@ public class NodeService
         V2rayNode node1 = v2rayNodeRepository.findById(vo.getId()).get();
         BeanUtil.copyProperties(vo, node1, CopyOptions.create().setIgnoreNullValue(true));
         v2rayNodeRepository.save(node1);
+    }
+
+
+    public Map<Integer, List<V2rayNode>> getNodeListForSimpleUser()
+    {
+        List<V2rayNode> allByEnableEquals = v2rayNodeRepository.findAllByEnableEquals(true);
+        Map<Integer, List<V2rayNode>> collect = allByEnableEquals.stream().collect(groupingBy(V2rayNode::getLevel));
+        return collect;
     }
 
 

@@ -1,10 +1,7 @@
 package com.idofast.admin.config;
 
 import com.idofast.admin.config.arguementresolver.CurUserMethodArgumentResolver;
-import com.idofast.admin.config.interceptor.AuthorityInterceptor;
-import com.idofast.admin.config.interceptor.CorsInterceptor;
-import com.idofast.admin.config.interceptor.LoginInterceptor;
-import com.idofast.admin.config.interceptor.RequestContextInterceptor;
+import com.idofast.admin.config.interceptor.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +31,11 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
 
     @Autowired
     private RequestContextInterceptor requestContextInterceptor;
+
+
+    @Autowired
+    private ProxyApiAuthInterceptor apiAuthInterceptor;
+
     //注册拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry)
@@ -42,8 +44,8 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .addPathPatterns("/**");
 
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/user/**")
-//                .addPathPatterns("/**")
+//                .addPathPatterns("/user/**")
+                .addPathPatterns("/**")
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/user/detail/token")
@@ -51,6 +53,8 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .excludePathPatterns("/user/vcode/resetPassword")
                 .excludePathPatterns("/user/resetPassword/withVcode")
                 .excludePathPatterns("/error/**")
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/doc.html/**")
+                .excludePathPatterns("/master/api/**")
 
                 .addPathPatterns("/notice/**")
                 .excludePathPatterns("/notice/detail/**")
@@ -62,7 +66,7 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .addPathPatterns("/pay/**")
                 .excludePathPatterns("/pay/callback")
 
-                .addPathPatterns("/users/**")
+                .addPathPatterns("/proxyinfo/**")
 
                 .addPathPatterns("/rechargelog/**")
 
@@ -70,10 +74,12 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
 
                 .addPathPatterns("/system/preference/**")
 
-                .addPathPatterns("/node/**")
+                .addPathPatterns("/server/**")
 
                 .addPathPatterns("/subscription/**")
                 .excludePathPatterns("/subscription/v2ray/**")
+
+
 
 
         ;
@@ -84,6 +90,8 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
         registry.addInterceptor(authorityInterceptor)
                 .addPathPatterns("/**");
 
+        registry.addInterceptor(apiAuthInterceptor)
+                .addPathPatterns("/master/api/**");
     }
 
 

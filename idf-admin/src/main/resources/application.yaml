@@ -39,7 +39,7 @@ email:
 token:
   secret: nwafu
   # 单位 分钟
-  expiration: 43200
+  expiration: 4320
 
 #是否真的发送email；方便测试
 switch:
@@ -65,7 +65,9 @@ logging:
 
 
 proxy:
-  port: 8100
+  port: 443
+  tls: true
+  authPassword: idofast
   api:
     rmAccount: /proxy/api/account/del
 

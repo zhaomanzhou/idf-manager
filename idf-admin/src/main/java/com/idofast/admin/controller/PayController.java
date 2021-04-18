@@ -221,6 +221,7 @@ public class PayController
             case "WAIT_BUYER_PAY":
             {
                 order.setOrderStatus(OrderStatusEnum.WAIT_TO_PAY);
+                break;
             }
             case "TRADE_SUCCESS":
             {

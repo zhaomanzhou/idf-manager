@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Validator;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -53,8 +52,7 @@ public class UserController
     @Autowired
     private EventPublisher eventPublisher;
 
-    @Autowired
-    private Validator validator;
+
 
 
     @ApiOperation(value = "获取注册验证码")

@@ -1,12 +1,15 @@
 package com.idofast.proxy.web.adapter;
 
 import com.idofast.common.dto.V2rayAccountDto;
+import com.idofast.common.response.error.BusinessException;
 import com.idofast.proxy.service.V2rayService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.ArrayList;
 
 /**
  * @author zhaomanzhou
@@ -34,5 +37,12 @@ public class ProxyAccountAdaptTest
 
 
 //        System.out.println(accountAdapt.getRemoteV2rayAccountDto(12233L));
+    }
+
+    @Test
+    public void testGetRemote() throws BusinessException
+    {
+        System.out.println(accountAdapt.getRemoteV2rayAccountDto(12233L));
+        accountAdapt.reportUserState(new ArrayList<>());
     }
 }

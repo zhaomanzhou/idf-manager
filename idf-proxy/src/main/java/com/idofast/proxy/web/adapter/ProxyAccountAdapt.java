@@ -7,7 +7,9 @@ import com.idofast.common.dto.V2rayAccountDto;
 import com.idofast.common.response.ResponseCode;
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.response.error.BusinessException;
+import com.idofast.proxy.bean.ProxyConstant;
 import com.idofast.proxy.util.UrlUtil;
+import com.idofast.proxy.web.interceptor.AuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +43,9 @@ public class ProxyAccountAdapt
     @Value("${proxy.local.host}")
     private String serverHost;
 
+    @Autowired
+    private ProxyConstant proxyConstant;
+
 
     @PostConstruct
     public void verify()
@@ -58,8 +63,10 @@ public class ProxyAccountAdapt
         log.info("开始请求 {}?id={}", urlUtil.getProxyInfoUrl(), id);
         MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
         paramMap.add("id", id);
+        MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<String, String>();
+        headerMap.add(AuthInterceptor.AUTH_NAME, proxyConstant.getAuthPassword());
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap, headerMap);
         ResponseEntity<ServerResponse<V2rayAccountDto>> entity = restTemplate.exchange(
                 urlUtil.getProxyInfoUrl(),
                 HttpMethod.POST,
@@ -86,14 +93,14 @@ public class ProxyAccountAdapt
     public boolean reportUserState(List<StateMessage> list)
     {
 
-//
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<String, String>();
+        headerMap.add(AuthInterceptor.AUTH_NAME, proxyConstant.getAuthPassword());
 
         StateReportDto dto = new StateReportDto();
         dto.setContents(list);
         dto.setHost(serverHost);
-        HttpEntity<Object> requestEntity = new HttpEntity<Object>(dto,headers);
+        HttpEntity<Object> requestEntity = new HttpEntity<Object>(dto,headerMap);
         ResponseEntity<ServerResponse> entity = restTemplate.exchange(
                 urlUtil.getStateReportUrl(),
                 HttpMethod.POST,

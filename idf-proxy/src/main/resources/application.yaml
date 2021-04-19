@@ -18,7 +18,7 @@ proxy:
     tag: 6001
   local:
     #本地主机域名，报告给服务器用的
-    host: preview.idofast.com
+    host: iplc2.idofast.com
 
   netty:
     port: 8888

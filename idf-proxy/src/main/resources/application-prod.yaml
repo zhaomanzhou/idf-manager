@@ -1,0 +1,13 @@
+proxy:
+  #master端所在的地址  api地址
+  v2ray:
+    port: 6001
+    apiPort: 62789
+    host: 127.0.0.1
+    tag: 6001
+  local:
+    #本地主机域名，报告给服务器用的
+    host: agajp.idofast.com
+
+  netty:
+    port: 8888

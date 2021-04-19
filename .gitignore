@@ -36,8 +36,8 @@ build/
 
 *.log
 
-application-docker.yaml
-application-local.yaml
-application-prod.yaml
+idf-admin/src/main/resources/application-docker.yaml
+idf-admin/src/main/resources/application-local.yaml
+idf-admin/src/main/resources/application-prod.yaml
 
 

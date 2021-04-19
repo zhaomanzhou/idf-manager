@@ -1,0 +1,22 @@
+
+proxy:
+  master:
+    #master端所在的地址  api地址
+    host: 127.0.0.1
+    port: 8001
+    tls: false
+    getProxyInfoUrl: '/master/api/user/detail'   #获取用户信息
+    reportStateUrl: '/master/api/state/report'   #上报状态
+    authPassword: 'idofast'
+
+  v2ray:
+    port: 6001
+    apiPort: 62789
+    host: back.idofast.com
+  local:
+    #本地主机域名，报告给服务器用的
+    host: qy.zmz121.cn
+
+
+
+

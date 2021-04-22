@@ -32,16 +32,19 @@ public class NodeService
 
     /**
      * 添加新v2ray节点
+     *
      * @param v2rayNode
      */
     public void addNewV2rayNode(V2rayNode v2rayNode)
     {
-        v2rayNode.setMessageForAdmin("");
         v2rayNodeRepository.save(v2rayNode);
     }
 
+
+
     /**
      * 获取所有直连节点列表， 即parentNodeId为0的节点
+     *
      * @return
      */
     public List<DirectV2rayNodeVo> getAllDirectNodes()
@@ -56,7 +59,7 @@ public class NodeService
     public Optional<V2rayNode> getByHost(String host)
     {
         List<V2rayNode> allByHostEquals = v2rayNodeRepository.findAllByHostEquals(host);
-        if(allByHostEquals.size() == 0)
+        if (allByHostEquals.size() == 0)
         {
             return Optional.empty();
         }
@@ -64,19 +67,26 @@ public class NodeService
     }
 
 
+    /**
+     * 获取所有节点列表，管理员视角
+     *
+     * @return
+     */
     public List<V2rayNodeVo> getAllV2rayNodes()
     {
         List<V2rayNode> all = v2rayNodeRepository.findAll();
+
+        //生产一个nodeMap，把所有节点的id和对应的node关联起来
         final Map<Long, V2rayNode> nodeMap = all.stream().
                 collect(groupingBy(V2rayNode::getId, collectingAndThen(maxBy((e1, e2) -> 1), Optional::get)));
 
         List<V2rayNodeVo> collect = all.stream()
-                .map(node ->{
+                .map(node -> {
                     v2rayNodeVo = V2rayNodeVo.convertFrom(node);
-                    if(node.getParentNodeId() == 0L)
+                    if (node.getParentNodeId() == 0L)
                     {
                         return v2rayNodeVo;
-                    }else
+                    } else
                     {
                         V2rayNode parent = nodeMap.get(node.getParentNodeId());
                         v2rayNodeVo.setParentHost(parent.getHost());
@@ -85,7 +95,17 @@ public class NodeService
 
                     }
                 })
+                .sorted((n1, n2) -> {
+                    if (n1.getLevel().equals(n2.getLevel()))
+                    {
+                        return (int) (n1.getSequence() - n2.getSequence());
+                    } else
+                    {
+                        return n1.getLevel() - n2.getLevel();
+                    }
+                })
                 .collect(toList());
+
 
         return collect;
 
@@ -112,8 +132,6 @@ public class NodeService
         Map<Integer, List<V2rayNode>> collect = allByEnableEquals.stream().collect(groupingBy(V2rayNode::getLevel));
         return collect;
     }
-
-
 
 
 }

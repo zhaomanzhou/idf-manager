@@ -76,6 +76,7 @@ public class ServerNodeController
     public ServerResponse<String> createV2rayNode(@Validated V2rayNodeAddOrUpdateVo nodeAddVo)
     {
         V2rayNode node = V2rayNodeAddOrUpdateVo.convertToV2rayNode(nodeAddVo);
+        node.setSequence(System.currentTimeMillis());
         nodeService.addNewV2rayNode(node);
         return ServerResponse.success();
     }
@@ -131,6 +132,7 @@ public class ServerNodeController
                         Map.Entry::getKey,
                         e -> e.getValue().stream()
                                 .map(k -> ServerNodeResponse.convertFrom(k, proxyInfo.getLevel(), connectionService.getConnectionNumByHost(k.getHost())))
+                                .sorted((n1, n2) -> (int) (n1.getSequence() -n2.getSequence()))
                                 .collect(Collectors.toList())
                         )
                 );

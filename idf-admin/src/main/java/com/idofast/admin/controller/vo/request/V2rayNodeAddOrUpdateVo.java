@@ -75,6 +75,30 @@ public class V2rayNodeAddOrUpdateVo
     private String description = "";
 
 
+
+    /**
+     * 节点信息， 只有管理员可见
+     */
+    private String messageForAdmin;
+
+
+    /**
+     * 节点管理host
+     */
+    private String apiHost;
+
+    /**
+     * 节点管理端口
+     */
+    private Integer apiPort;
+
+
+    /**
+     * 排序使用
+     */
+    private Long sequence;
+
+
     /**
      * 父节点ID
      */
@@ -84,7 +108,6 @@ public class V2rayNodeAddOrUpdateVo
     {
         V2rayNode node = new V2rayNode();
         BeanUtils.copyProperties(vo, node);
-        node.setMessageForAdmin("");
         return node;
     }
 

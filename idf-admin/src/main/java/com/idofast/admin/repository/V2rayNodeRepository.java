@@ -16,7 +16,7 @@ public interface V2rayNodeRepository extends JpaRepository<V2rayNode, Long>
 {
     List<V2rayNode> getAllByParentNodeIdEquals(Long parentId);
 
-    List<V2rayNode> findAllByLevelIsLessThanEqual(Integer level);
+    List<V2rayNode> findAllByLevelIsLessThanEqualAndEnableEquals(Integer level,Boolean enable);
 
     List<V2rayNode> findAllByEnableEquals(Boolean enable);
 

@@ -8,6 +8,8 @@ import lombok.Data;
  * @author zhaomanzhou
  * @version 1.0
  * @createTime 2021/4/17 11:48 下午
+ *
+ * 服务器列表页面返回的数据
  */
 @Data
 public class ServerNodeResponse
@@ -25,6 +27,11 @@ public class ServerNodeResponse
     private Integer connectionNum;
     //当前用户是否可用
     private boolean canUse;
+
+    /**
+     * 排序使用
+     */
+    private Long sequence;
 
     public static ServerNodeResponse convertFrom(V2rayNode node, Integer userLevel, Integer connectionNum)
     {

@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author zhaomanzhou
@@ -51,8 +52,18 @@ public class SubscriptionService
 
         UserProxyInfo proxyInfo = proxyInfoOptional.get();
 
-        List<V2rayNode> allNodes = v2rayNodeRepository.findAllByLevelIsLessThanEqual(proxyInfo.getLevel());
+        List<V2rayNode> allNodes = v2rayNodeRepository.findAllByLevelIsLessThanEqualAndEnableEquals(proxyInfo.getLevel(), true);
 
+        allNodes = allNodes.stream()
+                .sorted((n1, n2) -> {
+                    if (n1.getLevel().equals(n2.getLevel()))
+                    {
+                        return (int) (n1.getSequence() - n2.getSequence());
+                    } else
+                    {
+                        return n1.getLevel() - n2.getLevel();
+                    }
+                }).collect(Collectors.toList());
 
         return buildBase64Subscription(allNodes, proxyInfo);
     }

@@ -97,6 +97,23 @@ public class V2rayNode
     private String messageForAdmin;
 
 
+    /**
+     * 节点管理host
+     */
+    private String apiHost;
+
+    /**
+     * 节点管理端口
+     */
+    private Integer apiPort;
+
+
+    /**
+     * 排序使用
+     */
+    private Long sequence;
+
+
 
     /**
      * transitNode为true是有效， 父节点id

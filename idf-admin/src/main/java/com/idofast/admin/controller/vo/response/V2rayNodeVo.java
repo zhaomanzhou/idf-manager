@@ -105,6 +105,25 @@ public class V2rayNodeVo
 
 
 
+
+    /**
+     * 节点管理host
+     */
+    private String apiHost;
+
+    /**
+     * 节点管理端口
+     */
+    private Integer apiPort;
+
+
+    /**
+     * 排序使用
+     */
+    private Long sequence;
+
+
+
     public static V2rayNodeVo convertFrom(V2rayNode node)
     {
         V2rayNodeVo vo = new V2rayNodeVo();

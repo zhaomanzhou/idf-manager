@@ -102,7 +102,7 @@ public class V2rayApiService
                     proxyApiAdapter.rmAccount(id, node.getHost());
                     log.info("删除成功");
                     break;
-                } catch (BusinessException e)
+                } catch (Exception e)
                 {
                     log.info("删除失败，{}", e.getMessage());
                 }

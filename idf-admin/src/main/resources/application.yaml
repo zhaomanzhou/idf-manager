@@ -64,8 +64,8 @@ logging:
 
 
 proxy:
-  port: 443
-  tls: true
+  port: 8100
+  tls: false
   authPassword: idofast
   wsPath: /ws/
   api:

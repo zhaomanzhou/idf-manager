@@ -55,7 +55,7 @@ public class V2rayApiController
     }
 
     @PostMapping("/state/report")
-    @ApiOperation("获取用户信息")
+    @ApiOperation("代理端流量状态上报接口")
     public ServerResponse<String> reportUserState(@RequestBody StateReportDto stateReportDto) throws BusinessException
     {
         es.submit(()->{

@@ -52,6 +52,7 @@ public class ProxyApiAdapter
             MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
             paramMap.add("id", id);
             paramMap.add("email", user.getEmail());
+            log.info("开始发起http删除用户调用，id:{}, email:{}", id, user.getEmail());
 
 
             MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<String, String>();

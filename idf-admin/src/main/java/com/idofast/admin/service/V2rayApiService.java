@@ -88,6 +88,7 @@ public class V2rayApiService
     {
 
         List<DirectV2rayNodeVo> allDirectNodes = nodeService.getAllDirectNodes();
+        log.info("开始向所有远端服务器删除用户{}, 一共{}个服务器", id, allDirectNodes.size());
         for(DirectV2rayNodeVo node: allDirectNodes)
         {
             int retryTime = 3;

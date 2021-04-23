@@ -3,9 +3,9 @@ package com.idofast.admin.config;
 import com.idofast.admin.config.arguementresolver.CurUserMethodArgumentResolver;
 import com.idofast.admin.config.interceptor.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.time.Duration;
 import java.util.List;
 
 @Configuration
@@ -79,8 +80,6 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .excludePathPatterns("/subscription/v2ray/**")
 
 
-
-
         ;
 
         registry.addInterceptor(requestContextInterceptor)
@@ -99,30 +98,44 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
     {
         registry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowedMethods("GET","HEAD","POST","PUT","DELETE","OPTIONS")
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true)
                 .maxAge(3600)
                 .allowedHeaders("*");
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers)
+    {
         argumentResolvers.add(currentUserMethodArgumentResolver());
     }
 
     @Bean
-    public CurUserMethodArgumentResolver currentUserMethodArgumentResolver() {
+    public CurUserMethodArgumentResolver currentUserMethodArgumentResolver()
+    {
         return new CurUserMethodArgumentResolver();
     }
 
+//    @Bean
+//    public RestTemplate restTemplate() {
+//        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+//        factory.setReadTimeout(5000);//单位为ms
+//        factory.setConnectTimeout(5000);//单位为ms
+//        RestTemplate restTemplate = new RestTemplate(factory);
+//        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+//        return restTemplate;
+//    }
+
+
     @Bean
-    public RestTemplate restTemplate() {
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setReadTimeout(5000);//单位为ms
-        factory.setConnectTimeout(5000);//单位为ms
-        RestTemplate restTemplate = new RestTemplate(factory);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        return restTemplate;
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder)
+    {
+        RestTemplate build = restTemplateBuilder
+                .setConnectTimeout(Duration.ofSeconds(5))
+                .setReadTimeout(Duration.ofSeconds(5))
+                .build();
+        build.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        return build;
     }
 
 

@@ -73,6 +73,7 @@ public class ProxyApiAdapter
             if (result ==null || result.getStatus() != ResponseCode.SUCCESS.getCode()) {
                 throw new BusinessException("远端回应错误: " + result.getMsg());
             }
+            log.info("调用成功，{}已删除该用户{}", host, id);
             return;
         }
         log.warn("通知远端删除一个不存在id:{}", id);

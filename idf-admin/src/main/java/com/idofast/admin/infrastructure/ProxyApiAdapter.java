@@ -52,7 +52,7 @@ public class ProxyApiAdapter
             MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
             paramMap.add("id", id);
             paramMap.add("email", user.getEmail());
-            log.info("开始发起http删除用户调用，id:{}, email:{}", id, user.getEmail());
+//            log.info("开始发起http删除用户调用，id:{}, email:{}", id, user.getEmail());
 
 
             MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<String, String>();
@@ -73,7 +73,7 @@ public class ProxyApiAdapter
             if (result ==null || result.getStatus() != ResponseCode.SUCCESS.getCode()) {
                 throw new BusinessException("远端回应错误: " + result.getMsg());
             }
-            log.info("调用成功，{}已删除该用户{}", host, id);
+//            log.info("调用成功，{}已删除该用户{}", host, id);
             return;
         }
         log.warn("通知远端删除一个不存在id:{}", id);

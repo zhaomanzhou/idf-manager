@@ -18,4 +18,7 @@ public class RemoteConst
 
     @Value("${proxy.v2ray.port}")
     private Integer v2rayPort;
+
+    @Value("${proxy.v2ray.wsPath}")
+    private String wsPath;
 }

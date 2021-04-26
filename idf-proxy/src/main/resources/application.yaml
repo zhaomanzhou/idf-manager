@@ -16,6 +16,7 @@ proxy:
     apiPort: 62789
     host: 127.0.0.1
     tag: 6001
+    wsPath: idf
   local:
     #本地主机域名，报告给服务器用的
     host: iplc2.idofast.com

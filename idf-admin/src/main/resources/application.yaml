@@ -67,7 +67,7 @@ proxy:
   port: 8100
   tls: false
   authPassword: idofast
-  wsPath: /ws/
+  wsPath: /idf/
   api:
     rmAccount: /proxy/api/account/del
 

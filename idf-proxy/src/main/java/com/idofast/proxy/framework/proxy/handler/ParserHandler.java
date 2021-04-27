@@ -76,6 +76,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     public void channelRead(ChannelHandlerContext ctx, Object msg)
     {
 
+
         if (isHandshaking)
         {
             try
@@ -102,6 +103,8 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
                 close();
                 return;
             }
+
+            log.info(ctx.channel().remoteAddress().toString());
 
             int i = userReportService.addConnectionNum(accountDto.getId());
             log.info("账号{}已连接, 连接数{}", accountDto.getEmail(), i);

@@ -180,7 +180,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
         int endIndex = httpHead.indexOf("HTTP");
         String id = httpHead.substring(httpHead.indexOf(remoteConst.getWsPath()) + remoteConst.getWsPath().length() +1, endIndex).trim();
         accountDto = accountService.getAndSynchUserById(Long.parseLong(id));
-        String replace = httpHead.substring(0, 6) + remoteConst.getWsPath().length() + " " + httpHead.substring(endIndex);
+        String replace = httpHead.substring(0, 6 +remoteConst.getWsPath().length()  )  + " " + httpHead.substring(endIndex);
         byteBuf.clear().writeBytes(replace.getBytes());
     }
 

@@ -13,6 +13,7 @@ proxy:
     port: 6001
     apiPort: 62789
     host: back.idofast.com
+
   local:
     #本地主机域名，报告给服务器用的
     host: qy.zmz121.cn

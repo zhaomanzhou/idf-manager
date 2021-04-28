@@ -104,8 +104,6 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
                 return;
             }
 
-            log.info(ctx.channel().remoteAddress().toString());
-
             int i = userReportService.addConnectionNum(accountDto.getId());
             log.info("账号{}已连接, 连接数{}", accountDto.getEmail(), i);
             isHandshaking = false;

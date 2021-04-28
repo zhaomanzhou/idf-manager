@@ -177,13 +177,10 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     {
         ByteBuf byteBuf = ((ByteBuf) msg);
         String httpHead = byteBuf.toString(Charset.defaultCharset());
-        log.info(httpHead);
         int endIndex = httpHead.indexOf("HTTP");
-
-        System.out.println(httpHead.indexOf(remoteConst.getWsPath()));
         String id = httpHead.substring(httpHead.indexOf(remoteConst.getWsPath()) + remoteConst.getWsPath().length() +1, endIndex).trim();
         accountDto = accountService.getAndSynchUserById(Long.parseLong(id));
-        String replace = httpHead.substring(0, 8) + " " + httpHead.substring(endIndex);
+        String replace = httpHead.substring(0, 6) + remoteConst.getWsPath().length() + " " + httpHead.substring(endIndex);
         byteBuf.clear().writeBytes(replace.getBytes());
     }
 

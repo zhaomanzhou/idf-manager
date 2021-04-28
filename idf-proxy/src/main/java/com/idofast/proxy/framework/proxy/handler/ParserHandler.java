@@ -177,6 +177,7 @@ public class ParserHandler extends ChannelInboundHandlerAdapter
     {
         ByteBuf byteBuf = ((ByteBuf) msg);
         String httpHead = byteBuf.toString(Charset.defaultCharset());
+        log.info(httpHead);
         int endIndex = httpHead.indexOf("HTTP");
 
         System.out.println(httpHead.indexOf(remoteConst.getWsPath()));

@@ -1,9 +1,11 @@
 package com.idofast.admin.event.listener;
 
 import com.idofast.admin.domain.Bundle;
+import com.idofast.admin.domain.DataResetLog;
 import com.idofast.admin.domain.RechargeLog;
 import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.event.event.RechargeEvent;
+import com.idofast.admin.repository.DataResetLogRepository;
 import com.idofast.admin.repository.RechargeLogRepository;
 import com.idofast.admin.repository.UserProxyInfoRepository;
 import com.idofast.admin.service.BundleService;
@@ -42,6 +44,9 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
 
     @Autowired
     private RechargeLogRepository rechargeLogRepository;
+
+    @Autowired
+    private DataResetLogRepository dataResetLogRepository;
 
     @SneakyThrows
     @Transactional
@@ -87,8 +92,6 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
         if(proxyInfo.getBundleId().equals(0L))
         {
 
-
-
             proxyInfo.setExpireDate(LocalDateTime.now().plusDays(totalDay));
             proxyInfo.setNextSettleDate(LocalDateTime.now().plusDays(bundle.getDuration()));
             proxyInfo.setBundleId(bundleId);
@@ -111,9 +114,32 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
 
         if(proxyInfo.getExpireDate().isBefore(LocalDateTime.now()))
         {
+            //记录上一次流量重置
+            DataResetLog dataResetLog = DataResetLog.builder()
+                    .userId(proxyInfo.getId())
+                    .endDate(proxyInfo.getNextSettleDate())
+                    .usedData(proxyInfo.getUsedData())
+                    .build();
+
+            if(proxyInfo.getPrevSettleDate() == null)
+            {
+                final Bundle byId = bundleService.findById(proxyInfo.getBundleId());
+                dataResetLog.setStartDate(proxyInfo.getExpireDate().plusDays(-1 * byId.getDuration()));
+            }else
+            {
+                dataResetLog.setStartDate(proxyInfo.getPrevSettleDate());
+            }
+            dataResetLogRepository.save(dataResetLog);
+
+
+
             proxyInfo.setExpireDate(LocalDateTime.now().plusDays(totalDay));
+            proxyInfo.setUsedData(0L);
             proxyInfo.setNextSettleDate(LocalDateTime.now().plusDays(bundle.getDuration()));
             proxyInfo.setPrevSettleDate(LocalDateTime.now());
+
+
+
         }else
         {
             proxyInfo.setExpireDate(proxyInfo.getExpireDate().plusDays(totalDay));

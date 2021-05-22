@@ -5,6 +5,7 @@ import com.idofast.admin.domain.User;
 import com.idofast.admin.util.Jwtutil;
 import com.idofast.common.common.RedisPrefixConst;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Component
+@Slf4j
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
@@ -34,14 +36,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
         String token = request.getHeader("token");
+
         if(!Jwtutil.isValidate(token))
         {
+            log.warn("没有带token的请求:{}, ip:{}", request.getRequestURL(), request.getRemoteAddr());
+            System.out.println(request.getRequestURL());
             request.getRequestDispatcher("/error/unlogin").forward(request, response);
             return false;
         }
         User user = (User)redisTemplate.opsForHash().get(RedisPrefixConst.TOKEN_PREFIX + token, TokenHashConst.USER);
         if(user == null)
         {
+            log.warn("错误的token请求:{}, ip:{}", request.getRequestURL(), request.getRemoteAddr());
+
             request.getRequestDispatcher("/error/unlogin").forward(request, response);
             return false;
         }else

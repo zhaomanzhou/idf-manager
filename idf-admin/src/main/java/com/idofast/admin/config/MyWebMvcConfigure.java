@@ -53,8 +53,8 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .excludePathPatterns("/user/vcode/resetPassword")
                 .excludePathPatterns("/user/resetPassword/withVcode")
                 .excludePathPatterns("/error/**")
-                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/doc.html/**")
-                .excludePathPatterns("/master/api/**")
+//                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/doc.html/**")
+//                .excludePathPatterns("/master/api/**")
 
                 .addPathPatterns("/notice/**")
                 .excludePathPatterns("/notice/detail/**")

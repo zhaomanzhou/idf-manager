@@ -72,7 +72,7 @@ public class V2rayApiController
                 log.error(e.toString());
             }
         });
-        log.info(stateReportDto.toString());
+        log.debug(stateReportDto.toString());
         return ServerResponse.success();
     }
 

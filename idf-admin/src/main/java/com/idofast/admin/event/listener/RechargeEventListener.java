@@ -99,6 +99,7 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
             proxyInfo.setMaxConnection(proxyInfo.getMaxConnection());
             proxyInfo.setTotalData(bundle.getTotalData()*1024);
             proxyInfo.setUsedData(0L);
+            proxyInfo.setPrevSettleDate(LocalDateTime.now());
             proxyInfoRepository.save(proxyInfo);
             saveRechargeLog(rechargeLog);
             return;
@@ -112,6 +113,7 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
         {
             proxyInfo.setExpireDate(LocalDateTime.now().plusDays(totalDay));
             proxyInfo.setNextSettleDate(LocalDateTime.now().plusDays(bundle.getDuration()));
+            proxyInfo.setPrevSettleDate(LocalDateTime.now());
         }else
         {
             proxyInfo.setExpireDate(proxyInfo.getExpireDate().plusDays(totalDay));
@@ -157,18 +159,14 @@ public class RechargeEventListener implements ApplicationListener<RechargeEvent>
                 proxyInfo.setTotalActiveDay(totalDay);
                 proxyInfo.setMaxConnection(proxyInfo.getMaxConnection());
                 proxyInfo.setUsedData(0L);
+                proxyInfo.setPrevSettleDate(LocalDateTime.now());
                 saveRechargeLog(rechargeLog);
                 proxyInfoRepository.save(proxyInfo);
 
 
             }
 
-
-
-
-
         }
-
 
     }
 

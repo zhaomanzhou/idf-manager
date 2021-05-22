@@ -7,6 +7,7 @@ import com.idofast.admin.controller.vo.response.DirectV2rayNodeVo;
 import com.idofast.admin.controller.vo.response.V2rayNodeVo;
 import com.idofast.admin.domain.V2rayNode;
 import com.idofast.admin.repository.V2rayNodeRepository;
+import com.idofast.common.response.error.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,8 +113,13 @@ public class NodeService
     }
 
 
-    public void deleteNode(Long id)
+    public void deleteNode(Long id) throws BusinessException
     {
+        final List<V2rayNode> allByParentNodeIdEquals = v2rayNodeRepository.getAllByParentNodeIdEquals(id);
+        if(allByParentNodeIdEquals.size() > 0)
+        {
+            throw new BusinessException("该节点尚有未删除的子节点，删除失败");
+        }
         v2rayNodeRepository.deleteById(id);
     }
 

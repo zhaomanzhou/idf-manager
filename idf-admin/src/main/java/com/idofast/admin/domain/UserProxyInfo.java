@@ -118,6 +118,11 @@ public class UserProxyInfo
      */
     private String subscribeCode;
 
+    /**
+     * 上次日期重置的时间
+     */
+    @CreationTimestamp
+    private LocalDateTime prevSettleDate;
 
     /**
      * v2ray账号的uuid

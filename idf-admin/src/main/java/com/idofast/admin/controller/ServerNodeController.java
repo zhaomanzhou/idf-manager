@@ -76,7 +76,7 @@ public class ServerNodeController
     public ServerResponse<String> createV2rayNode(@Validated V2rayNodeAddOrUpdateVo nodeAddVo)
     {
         V2rayNode node = V2rayNodeAddOrUpdateVo.convertToV2rayNode(nodeAddVo);
-        node.setSequence(System.currentTimeMillis());
+        node.setSequence(System.currentTimeMillis()/100000000);
         nodeService.addNewV2rayNode(node);
         return ServerResponse.success();
     }
@@ -103,7 +103,7 @@ public class ServerNodeController
     @PostMapping("/v2ray/delete")
     @ApiOperation("删除v2ray节点列表")
     @AuthRole(RoleEnum.ADMIN)
-    public ServerResponse<String> deleteV2rayNode(@NotNull Long id)
+    public ServerResponse<String> deleteV2rayNode(@NotNull Long id) throws BusinessException
     {
         nodeService.deleteNode(id);
         return ServerResponse.success();

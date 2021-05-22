@@ -50,11 +50,12 @@ public class ResetDataTask
             DataResetLog dataResetLog = DataResetLog.builder()
                     .userId(proxyInfo.getId())
                     .endDate(proxyInfo.getNextSettleDate())
-                    .startDate(proxyInfo.getNextSettleDate().plusDays(-1 * bundle.getDuration()))
+                    .startDate(proxyInfo.getPrevSettleDate())
                     .usedData(proxyInfo.getUsedData())
                     .build();
 
             proxyInfo.setNextSettleDate(proxyInfo.getNextSettleDate().plusDays(bundle.getDuration()));
+            proxyInfo.setPrevSettleDate(LocalDateTime.now());
             proxyInfo.setUsedData(0L);
 
             proxyInfoRepository.save(proxyInfo);

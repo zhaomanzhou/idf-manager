@@ -68,9 +68,20 @@ public class AccountService
 
         synchronized (pool.intern(id+""))
         {
+
             if(accountMap.containsKey(id))
             {
                 V2rayAccountDto accountDto = accountMap.get(id);
+
+                try
+                {
+                    checkUserValid(accountDto);
+                } catch (Exception e)
+                {
+                    errorCache.put(id, e.getMessage());
+                    accountMap.remove(id);
+                    throw e;
+                }
                 checkUserValid(accountDto);
                 return accountDto;
             }
@@ -96,7 +107,7 @@ public class AccountService
                         errorCache.put(id, "用户不存在, id:" + id);
                         throw new BusinessException(errorCache.getIfPresent(id));
                     }
-                    System.out.println(accountDto);
+                    log.info(String.valueOf(accountDto));
                     accountMap.put(id, accountDto);
                     break;
                 } catch (Exception e)
@@ -146,7 +157,7 @@ public class AccountService
 
     private void checkUserValid(V2rayAccountDto accountDto) throws BusinessException
     {
-        if(LocalDateTimeUtil.toLocalDateTime(accountDto.getExpireDate()).isBefore(LocalDateTime.now()))
+        if(accountDto.getExpireDate() < LocalDateTimeUtil.toTimeStamp(LocalDateTime.now()))
         {
             throw new BusinessException("用户已过期, id:" + accountDto.getId());
         }
@@ -154,6 +165,7 @@ public class AccountService
         {
             throw new BusinessException("用户流量已用完, id:" + accountDto.getId());
         }
+
         if(!accountDto.getEnable())
         {
             throw new BusinessException("用户已封禁，id:" + accountDto.getId());

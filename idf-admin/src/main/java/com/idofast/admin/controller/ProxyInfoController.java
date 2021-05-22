@@ -56,6 +56,7 @@ public class ProxyInfoController
 
     @GetMapping("/list")
     @ApiOperation("获取用户列表")
+    @AuthRole(RoleEnum.ADMIN)
     public ServerResponse<Object> getUserProxyInfoList()
     {
         Page<UserInfoLite> userList = userProxyInfoService.getUserList(null);
@@ -64,6 +65,7 @@ public class ProxyInfoController
 
     @GetMapping("/update")
     @ApiOperation("更改用户信息")
+    @AuthRole(RoleEnum.ADMIN)
     public ServerResponse<Object> updateUserProxyInfo(@Validated ProxyInfoUpdateVo proxyInfoUpdateVo) throws BusinessException
     {
         userProxyInfoService.updateUserProxyInfo(proxyInfoUpdateVo);

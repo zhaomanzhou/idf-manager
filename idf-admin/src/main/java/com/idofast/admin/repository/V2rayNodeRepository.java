@@ -14,6 +14,9 @@ import java.util.List;
 @Repository
 public interface V2rayNodeRepository extends JpaRepository<V2rayNode, Long>
 {
+    /**
+     * 获取该节点的所有字节点
+     */
     List<V2rayNode> getAllByParentNodeIdEquals(Long parentId);
 
     List<V2rayNode> findAllByLevelIsLessThanEqualAndEnableEquals(Integer level,Boolean enable);

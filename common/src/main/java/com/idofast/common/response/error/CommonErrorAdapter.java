@@ -29,4 +29,13 @@ public class CommonErrorAdapter implements CommonError {
         this.errMsg = errorMessage;
         return this;
     }
+
+    @Override
+    public String toString()
+    {
+        return "CommonErrorAdapter{" +
+                "errCode=" + errCode +
+                ", errMsg='" + errMsg + '\'' +
+                '}';
+    }
 }

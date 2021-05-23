@@ -23,7 +23,7 @@ public class GLobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     @ResponseBody
     public ServerResponse<Object> BusinessExceptionHandler(BusinessException e) {
-        log.info("Business Exception ", e);
+        log.error("Business Exception {}", e.getMessage());
         return ServerResponse.error(e.getErrorCode(), e.getErrorMessage());
     }
 

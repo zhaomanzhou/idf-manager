@@ -33,7 +33,8 @@ email:
   username: idofast2020@gmail.com
   senderName: IdoFast加速器
 
-
+swagger:
+  production: true
 
 token:
   secret: nwafu

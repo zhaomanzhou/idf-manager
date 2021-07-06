@@ -58,6 +58,7 @@ public class SubscriptionController
     @ApiOperation("订阅操作，获取服务器列表")
     public void subscribe(@PathVariable String subscribeCode, HttpServletResponse response) throws BusinessException, IOException
     {
+        log.warn("开始获取订阅{}", subscribeCode);
         String subscriptionContent = subscriptionService.getSubscriptionContent(subscribeCode);
 
         //需要再进行一次base64

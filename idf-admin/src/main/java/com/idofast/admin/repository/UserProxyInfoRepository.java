@@ -36,6 +36,23 @@ public interface UserProxyInfoRepository extends JpaRepository<UserProxyInfo, Lo
             " from User u INNER JOIN  UserProxyInfo d on u.id = d.id ")
     public Page<UserInfoLite> queryUserInfo( Pageable pageable);
 
+
+    @Query("select new com.idofast.admin.domain.dto.UserInfoLite " +
+            "(u.id, u.createTime, u.email, u.avatarUrl, u.role, u.status, u.remark, u.osDevice, u.ext, " +
+            "d.level, d.speed, d.totalData, d.usedData, d.nextSettleDate, d.expireDate, d.maxConnection, d.bundleId, d.bundleName, d.totalActiveDay, d.namespace) \n" +
+            " from User u INNER JOIN  UserProxyInfo d on u.id = d.id " +
+            "where u.id= :#{#id}")
+    public UserInfoLite queryUserInfoById( Long id);
+
+
+    @Query("select new com.idofast.admin.domain.dto.UserInfoLite " +
+            "(u.id, u.createTime, u.email, u.avatarUrl, u.role, u.status, u.remark, u.osDevice, u.ext, " +
+            "d.level, d.speed, d.totalData, d.usedData, d.nextSettleDate, d.expireDate, d.maxConnection, d.bundleId, d.bundleName, d.totalActiveDay, d.namespace) \n" +
+            " from User u INNER JOIN  UserProxyInfo d on u.id = d.id " +
+            "where u.email like :#{#email}%")
+    public Page<UserProxyInfo> queryUserInfoByEmail( Pageable pageable, String email);
+
+
     @Query("select new com.idofast.admin.domain.dto.V2rayAccount(u.id, u.email, p.speed, p.usedData, p.totalData, p.expireDate, p.maxConnection, p.uuid, u.status)  \n" +
             "from User u \n" +
             "INNER JOIN UserProxyInfo p\n" +

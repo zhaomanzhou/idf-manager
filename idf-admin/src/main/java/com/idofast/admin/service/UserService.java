@@ -75,9 +75,9 @@ public class UserService
         {
             throw new BusinessException("验证码已失效");
         }
-        if(!verificationCode.equals(registerUserVo.getVcode()))
+        if(!verificationCode.equals(registerUserVo.getVcode().trim()))
         {
-            throw new BusinessException("验证码错误");
+            throw new BusinessException("验证码错误, 用户输入的值为:" + registerUserVo.getVcode());
         }
         User user = registerUserVo.convertToUserDo();
         user.setInviteCode(randomCharUtil.generateInviteCode(6));

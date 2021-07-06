@@ -1,7 +1,7 @@
 package com.idofast.common.response.error;
 
 
-import com.idofast.common.common.ResponseCode;
+import com.idofast.common.response.ResponseCode;
 
 //包装器业务异常实现
 public class BusinessException extends Exception implements CommonError

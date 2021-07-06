@@ -69,7 +69,6 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter
                 // 如果没有登录
                 // 校验是否配置了自定义的跳转地址
                 String redirectUrl = StringUtils.isNotEmpty(authRole.returnUrl()) ? authRole.returnUrl() : "/error/unauth";
-
                 response.sendRedirect(redirectUrl);
 
                 return false;

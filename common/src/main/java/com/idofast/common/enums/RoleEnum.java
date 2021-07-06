@@ -6,7 +6,7 @@ import com.idofast.common.enums.base.IBaseEnum;
 public enum RoleEnum implements IBaseEnum<RoleEnum>
 {
     PLAIN(0,"user"),
-    ADMIN(1, "admin");
+    ADMIN(10, "admin");
 
 
     RoleEnum(int code, String msg)

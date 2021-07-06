@@ -55,28 +55,8 @@ public class MyWebMvcConfigure implements WebMvcConfigurer
                 .excludePathPatterns("/error/**")
 //                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/doc.html/**")
                 .excludePathPatterns("/master/api/**")
-
-                .addPathPatterns("/notice/**")
                 .excludePathPatterns("/notice/detail/**")
-
-                .addPathPatterns("/bundle/**")
-
-                .addPathPatterns("/order/**")
-
-                .addPathPatterns("/pay/**")
                 .excludePathPatterns("/pay/callback")
-
-                .addPathPatterns("/proxyinfo/**")
-
-                .addPathPatterns("/rechargelog/**")
-
-                .addPathPatterns("/data/**")
-
-                .addPathPatterns("/system/preference/**")
-
-                .addPathPatterns("/server/**")
-
-                .addPathPatterns("/subscription/**")
                 .excludePathPatterns("/subscription/v2ray/**")
 
 

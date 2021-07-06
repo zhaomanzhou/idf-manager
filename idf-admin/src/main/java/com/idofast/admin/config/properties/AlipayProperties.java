@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "alipay")
 public class AlipayProperties
 {
-    private String signType;
+    private String signType = "RSA2";
     private String protocol;
     private String appId;
     private String gatewayHost;

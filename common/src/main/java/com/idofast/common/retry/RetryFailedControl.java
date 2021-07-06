@@ -1,4 +1,4 @@
-package com.idofast.common.schedule.retry;
+package com.idofast.common.retry;
 
 import lombok.Builder;
 import lombok.Data;

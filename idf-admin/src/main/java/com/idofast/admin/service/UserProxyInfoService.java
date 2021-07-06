@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -68,6 +69,18 @@ public class UserProxyInfoService
     {
         return userProxyInfoRepository.queryUserInfo(page);
     }
+
+    public UserInfoLite getUserInfoById(Long id)
+    {
+        return userProxyInfoRepository.queryUserInfoById(id);
+    }
+
+    public List<UserProxyInfo> getUserInfoByEmail(String email)
+    {
+        return userProxyInfoRepository.queryUserInfoByEmail(null, email).getContent();
+    }
+
+
 
 
     public void updateUserProxyInfo(ProxyInfoUpdateVo updateVo) throws BusinessException

@@ -40,7 +40,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if(!Jwtutil.isValidate(token))
         {
             log.warn("没有带token的请求:{}, ip:{}", request.getRequestURL(), request.getRemoteAddr());
-            System.out.println(request.getRequestURL());
             request.getRequestDispatcher("/error/unlogin").forward(request, response);
             return false;
         }
@@ -48,7 +47,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if(user == null)
         {
             log.warn("错误的token请求:{}, ip:{}", request.getRequestURL(), request.getRemoteAddr());
-
             request.getRequestDispatcher("/error/unlogin").forward(request, response);
             return false;
         }else

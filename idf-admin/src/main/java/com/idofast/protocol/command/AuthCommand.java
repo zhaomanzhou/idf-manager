@@ -15,5 +15,6 @@ public class AuthCommand
     /**
      * 来源
      */
+
     private String host;
 }

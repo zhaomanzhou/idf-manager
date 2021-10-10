@@ -2,7 +2,7 @@ package com.idofast.admin.service;
 
 import com.idofast.admin.controller.vo.request.RegisterUserVo;
 import com.idofast.admin.service.manager.EmailLockManager;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

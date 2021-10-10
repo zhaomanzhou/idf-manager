@@ -1,7 +1,7 @@
 package com.idofast.proxy.framework.proxy.handler;
 
 import com.idofast.common.dto.V2rayAccountDto;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import com.idofast.proxy.bean.RemoteConst;
 import com.idofast.proxy.framework.proxy.factory.NettyClientFactory;
 import com.idofast.proxy.framework.service.AccountService;

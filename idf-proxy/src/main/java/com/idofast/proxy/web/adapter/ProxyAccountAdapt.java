@@ -4,9 +4,9 @@ package com.idofast.proxy.web.adapter;
 import com.idofast.common.dto.StateMessage;
 import com.idofast.common.dto.StateReportDto;
 import com.idofast.common.dto.V2rayAccountDto;
-import com.idofast.common.response.ResponseCode;
+import com.idofast.common.response.BaseResponseCode;
 import com.idofast.common.response.ServerResponse;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import com.idofast.proxy.bean.ProxyConstant;
 import com.idofast.proxy.util.UrlUtil;
 import com.idofast.proxy.web.interceptor.AuthInterceptor;
@@ -78,7 +78,7 @@ public class ProxyAccountAdapt
             throw new BusinessException("Http状态码错误:" +  entity.getStatusCode().getReasonPhrase());
         }
         ServerResponse<V2rayAccountDto> result = entity.getBody();
-        if (result ==null || result.getStatus() != ResponseCode.SUCCESS.getCode()) {
+        if (result ==null || result.getStatus() != BaseResponseCode.SUCCESS.getCode()) {
             throw new BusinessException("远程获取账号结果发生错误: " + result.getMsg());
         }
 
@@ -112,7 +112,7 @@ public class ProxyAccountAdapt
             return false;
         }
         ServerResponse result = entity.getBody();
-        if (result ==null || result.getStatus() != ResponseCode.SUCCESS.getCode()) {
+        if (result ==null || result.getStatus() != BaseResponseCode.SUCCESS.getCode()) {
             log.warn("远程提交用户状态数据发生错误:{}", result.getMsg());
             return false;
         }

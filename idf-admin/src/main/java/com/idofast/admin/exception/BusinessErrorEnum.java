@@ -1,7 +1,7 @@
 package com.idofast.admin.exception;
 
 
-import com.idofast.common.response.error.CommonError;
+import com.idofast.common.response.exception.CommonError;
 
 public enum BusinessErrorEnum implements CommonError
 {

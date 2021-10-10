@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
  * @author zhaomanzhou
  * @version 1.0
  * @createTime 2021/4/12 1:11 下午
+ *
+ * admin端和proxy传送的v2ray账户dto
  */
 @Data
 @AllArgsConstructor
@@ -48,6 +50,9 @@ public class V2rayAccountDto
     private String uuid;
 
 
+    /**
+     * 是否被封禁
+     */
     private Boolean enable;
 
 }

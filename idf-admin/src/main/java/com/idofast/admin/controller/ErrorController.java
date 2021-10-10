@@ -2,7 +2,7 @@ package com.idofast.admin.controller;
 
 import com.idofast.admin.exception.BusinessErrorEnum;
 import com.idofast.common.response.ServerResponse;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;

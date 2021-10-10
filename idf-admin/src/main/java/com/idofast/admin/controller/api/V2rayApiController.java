@@ -6,7 +6,7 @@ import com.idofast.admin.service.V2rayApiService;
 import com.idofast.common.dto.StateReportDto;
 import com.idofast.common.dto.V2rayAccountDto;
 import com.idofast.common.response.ServerResponse;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

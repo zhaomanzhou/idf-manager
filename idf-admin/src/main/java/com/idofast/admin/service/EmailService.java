@@ -9,7 +9,7 @@ import com.idofast.admin.service.manager.EmailManager;
 import com.idofast.admin.util.EmailUtils;
 import com.idofast.admin.util.VcodeUtil;
 import com.idofast.common.enums.EmailTypeEnum;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -13,7 +13,7 @@ import com.alipay.easysdk.payment.common.models.AlipayTradeCancelResponse;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePrecreateResponse;
 import com.idofast.admin.config.properties.AlipayProperties;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

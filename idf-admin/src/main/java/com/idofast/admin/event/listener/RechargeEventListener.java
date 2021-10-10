@@ -10,7 +10,7 @@ import com.idofast.admin.repository.RechargeLogRepository;
 import com.idofast.admin.repository.UserProxyInfoRepository;
 import com.idofast.admin.service.BundleService;
 import com.idofast.admin.service.UserProxyInfoService;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

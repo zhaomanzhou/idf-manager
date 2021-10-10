@@ -2,7 +2,8 @@ package com.idofast.common.response;
 
 
 
-public enum ResponseCode {
+public enum BaseResponseCode
+{
 
     SUCCESS(200,"SUCCESS"),
     ERROR(5000,"ERROR");
@@ -11,7 +12,7 @@ public enum ResponseCode {
     private final String desc;
 
 
-    ResponseCode(int code, String desc){
+    BaseResponseCode(int code, String desc){
         this.code = code;
         this.desc = desc;
     }

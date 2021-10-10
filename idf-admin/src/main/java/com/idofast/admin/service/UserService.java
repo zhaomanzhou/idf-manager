@@ -15,7 +15,7 @@ import com.idofast.common.common.RedisPrefixConst;
 import com.idofast.common.enums.DeletedEnum;
 import com.idofast.common.enums.OsDeviceEnum;
 import com.idofast.common.enums.UserStatusEnum;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import com.idofast.common.util.MD5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

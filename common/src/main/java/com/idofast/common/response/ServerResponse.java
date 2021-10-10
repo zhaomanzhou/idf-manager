@@ -45,25 +45,25 @@ public class ServerResponse<T> implements Serializable {
 
 
     public static <T> ServerResponse<T> success() {
-        return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(), null);
+        return new ServerResponse<T>(BaseResponseCode.SUCCESS.getCode(), null);
     }
 
 
 
     public static <T> ServerResponse<T> success(T data) {
-        return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(), "success", data);
+        return new ServerResponse<T>(BaseResponseCode.SUCCESS.getCode(), "success", data);
     }
 
 
 
 
     public static <T> ServerResponse<T> error() {
-        return new ServerResponse<T>(ResponseCode.ERROR.getCode(), "error");
+        return new ServerResponse<T>(BaseResponseCode.ERROR.getCode(), "error");
     }
 
 
     public static <T> ServerResponse<T> error(String errorMessage) {
-        return new ServerResponse<T>(ResponseCode.ERROR.getCode(), errorMessage);
+        return new ServerResponse<T>(BaseResponseCode.ERROR.getCode(), errorMessage);
     }
 
     public static <T> ServerResponse<T> error(int status, String errorMessage) {

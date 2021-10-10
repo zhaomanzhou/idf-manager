@@ -9,7 +9,7 @@ package com.idofast.admin.service;
 import com.idofast.admin.domain.Order;
 import com.idofast.admin.repository.OrderRepository;
 import com.idofast.common.enums.OrderStatusEnum;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;

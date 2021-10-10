@@ -15,8 +15,9 @@ import java.text.SimpleDateFormat;
 public class JsonUtil
 {
     private static ObjectMapper objectMapper = new ObjectMapper();
-    static{
 
+
+    static{
         //所有的日期格式都统一为以下的样式，即yyyy-MM-dd HH:mm:ss
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 

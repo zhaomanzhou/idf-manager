@@ -2,7 +2,7 @@ package com.idofast.admin.service;
 
 import com.idofast.admin.domain.Bundle;
 import com.idofast.admin.repository.BundleRepository;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;

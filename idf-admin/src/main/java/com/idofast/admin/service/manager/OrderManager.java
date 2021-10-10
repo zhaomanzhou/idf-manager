@@ -10,7 +10,7 @@ import com.idofast.admin.service.AliPayService;
 import com.idofast.admin.service.OrderService;
 import com.idofast.common.enums.OrderStatusEnum;
 import com.idofast.common.enums.PayTypeEnum;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

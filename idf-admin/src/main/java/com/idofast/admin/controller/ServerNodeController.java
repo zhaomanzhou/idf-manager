@@ -19,7 +19,7 @@ import com.idofast.admin.service.UserProxyInfoService;
 import com.idofast.admin.service.UserService;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.response.ServerResponse;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

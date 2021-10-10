@@ -1,45 +1,38 @@
 package com.idofast.common.retry;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.concurrent.Callable;
 
 /**
  * @author zhaomanzhou
  * @version 1.0
- * @createTime 2021/5/24 1:04 上午
+ * @createTime 2021/5/24 1:08 上午
+ * 重试命令，当抛出异常认为命令执行失败
  */
-@Slf4j
+@Data
+@Builder
 public class RetryCommand<T>
 {
-    public T retryWithCondition(Callable<T> command, RetryFailedControl control, String description)
-    {
-        while (true)
-        {
-            if(control.getRetryTime() <= 0)
-            {
-                return null;
-            }
-            try
-            {
-                final T result = command.call();
-                return result;
-            } catch (Exception e)
-            {
-                log.warn("{}失败，失败原因{}, 还有{}次重试机会", description, e.getMessage(), control.getRetryTime());
-                control.setRetryTime(control.getRetryTime() - 1);
+    /**
+     * 要执行的命令
+     */
+    private Callable<T> command;
+    /**
+     * 一共尝试几次
+     */
+    private int retryTime;
 
-                if(control.getRetryTime() > 0)
-                {
-                    try
-                    {
-                        Thread.sleep(control.getDelayTime());
-                    } catch (InterruptedException interruptedException)
-                    {
-                        interruptedException.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
+    /**
+     * 失败后等多久进行重试
+     */
+    private Long delayTime;
+
+    /**
+     * 该命令的描述
+     */
+    private String name;
+
+
 }

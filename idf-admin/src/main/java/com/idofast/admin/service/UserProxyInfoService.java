@@ -9,7 +9,7 @@ import com.idofast.admin.event.event.UserRegisterEvent;
 import com.idofast.admin.event.publisher.EventPublisher;
 import com.idofast.admin.repository.UserProxyInfoRepository;
 import com.idofast.common.util.LocalDateTimeUtil;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

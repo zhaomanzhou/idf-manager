@@ -1,4 +1,4 @@
-package com.idofast.common.response.error;
+package com.idofast.common.response.exception;
 
 /**
  * @author zhaomanzhou

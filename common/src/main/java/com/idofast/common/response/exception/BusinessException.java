@@ -1,7 +1,7 @@
-package com.idofast.common.response.error;
+package com.idofast.common.response.exception;
 
 
-import com.idofast.common.response.ResponseCode;
+import com.idofast.common.response.BaseResponseCode;
 
 //包装器业务异常实现
 public class BusinessException extends Exception implements CommonError
@@ -29,7 +29,7 @@ public class BusinessException extends Exception implements CommonError
     public BusinessException(String message)
     {
         super(message);
-        this.commonError = new CommonErrorAdapter(ResponseCode.ERROR.getCode(), message);
+        this.commonError = new CommonErrorAdapter(BaseResponseCode.ERROR.getCode(), message);
     }
 
     @Override

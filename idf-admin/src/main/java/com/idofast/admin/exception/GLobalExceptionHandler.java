@@ -1,7 +1,7 @@
 package com.idofast.admin.exception;
 
 import com.idofast.common.response.ServerResponse;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindException;

@@ -1,19 +1,15 @@
 package com.idofast.admin.service;
 import com.idofast.common.enums.NoticeStatusEnum;
-import java.time.LocalDateTime;
 
 import com.idofast.admin.domain.Notice;
 import com.idofast.admin.repository.NoticeRepository;
 import com.idofast.admin.service.manager.NoticeManager;
 import com.idofast.common.enums.NoticeTypeEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

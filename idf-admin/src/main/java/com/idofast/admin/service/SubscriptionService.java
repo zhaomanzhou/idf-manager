@@ -5,7 +5,7 @@ import com.idofast.admin.domain.UserProxyInfo;
 import com.idofast.admin.domain.V2rayNode;
 import com.idofast.admin.repository.UserProxyInfoRepository;
 import com.idofast.admin.repository.V2rayNodeRepository;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import com.idofast.common.util.JsonUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;

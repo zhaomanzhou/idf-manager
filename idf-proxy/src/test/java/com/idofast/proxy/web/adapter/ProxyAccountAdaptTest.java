@@ -1,7 +1,7 @@
 package com.idofast.proxy.web.adapter;
 
 import com.idofast.common.dto.V2rayAccountDto;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import com.idofast.proxy.service.V2rayService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

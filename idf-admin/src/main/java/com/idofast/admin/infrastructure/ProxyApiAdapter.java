@@ -5,9 +5,9 @@ import com.idofast.admin.domain.User;
 import com.idofast.admin.repository.UserRepository;
 import com.idofast.admin.util.UrlUtil;
 import com.idofast.common.dto.V2rayAccountDto;
-import com.idofast.common.response.ResponseCode;
+import com.idofast.common.response.BaseResponseCode;
 import com.idofast.common.response.ServerResponse;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,7 +70,7 @@ public class ProxyApiAdapter
                 throw new BusinessException("Http状态码错误:" +  entity.getStatusCode().getReasonPhrase());
             }
             ServerResponse<V2rayAccountDto> result = entity.getBody();
-            if (result ==null || result.getStatus() != ResponseCode.SUCCESS.getCode()) {
+            if (result ==null || result.getStatus() != BaseResponseCode.SUCCESS.getCode()) {
                 throw new BusinessException("远端回应错误: " + result.getMsg());
             }
 //            log.info("调用成功，{}已删除该用户{}", host, id);

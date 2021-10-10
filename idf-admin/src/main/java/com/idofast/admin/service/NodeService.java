@@ -7,7 +7,7 @@ import com.idofast.admin.controller.vo.response.DirectV2rayNodeVo;
 import com.idofast.admin.controller.vo.response.V2rayNodeVo;
 import com.idofast.admin.domain.V2rayNode;
 import com.idofast.admin.repository.V2rayNodeRepository;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

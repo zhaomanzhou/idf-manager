@@ -9,7 +9,7 @@ import com.idofast.common.dto.StateMessage;
 import com.idofast.common.dto.StateReportDto;
 import com.idofast.common.dto.V2rayAccountDto;
 import com.idofast.common.enums.UserStatusEnum;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import com.idofast.common.util.LocalDateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

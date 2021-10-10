@@ -18,7 +18,7 @@ import com.idofast.common.enums.NoticeTypeEnum;
 import com.idofast.common.enums.NoticeVisibilityEnum;
 import com.idofast.common.enums.RoleEnum;
 import com.idofast.common.response.ServerResponse;
-import com.idofast.common.response.error.BusinessException;
+import com.idofast.common.response.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

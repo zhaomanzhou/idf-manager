@@ -1,7 +1,6 @@
 package com.idofast.admin.annotation;
 
 
-import com.idofast.common.enums.RoleEnum;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.lang.annotation.ElementType;

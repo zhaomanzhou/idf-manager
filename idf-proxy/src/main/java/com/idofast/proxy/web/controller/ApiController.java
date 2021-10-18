@@ -2,7 +2,7 @@ package com.idofast.proxy.web.controller;
 
 
 import com.idofast.common.response.ServerResponse;
-import com.idofast.proxy.framework.service.AccountService;
+import com.idofast.proxy.biz.service.AccountService;
 import com.idofast.proxy.service.V2rayService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

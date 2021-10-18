@@ -3,7 +3,7 @@ package com.idofast.proxy.web.interceptor;
 
 import com.idofast.common.response.ServerResponse;
 import com.idofast.common.util.JsonUtil;
-import com.idofast.proxy.bean.ProxyConstant;
+import com.idofast.proxy.common.bean.ProxyConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

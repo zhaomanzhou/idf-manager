@@ -3,7 +3,7 @@ package com.idofast.admin.config.interceptor;
 import com.idofast.admin.constant.TokenHashConst;
 import com.idofast.admin.domain.User;
 import com.idofast.admin.util.Jwtutil;
-import com.idofast.common.common.RedisPrefixConst;
+import com.idofast.common.redis.RedisPrefixConst;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

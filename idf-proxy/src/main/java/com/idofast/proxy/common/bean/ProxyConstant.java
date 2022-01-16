@@ -26,7 +26,4 @@ public class ProxyConstant
     private Integer port;
     private Boolean tls;
 
-
-
-
 }

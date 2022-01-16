@@ -20,14 +20,7 @@ public class BeanConfig
     {
         return new ThreadPoolExecutor(1, 10, 5, TimeUnit.MINUTES,
                 new LinkedBlockingQueue<>(10),
-                new RejectedExecutionHandler()
-                {
-                    @Override
-                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor)
-                    {
-                        log.warn("添加v2ray账户线程池满了");
-                    }
-                }
+                (r, executor) -> log.warn("添加v2ray账户线程池满了")
         );
     }
 }

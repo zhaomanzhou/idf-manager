@@ -102,7 +102,7 @@ public class SubscriptionService
         String add;
         String port;
         String id;
-        String aid = "1";
+        String aid = "0";
         String net = "ws";
         String type = "none";
         String host ="";

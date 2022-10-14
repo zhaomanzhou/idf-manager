@@ -5,7 +5,7 @@ server:
 proxy:
   #master端所在的地址  api地址
   master:
-    host: 43.129.20.91
+    host: preview.idofast.com
     port: 443
     tls: true
     getProxyInfoUrl: '/api/master/api/user/detail'   #获取用户信息
